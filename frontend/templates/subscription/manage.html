@@ -1,0 +1,188 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Manage Subscription" %} | HandyBase{% endblock %}
+
+{% block content %}
+<div class="w-full space-y-8">
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+            <p class="text-sm font-semibold uppercase tracking-wider text-blue-400">{% trans "Billing" %}</p>
+            <h1 class="mt-2 text-3xl font-bold tracking-tight text-foreground">{% trans "Manage subscription" %}</h1>
+            <p class="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+                {% trans "Review your current plan, update access, and track billing activity." %}
+            </p>
+        </div>
+    </div>
+
+    <article class="rounded-xl border border-border bg-secondary p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+        <div>
+            <p class="text-sm font-bold text-blue-400">{% trans "Subscription Access" %}</p>
+            <h2 class="mt-2 text-2xl font-bold text-foreground">
+                {% if current.plan_name %}
+                    {{ current.plan_name }}
+                {% elif current.name %}
+                    {{ current.name }}
+                {% elif current.plan_type %}
+                    {{ current.plan_type|title }}
+                {% else %}
+                    {% trans "Basic Client" %}
+                {% endif %}
+            </h2>
+            <p class="mt-2 text-sm leading-6 text-muted-foreground max-w-2xl">
+                {% trans "Upgrade to unlock booking execution, messaging, and advanced request workflows." %}
+            </p>
+        </div>
+        <div class="shrink-0">
+            <a href="{% url 'subscription:plans' %}" class="inline-flex w-full sm:w-auto items-center justify-center rounded-lg bg-blue-600 px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700">
+                {% trans "Browse Plans" %}
+            </a>
+        </div>
+    </article>
+
+    <section class="grid grid-cols-1 gap-6 xl:grid-cols-[0.95fr_1.05fr]">
+        <article class="rounded-xl border border-border bg-secondary p-6 shadow-sm">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <p class="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{% trans "Current Plan Details" %}</p>
+                    {% if current %}
+                        <h2 class="mt-3 text-2xl font-bold text-foreground">
+                            {% if current.plan_name %}
+                                {{ current.plan_name }}
+                            {% elif current.name %}
+                                {{ current.name }}
+                            {% elif current.plan_type %}
+                                {{ current.plan_type|title }}
+                            {% else %}
+                                {% trans "Active plan" %}
+                            {% endif %}
+                        </h2>
+                        <p class="mt-2 text-sm text-muted-foreground">{% trans "Status" %}: <span class="font-semibold text-foreground">{{ current.status|default:"Active" }}</span></p>
+                    {% else %}
+                        <h2 class="mt-3 text-2xl font-bold text-foreground">{% trans "No active subscription" %}</h2>
+                        <p class="mt-2 text-sm text-muted-foreground">{% trans "Choose a plan to unlock subscription features." %}</p>
+                    {% endif %}
+                </div>
+                {% if current %}
+                    <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-700">{{ current.status|default:"Active" }}</span>
+                {% endif %}
+            </div>
+
+            <div class="mt-6 grid grid-cols-2 gap-4">
+                <div class="rounded-lg bg-background p-4">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{% trans "Amount" %}</p>
+                    <p class="mt-2 text-lg font-bold text-foreground">
+                        {% if current %}
+                            {% if current.amount_paid %}
+                                {{ current.amount_paid }} {{ current.currency|default:"USD" }}
+                            {% elif current.price %}
+                                {{ current.price }} {{ current.currency|default:"USD" }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="rounded-lg bg-background p-4">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{% trans "Renewal" %}</p>
+                    <p class="mt-2 text-lg font-bold text-foreground">
+                        {% if current %}
+                            {% if current.end_date %}
+                                {{ current.end_date }}
+                            {% elif current.renewal_date %}
+                                {{ current.renewal_date }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+                <a href="{% url 'subscription:plans' %}" class="inline-flex flex-1 items-center justify-center rounded-lg border border-border bg-background px-4 py-3 text-sm font-bold text-foreground transition hover:bg-secondary">
+                    {% trans "Change Plan" %}
+                </a>
+                {% if current %}
+                    <form action="{% url 'subscription:cancel' %}" method="post" class="flex-1">
+                        {% csrf_token %}
+                        <input type="hidden" name="reason" value="User requested cancellation">
+                        <button type="submit" class="inline-flex w-full items-center justify-center rounded-lg border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm font-bold text-destructive transition hover:bg-destructive/20">
+                            {% trans "Cancel Subscription" %}
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </article>
+
+        <article class="rounded-xl border border-border bg-secondary p-6 shadow-sm">
+            <div class="flex items-center justify-between gap-4">
+                <div>
+                    <p class="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{% trans "Billing History" %}</p>
+                    <h2 class="mt-2 text-xl font-bold text-foreground">{% trans "Recent transactions" %}</h2>
+                </div>
+            </div>
+
+            <div class="mt-6 overflow-x-auto">
+                <table class="w-full min-w-[560px] text-left text-sm">
+                    <thead>
+                        <tr class="border-b border-border text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                            <th class="pb-3 pr-4">{% trans "Plan" %}</th>
+                            <th class="pb-3 pr-4">{% trans "Amount" %}</th>
+                            <th class="pb-3 pr-4">{% trans "Status" %}</th>
+                            <th class="pb-3">{% trans "Date" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 text-muted-foreground">
+                        {% for item in history %}
+                            <tr>
+                                <td class="py-4 pr-4 font-semibold text-foreground">
+                                    {% if item.plan_name %}
+                                        {{ item.plan_name }}
+                                    {% elif item.name %}
+                                        {{ item.name }}
+                                    {% elif item.plan_type %}
+                                        {{ item.plan_type|title }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td class="py-4 pr-4">
+                                    {% if item.amount_paid %}
+                                        {{ item.amount_paid }}
+                                    {% elif item.amount %}
+                                        {{ item.amount }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                    {{ item.currency|default:"USD" }}
+                                </td>
+                                <td class="py-4 pr-4">
+                                    <span class="rounded-full bg-background px-3 py-1 text-xs font-bold text-muted-foreground">{{ item.status|default:"Paid" }}</span>
+                                </td>
+                                <td class="py-4">
+                                    {% if item.start_date %}
+                                        {{ item.start_date }}
+                                    {% elif item.created_at %}
+                                        {{ item.created_at }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="4" class="py-10 text-center text-muted-foreground">{% trans "No billing history yet." %}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </section>
+</div>
+{% endblock %}

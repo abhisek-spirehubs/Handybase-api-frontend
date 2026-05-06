@@ -1,0 +1,221 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+
+{% block title %}My Profile | HandyBase{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto bg-secondary p-8 rounded-2xl shadow-sm border border-border">
+    <!-- Profile Header Section -->
+    <div class="flex flex-col md:flex-row items-center md:items-start gap-8 mb-12">
+        
+        <!-- PROFILE IMAGE SECTION -->
+        <div class="shrink-0 relative group cursor-pointer" onclick="document.getElementById('imageViewerModal').classList.remove('hidden')">
+            {% if user.avatar_url or user.profile_image %}
+                <!-- Attempts to load user image. If broken, falls back to initials -->
+                <img class="size-32 md:size-40 rounded-full object-cover border-4 border-white shadow-md group-hover:opacity-90 transition duration-300" 
+                     src="{% firstof user.avatar_url user.profile_image %}" 
+                     alt="{{ user.fname }} Profile"
+                     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ user.fname }}+{{ user.lname }}&background=eff6ff&color=3b82f6&size=256';">
+            {% else %}
+                <!-- Default initials avatar if no image is provided -->
+                <img class="size-32 md:size-40 rounded-full object-cover border-4 border-white shadow-md group-hover:opacity-90 transition duration-300" 
+                     src="https://ui-avatars.com/api/?name={{ user.fname }}+{{ user.lname }}&background=eff6ff&color=3b82f6&size=256" 
+                     alt="{{ user.fname }} Profile">
+            {% endif %}
+            
+            <!-- Hover Overlay -->
+            <div class="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
+            </div>
+        </div>
+        <!-- END IMAGE SECTION -->
+        
+        <div class="flex-grow text-center md:text-left pt-2">
+            <div class="flex flex-col md:flex-row items-center gap-4 mb-4">
+                <h2 class="text-3xl font-bold text-foreground">{{ user.fname }} {{ user.lname }}</h2>
+                <button type="button" onclick="document.getElementById('editModal').classList.remove('hidden')" class="px-5 py-2 bg-background text-muted-foreground font-bold rounded-lg text-sm hover:bg-gray-200 border border-border transition">
+                    Edit Profile
+                </button>
+            </div>
+            
+            <!-- Account Stats/Badges -->
+            <div class="flex flex-wrap justify-center md:justify-start gap-3 mb-6 text-sm">
+                {% if user.user_type == 'provider' %}
+                    <span class="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full font-semibold border border-emerald-200">🛠 {{ user.services|length|default:"0" }} Services</span>
+                    <span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-full font-semibold border border-blue-200">💬 {{ user.total_reviews|default:"0" }} Reviews</span>
+                    <span class="bg-amber-50 text-amber-700 px-3 py-1 rounded-full font-semibold border border-amber-200">⭐ {{ user.rating|default:"0.0" }} Rating</span>
+                {% else %}
+                    <span class="bg-background text-muted-foreground px-3 py-1 rounded-full font-semibold border border-border">📅 Joined {{ user.created_at|slice:":4" }}</span>
+                    <span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-full font-semibold border border-blue-200 capitalize">👤 {{ user.user_type }} Account</span>
+                {% endif %}
+            </div>
+            
+            <!-- Contact & Bio Info -->
+            <div class="text-sm text-muted-foreground space-y-3">
+                
+                <!-- Business Name (Styled distinctly) -->
+                {% if user.business_name and user.business_name != user.fname|add:" "|add:user.lname %}
+                <div class="flex items-center justify-center md:justify-start gap-2 text-foreground">
+                    <svg class="size-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    <strong class="text-base">{{ user.business_name }}</strong>
+                </div>
+                {% endif %}
+
+                <!-- Contact Details -->
+                <div class="flex flex-wrap items-center justify-center md:justify-start gap-x-4 gap-y-2 text-muted-foreground">
+                    <span class="flex items-center gap-1.5">
+                        <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        {{ user.email }}
+                    </span>
+                    
+                    {% if user.phone %}
+                    <span class="hidden md:inline text-gray-300">•</span>
+                    <span class="flex items-center gap-1.5">
+                        <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                        {{ user.phone }}
+                    </span>
+                    {% endif %}
+                </div>
+                
+                <!-- Bio -->
+                <p class="pt-3 border-t border-gray-100 max-w-2xl leading-relaxed">
+                    {{ user.description|default:"No bio available yet." }}
+                </p>
+                
+                <!-- Website Link -->
+                {% if user.website_url %}
+                    <a href="{{ user.website_url }}" target="_blank" class="inline-flex items-center gap-1.5 text-blue-600 font-semibold hover:text-blue-800 transition mt-2">
+                        <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                        {{ user.website_url }}
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Portfolio Section (Providers Only) -->
+    {% if user.user_type == 'provider' %}
+        <div class="border-b border-border flex justify-center md:justify-start gap-8 mb-6">
+            <div class="py-4 text-sm font-bold text-blue-600 tracking-wider border-b-2 border-blue-600 cursor-pointer">▦ PORTFOLIO</div>
+            <div class="py-4 text-sm font-bold text-muted-foreground tracking-wider hover:text-muted-foreground cursor-pointer transition">🛠️ SERVICES</div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {% if user.portfolio_images %}
+                {% for image in user.portfolio_images %}
+                    <div class="aspect-square bg-background rounded-xl overflow-hidden relative group shadow-sm border border-border">
+                        <img src="{{ image }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="aspect-square bg-background border-2 border-dashed border-border rounded-xl flex flex-col items-center justify-center text-muted-foreground">
+                    <span class="text-3xl mb-2">📷</span>
+                    <span class="text-xs font-semibold uppercase">Empty</span>
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+<!-- IMAGE VIEWER MODAL -->
+<div id="imageViewerModal" class="hidden fixed inset-0 z-[110] bg-gray-900/95 backdrop-blur-sm flex items-center justify-center px-4 transition-opacity cursor-pointer" onclick="this.classList.add('hidden')">
+    <button class="absolute top-6 right-6 text-white/60 hover:text-white transition">
+        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+    </button>
+    <div class="max-w-4xl w-full p-4 flex justify-center cursor-default" onclick="event.stopPropagation()">
+        {% if user.avatar_url or user.profile_image %}
+            <img class="max-h-[85vh] max-w-full rounded-2xl shadow-2xl border-4 border-white/10" 
+                 src="{% firstof user.avatar_url user.profile_image %}" 
+                 onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ user.fname }}+{{ user.lname }}&background=eff6ff&color=3b82f6&size=512';">
+        {% else %}
+            <img class="max-h-[85vh] max-w-full rounded-2xl shadow-2xl border-4 border-white/10" 
+                 src="https://ui-avatars.com/api/?name={{ user.fname }}+{{ user.lname }}&background=eff6ff&color=3b82f6&size=512">
+        {% endif %}
+    </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div id="editModal" class="hidden fixed inset-0 z-[100] bg-gray-900/60 backdrop-blur-sm flex items-center justify-center px-4">
+    <div class="bg-secondary rounded-2xl w-full max-w-xl overflow-hidden flex flex-col shadow-2xl max-h-[90vh]">
+        <div class="flex justify-between items-center px-6 py-5 border-b border-gray-100 bg-background">
+            <h3 class="font-bold text-xl text-foreground">Edit Profile Details</h3>
+            <button type="button" onclick="document.getElementById('editModal').classList.add('hidden')" class="text-muted-foreground hover:text-red-500 transition text-2xl leading-none">&times;</button>
+        </div>
+        
+        <div class="p-6 overflow-y-auto">
+            <form method="post" enctype="multipart/form-data" action="{% url 'dashboard:profile' %}">
+                {% csrf_token %}
+                
+                <!-- UPDATED: Profile Photo Upload Section -->
+                <div class="mb-6 p-4 bg-secondary rounded-xl border border-border shadow-sm flex items-center gap-5">
+                    <div class="shrink-0 relative">
+                        {% if user.avatar_url or user.profile_image %}
+                            <img id="modalProfilePreview" class="size-16 rounded-full object-cover border-2 border-gray-100 shadow-sm" src="{% firstof user.avatar_url user.profile_image %}" alt="Avatar" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ user.fname }}+{{ user.lname }}&background=eff6ff&color=3b82f6';">
+                        {% else %}
+                            <!-- Replaced div with img so we can swap the src with JavaScript -->
+                            <img id="modalProfilePreview" class="size-16 rounded-full object-cover border-2 border-gray-100 shadow-sm" src="https://ui-avatars.com/api/?name={{ user.fname }}+{{ user.lname }}&background=eff6ff&color=3b82f6" alt="Avatar">
+                        {% endif %}
+                    </div>
+                    <div class="flex-grow">
+                        <label class="block text-sm font-bold text-foreground mb-1.5">Profile Photo</label>
+                        <!-- Added id and onchange event -->
+                        <input type="file" id="profileImageInput" name="profile_image" accept="image/png, image/jpeg, image/webp" 
+                               onchange="previewImage(event)"
+                               class="block w-full text-sm text-muted-foreground 
+                                      file:mr-4 file:py-2 file:px-4 
+                                      file:rounded-full file:border-0 
+                                      file:text-xs file:font-bold 
+                                      file:bg-blue-50 file:text-blue-700 
+                                      hover:file:bg-blue-100 file:cursor-pointer cursor-pointer transition">
+                        <p class="text-xs text-muted-foreground mt-1.5">Recommended: Square JPG, PNG, or WEBP.</p>
+                    </div>
+                </div>
+
+                <!-- ADDED: Image Preview Script -->
+                <script>
+                    function previewImage(event) {
+                        var reader = new FileReader();
+                        reader.onload = function() {
+                            var output = document.getElementById('modalProfilePreview');
+                            output.src = reader.result;
+                        }
+                        if(event.target.files[0]) {
+                            reader.readAsDataURL(event.target.files[0]);
+                        }
+                    }
+                </script>
+                <!-- END UPDATED Section -->
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                    {% include 'components/atoms/_input.html' with label="First Name" name="fname" value=user.fname required=True %}
+                    {% include 'components/atoms/_input.html' with label="Last Name" name="lname" value=user.lname required=True %}
+                </div>
+                
+                <div class="space-y-5 mb-8">
+                    <!-- Phone Number -->
+                    {% include 'components/atoms/_input.html' with label="Phone Number" name="phone" value=user.phone|default:'' placeholder="Enter phone number" %}
+
+                    <!-- Business Name (Only for Providers) -->
+                    {% if user.user_type == 'provider' %}
+                        {% include 'components/atoms/_input.html' with label="Business Name" name="business_name" value=user.business_name|default:'' placeholder="Enter your business name" %}
+                    {% endif %}
+
+                    <!-- Bio / Description -->
+                    <div>
+                        <label class="block text-sm font-bold text-muted-foreground mb-1.5">Description / Bio</label>
+                        <textarea name="description" rows="4" class="w-full p-2.5 border border-border rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition resize-none" placeholder="Tell clients about your services...">{{ user.description|default:'' }}</textarea>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex justify-end gap-3 pt-5 border-t border-gray-100">
+                    <button type="button" onclick="document.getElementById('editModal').classList.add('hidden')" class="px-5 py-2.5 text-muted-foreground bg-background hover:bg-gray-200 font-bold rounded-lg transition">Cancel</button>
+                    <div class="min-w-[150px]">
+                        {% include 'components/atoms/_button.html' with type='submit' text='Save Changes' %}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

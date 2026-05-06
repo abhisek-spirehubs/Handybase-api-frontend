@@ -1,0 +1,26 @@
+{% load i18n %}
+<form action="{% url 'set_language' %}" method="post" class="m-0 p-0 inline-block">
+    {% csrf_token %}
+    <input name="next" type="hidden" value="{{ request.get_full_path }}">
+    
+    <div class="relative inline-block">
+        <select name="language" 
+                onchange="this.form.submit()" 
+                aria-label="{% trans 'Language' %}"
+                class="appearance-none bg-secondary border border-border rounded-lg text-sm font-medium text-muted-foreground py-2 pl-3 pr-8 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 cursor-pointer shadow-sm">
+            {% get_current_language as LANGUAGE_CODE %}
+            {% get_available_languages as LANGUAGES %}
+            
+            {% for lang in LANGUAGES %}
+                <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %}selected{% endif %}>
+                    {{ lang.1 }}
+                </option>
+            {% endfor %}
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-muted-foreground">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+        </div>
+    </div>
+</form>

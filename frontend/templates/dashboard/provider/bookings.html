@@ -1,0 +1,132 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Manage Bookings" %} | HandyBase{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-2xl font-bold text-foreground">{% trans "Manage Service Bookings" %}</h1>
+    <p class="text-muted-foreground mt-1">{% trans "Review, confirm, and complete your client requests." %}</p>
+</div>
+
+<div class="bg-secondary rounded-xl shadow-sm border border-border overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead class="bg-background border-b border-border">
+                <tr>
+                    <th class="p-4 text-muted-foreground font-semibold">{% trans "Scheduled Date" %}</th>
+                    <th class="p-4 text-muted-foreground font-semibold">{% trans "Client Info" %}</th>
+                    <th class="p-4 text-muted-foreground font-semibold">{% trans "Service ID" %}</th>
+                    <th class="p-4 text-muted-foreground font-semibold">{% trans "Status" %}</th>
+                    <th class="p-4 text-muted-foreground font-semibold text-right">{% trans "Actions" %}</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% for booking in bookings %}
+                <tr class="hover:bg-background transition">
+                    <td class="p-4 text-foreground font-medium whitespace-nowrap">
+                        {{ booking.booking_date|date:"Y-m-d" }}<br>
+                        <span class="text-xs text-muted-foreground font-normal">{{ booking.booking_date|time:"H:i" }}</span>
+                    </td>
+                    <td class="p-4">
+                        <div class="flex flex-col">
+                            <span class="text-foreground font-bold text-sm">{{ booking.client_name|default:booking.client_id|truncatechars:20 }}</span>
+                            <span class="text-[10px] text-muted-foreground font-mono uppercase mt-0.5">{{ booking.city }}, {{ booking.state }}</span>
+                        </div>
+                    </td>
+                    <td class="p-4">
+                        <div class="flex flex-col">
+                            <span class="text-sm text-foreground font-medium">{{ booking.service_name|default:booking.service_id|truncatechars:25 }}</span>
+                            <span class="text-[10px] text-muted-foreground font-mono uppercase mt-0.5">Ref: {{ booking.id|slice:":8" }}</span>
+                        </div>
+                    </td>
+                    <td class="p-4">
+                        {% if booking.booking_status == 'PENDING' %}
+                        <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded-full">{% trans "PENDING" %}</span>
+                        {% elif booking.booking_status == 'CONFIRMED' %}
+                        <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded-full">{% trans "CONFIRMED" %}</span>
+                        {% elif booking.booking_status == 'COMPLETED' %}
+                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs font-bold rounded-full">{% trans "COMPLETED" %}</span>
+                        {% else %}
+                        <span class="px-2 py-1 bg-background text-foreground text-xs font-bold rounded-full">{{ booking.booking_status }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="p-4 text-right">
+                        <div class="flex items-center justify-end gap-2">
+
+                            {% if booking.booking_status == 'PENDING' %}
+                            <form method="post" class="inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="confirm">
+                                <input type="hidden" name="booking_id" value="{{ booking.id }}">
+                                <button type="submit" class="px-3 py-1.5 text-xs font-bold bg-blue-50 text-blue-700 rounded border border-blue-200 hover:bg-blue-100">{% trans "Confirm" %}</button>
+                            </form>
+                            {% endif %}
+
+                            {% if booking.booking_status == 'CONFIRMED' %}
+                            <form method="post" class="inline" onsubmit="return confirm('Mark this service as fully completed?');">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="complete">
+                                <input type="hidden" name="booking_id" value="{{ booking.id }}">
+                                <button type="submit" class="px-3 py-1.5 text-xs font-bold bg-green-50 text-green-700 rounded border border-green-200 hover:bg-green-100">{% trans "Mark Completed" %}</button>
+                            </form>
+                            {% endif %}
+
+                            {% if booking.booking_status == 'PENDING' or booking.booking_status == 'CONFIRMED' %}
+                            <form method="post" class="inline" id="cancel-form-{{ booking.id }}">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="cancel">
+                                <input type="hidden" name="booking_id" value="{{ booking.id }}">
+                                <input type="hidden" name="cancellation_reason" id="cancel-reason-{{ booking.id }}" value="">
+                                <button type="button" onclick="submitCancelForm('{{ booking.id }}')"
+                                    class="px-3 py-1.5 text-xs font-bold text-red-600 hover:bg-red-50 rounded border border-transparent hover:border-red-200">{% trans "Reject" %}</button>
+                            </form>
+                            {% endif %}
+
+                            {% if booking.booking_status == 'COMPLETED' %}
+                            <a href="{% url 'client_reviews:rate' booking_id=booking.id %}"
+                                class="px-3 py-1.5 text-xs font-bold bg-purple-50 text-purple-700 rounded border border-purple-200 hover:bg-purple-100 inline-flex items-center gap-1"
+                                title="{% trans 'Rate this client' %}">
+                                <svg class="size-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8-2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg>
+                                {% trans "Rate Client" %}
+                            </a>
+                            {% endif %}
+
+                            {% if booking.booking_status == 'CONFIRMED' or booking.booking_status == 'COMPLETED' %}
+                            <a href="{% url 'chat:room' booking_id=booking.id %}"
+                                class="px-3 py-1.5 text-xs font-bold bg-primary/10 text-primary rounded border border-primary/20 hover:bg-primary/20 inline-flex items-center gap-1"
+                                title="{% trans 'Chat with client' %}">
+                                <svg class="size-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                                </svg>
+                                {% trans "Chat" %}
+                            </a>
+                            {% endif %}
+
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="p-12 text-center text-muted-foreground">
+                        {% trans "No bookings found for your services yet." %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function submitCancelForm(bookingId) {
+        var reason = prompt('Enter cancellation reason (required):');
+        if (!reason || reason.trim() === '') return;
+        document.getElementById('cancel-reason-' + bookingId).value = reason.trim();
+        document.getElementById('cancel-form-' + bookingId).submit();
+    }
+</script>
+{% endblock %}
+

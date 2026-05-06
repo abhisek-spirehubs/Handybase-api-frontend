@@ -1,0 +1,43 @@
+{% load i18n static %}
+
+<header class="bg-secondary border-b border-border sticky top-0 z-50">
+    <nav class="max-w-[1400px] mx-auto px-6 py-4 flex justify-between items-center overflow-visible">
+
+        <!-- LOGO -->
+        <a href="{% url 'home' %}" class="flex items-center gap-2 outline-none group">
+            <img src="{% static 'assets/logo.svg' %}" 
+                 alt="HandyBase Logo"
+                 class="h-10 w-auto max-w-none object-contain transition duration-300 group-hover:drop-shadow-[0_0_10px_#3B82F6]" />
+        </a>
+
+        <!-- NAV LINKS -->
+        <div class="hidden md:flex space-x-6 items-center">
+            <a href="#" class="text-muted-foreground hover:text-blue-600 font-medium transition">
+                {% trans "Find Providers" %}
+            </a>
+            <a href="#" class="text-muted-foreground hover:text-blue-600 font-medium transition">
+                {% trans "How it Works" %}
+            </a>
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="flex gap-3 sm:gap-4 items-center">
+
+            <!-- Language Switcher -->
+            {% include 'components/molecules/_language_switcher.html' %}
+
+            <!-- Login -->
+            <a href="{% url 'auth:login' %}" 
+               class="hidden sm:inline-flex px-4 py-2 text-blue-600 font-semibold hover:bg-blue-50 rounded-lg transition">
+                {% trans "Log In" %}
+            </a>
+
+            <!-- Signup -->
+            <a href="{% url 'auth:register_client' %}" 
+               class="hidden sm:inline-flex px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition shadow-sm">
+                {% trans "Sign Up" %}
+            </a>
+
+        </div>
+    </nav>
+</header>

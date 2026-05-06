@@ -1,0 +1,83 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+
+{% block title %}Find Providers | HandyBase{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-2xl font-bold text-foreground">Provider Directory</h1>
+</div>
+
+<div class="bg-secondary p-6 rounded-xl border border-border shadow-sm mb-8">
+    <form method="get" action="{% url 'dashboard:directory' %}" class="flex flex-col sm:flex-row gap-4">
+        <input type="text" name="search" value="{{ search_query }}" placeholder="Search by name, service, or business..." 
+               class="flex-grow py-2.5 px-4 rounded-lg border border-border focus:border-blue-500 focus:ring-blue-500 outline-none">
+        <button type="submit" class="py-2.5 px-8 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition">
+            Search
+        </button>
+        {% if search_query %}
+            <a href="{% url 'dashboard:directory' %}" class="py-2.5 px-6 bg-background text-muted-foreground font-bold rounded-lg text-center border border-border hover:bg-gray-200 transition">Clear</a>
+        {% endif %}
+    </form>
+</div>
+
+<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for provider in providers %}
+        <div class="bg-secondary rounded-xl border border-border shadow-sm overflow-hidden flex flex-col hover:shadow-md transition">
+            
+            <div class="p-6 border-b border-gray-100 flex items-center gap-4">
+                <!-- UPDATED: Profile Image Logic -->
+                <div class="size-14 shrink-0 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-700 text-xl border border-blue-200 overflow-hidden">
+                    {% if provider.profile_image %}
+                        <img src="{{ provider.profile_image }}" alt="Profile" class="h-full w-full object-cover">
+                    {% else %}
+                        {{ provider.business_name|default:provider.full_name|make_list|first|upper }}
+                    {% endif %}
+                </div>
+                <div>
+                    <h3 class="font-bold text-foreground text-lg line-clamp-1" title="{{ provider.business_name|default:provider.full_name }}">
+                        {{ provider.business_name|default:provider.full_name }}
+                    </h3>
+                    <p class="text-muted-foreground text-sm mt-0.5">
+                        ⭐ {{ provider.rating|floatformat:1 }} ({{ provider.total_reviews }} reviews)
+                    </p>
+                </div>
+            </div>
+
+            <div class="p-6 flex-grow">
+                <p class="text-muted-foreground text-sm line-clamp-3">
+                    {{ provider.description|default:"No description provided." }}
+                </p>
+                
+                {% if provider.services %}
+                <div class="mt-4 flex flex-wrap gap-2">
+                    {% for service in provider.services|slice:":3" %}
+                        <span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold border border-blue-100">
+                            {{ service }}
+                        </span>
+                    {% endfor %}
+                    {% if provider.services|length > 3 %}
+                        <span class="bg-background text-muted-foreground px-3 py-1 rounded-full text-xs font-semibold">
+                            +{{ provider.services|length|add:"-3" }} more
+                        </span>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="p-4 bg-background border-t border-gray-100">
+                <!-- UPDATED: Now an actual link pointing to the new detail page -->
+                <a href="{% url 'dashboard:provider_detail' provider.id %}" class="block text-center w-full py-2.5 bg-gray-900 text-white font-bold rounded-lg hover:bg-gray-800 transition">
+                    View Profile & Book
+                </a>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-span-full text-center py-16 bg-secondary rounded-xl border border-dashed border-border">
+            <div class="text-4xl mb-3">🔍</div>
+            <h3 class="text-lg font-bold text-foreground">No providers found</h3>
+            <p class="text-muted-foreground mt-1">Try adjusting your search terms or filters to find what you need.</p>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,995 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HandyBase — Skilled Hands. Trusted Service.</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #000;
+      color: white;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── CURSOR ── */
+    #cursor {
+      width: 8px;
+      height: 8px;
+      background: white;
+      border-radius: 50%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+    }
+
+    #cursor-ring {
+      width: 36px;
+      height: 36px;
+      border: 1.5px solid rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: width .25s ease, height .25s ease, border-color .25s ease;
+    }
+
+    /* ── PARTICLE CANVAS ── */
+    #particle-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      background: #000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-logo {
+      font-size: 19px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      color: white;
+      text-decoration: none;
+    }
+
+    .nav-logo em {
+      font-style: normal;
+      color: #38bdf8;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgba(255, 255, 255, 0.55);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: color .2s;
+    }
+
+    .nav-links a:hover {
+      color: white;
+    }
+
+    .nav-cta {
+      background: linear-gradient(135deg, #2563eb, #38bdf8);
+      color: white;
+      padding: 9px 22px;
+      border-radius: 980px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 4px 16px rgba(56, 189, 248, 0.25);
+    }
+
+    .nav-cta:hover {
+      transform: scale(1.04);
+      box-shadow: 0 6px 24px rgba(56, 189, 248, 0.4);
+    }
+
+    main {
+      position: relative;
+      z-index: 10;
+    }
+
+    /* ════════════════════════════════════════
+       FIX: CSS STICKY WRAPPERS (Replaces GSAP PIN)
+    ════════════════════════════════════════ */
+    .hero-sequence-wrapper {
+      position: relative;
+      height: calc(100vh + 2000px); /* Reserves scroll space physically in DOM */
+      width: 100%;
+    }
+
+    .hero-section {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      position: sticky; /* Replaces JS Pinning */
+      top: 0;
+      overflow: hidden;
+    }
+
+    #frame-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      object-fit: cover;
+    }
+
+    .bg-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(90deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0.88) 100%);
+    }
+
+    .hero-text-minimal {
+      position: relative;
+      z-index: 10;
+      padding: 0 64px 0 0;
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+      margin-right: 5%;
+    }
+
+    .hero-eyebrow {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #38bdf8;
+      margin-bottom: 18px;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: fadeUp .8s .3s forwards;
+    }
+
+    .hero-title {
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.08;
+      color: white;
+      margin-bottom: 20px;
+      opacity: 0;
+      transform: translateY(22px);
+      animation: fadeUp .9s .5s forwards;
+    }
+
+    .hero-title .grad {
+      background: linear-gradient(120deg, #38bdf8 0%, #a5b4fc 45%, #fff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: clamp(15px, 1.8vw, 19px);
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.78);
+      line-height: 1.6;
+      margin-bottom: 32px;
+      opacity: 0;
+      transform: translateY(18px);
+      animation: fadeUp .9s .7s forwards;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: fadeUp .9s .9s forwards;
+    }
+
+    .hero-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #2563eb, #38bdf8);
+      color: white;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 4px 20px rgba(37, 99, 235, 0.35);
+    }
+
+    .hero-cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(37, 99, 235, 0.45);
+    }
+
+    .hero-cta-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: white;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+    }
+
+    .hero-cta-outline:hover {
+      border-color: rgba(255, 255, 255, 0.55);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      animation: fadeIn 1s 1.5s forwards;
+      z-index: 10;
+    }
+
+    .scroll-hint span {
+      font-size: 11px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .shl {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, .8), transparent);
+      animation: shAnim 2s ease-in-out infinite;
+    }
+
+    /* ════════════════════════════════════════
+       SHOWCASE SECTION
+    ════════════════════════════════════════ */
+    .showcase-section {
+      position: relative;
+      z-index: 5;
+      padding: 120px 0 100px;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .showcase-header {
+      text-align: center;
+      padding: 0 24px;
+      margin-bottom: 72px;
+    }
+
+    .showcase-eyebrow {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #38bdf8;
+      margin-bottom: 14px;
+    }
+
+    .showcase-title {
+      font-size: clamp(38px, 5.5vw, 70px);
+      font-weight: 700;
+      letter-spacing: -0.045em;
+      line-height: 1.06;
+      color: white;
+      margin-bottom: 16px;
+    }
+
+    .showcase-title .grad {
+      background: linear-gradient(120deg, #38bdf8, #a5b4fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .showcase-sub {
+      font-size: 18px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.55);
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .slider-row {
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 16px;
+      padding: 40px 0;
+      mask-image: linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%);
+    }
+
+    .slider-track {
+      display: flex;
+      gap: 32px;
+      width: max-content;
+    }
+
+    .slider-ltr {
+      animation: slideLTR 160s linear infinite;
+    }
+
+    .slider-row:hover .slider-ltr {
+      animation-play-state: paused;
+    }
+
+    .svc-card {
+      flex: 0 0 760px;
+      height: 440px;
+      border-radius: 28px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.6s cubic-bezier(.16, 1, .3, 1), box-shadow 0.6s ease;
+      background: #0d0d14;
+    }
+
+    .svc-card:hover {
+      transform: scale(1.04) translateY(-6px);
+      box-shadow: 0 28px 56px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(56, 189, 248, 0.25);
+    }
+
+    .svc-card-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .svc-card:hover .svc-card-bg {
+      transform: scale(1.07);
+    }
+
+    .svc-card-icon {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80px;
+      z-index: 1;
+    }
+
+    .svc-card-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: linear-gradient(to top,
+          rgba(0, 0, 0, 0.88) 0%,
+          rgba(0, 0, 0, 0.4) 40%,
+          rgba(0, 0, 0, 0.1) 70%,
+          transparent 100%);
+    }
+
+    .svc-card-body {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 3;
+      padding: 32px 40px 40px;
+    }
+
+    .svc-card-tag {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      opacity: 0.8;
+    }
+
+    .svc-card-title {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: white;
+      line-height: 1.1;
+    }
+
+    .svc-card-sub {
+      font-size: 17px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 10px;
+      font-weight: 300;
+      max-width: 80%;
+    }
+
+    /* Color Utilities */
+    .bg-blue { background: linear-gradient(135deg, #0c2340 0%, #1a3a5c 100%); }
+    .bg-orange { background: linear-gradient(135deg, #2a1200 0%, #4a2500 100%); }
+    .bg-green { background: linear-gradient(135deg, #0a1f0a 0%, #163a16 100%); }
+    .bg-purple { background: linear-gradient(135deg, #180c2a 0%, #2e1a4a 100%); }
+    .bg-red { background: linear-gradient(135deg, #2a0808 0%, #4a1212 100%); }
+    .bg-teal { background: linear-gradient(135deg, #071a1a 0%, #0e3030 100%); }
+    .bg-amber { background: linear-gradient(135deg, #1a1200 0%, #332200 100%); }
+    .bg-navy { background: linear-gradient(135deg, #0a0f1e 0%, #151f3a 100%); }
+
+    .tag-blue { color: #7dd3fc; }
+    .tag-orange { color: #fdba74; }
+    .tag-green { color: #86efac; }
+    .tag-purple { color: #d8b4fe; }
+    .tag-red { color: #fca5a5; }
+    .tag-teal { color: #5eead4; }
+    .tag-amber { color: #fcd34d; }
+    .tag-navy { color: #93c5fd; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: rgba(0, 0, 0, 0.85);
+      border-top: 1px solid rgba(255, 255, 255, .05);
+      padding: 32px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      position: relative;
+      z-index: 5;
+    }
+
+    /* scroll reveal */
+    .rv {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .rv.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── KEYFRAMES ── */
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { to { opacity: 1; } }
+    @keyframes floatY { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+    @keyframes shAnim { 0% { transform: scaleY(0); transform-origin: top } 50% { transform: scaleY(1); transform-origin: top } 51% { transform: scaleY(1); transform-origin: bottom } 100% { transform: scaleY(0); transform-origin: bottom } }
+    @keyframes slideLTR { 0% { transform: translateX(0) } 100% { transform: translateX(-50%) } }
+
+    /* ── Prompt/Contact Section ── */
+    .prompt-contact-section {
+      background: #000;
+      padding: 120px 24px;
+      position: relative;
+      z-index: 5;
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .contact-container { max-width: 900px; margin: 0 auto; }
+    .contact-title { font-size: clamp(32px, 5vw, 56px); font-weight: 700; letter-spacing: -0.04em; margin-bottom: 24px; color: white; }
+    .contact-description { font-size: 18px; color: rgba(255, 255, 255, 0.5); line-height: 1.6; margin-bottom: 60px; }
+    .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 80px; }
+    .contact-item { display: flex; flex-direction: column; gap: 8px; }
+    .contact-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: rgba(255, 255, 255, 0.3); font-weight: 600; }
+    .contact-value { font-size: 20px; color: white; text-decoration: none; font-weight: 500; transition: color 0.3s; }
+    .contact-value:hover { color: #38bdf8; }
+    .contact-footer-minimal { font-size: 12px; color: rgba(255, 255, 255, 0.2); letter-spacing: 0.05em; }
+
+    /* ── VIDEO HERO ── */
+    .video-hero-section {
+      width: 100%;
+      height: 40vh;
+      margin-top: 60px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0 10%;
+      background: #000;
+    }
+    .video-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.7;
+    }
+    .quote-overlay { position: relative; z-index: 10; max-width: 500px; text-align: right; animation: fadeInRight 1.2s ease-out forwards; }
+    .quote-text { font-size: clamp(24px, 4vw, 42px); font-weight: 700; line-height: 1.2; color: white; margin-bottom: 16px; letter-spacing: -0.03em; }
+
+    @keyframes fadeInRight { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+
+    /* ── CAREER SCROLL SECTION ── */
+    .career-scroll-container {
+      position: relative;
+      height: 200vh;
+      background: #000;
+    }
+    .career-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      background: #000;
+    }
+    .career-image-box {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      overflow: hidden;
+      will-change: width;
+    }
+    .career-image-box img {
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+    }
+    .career-content-box {
+      position: absolute;
+      right: 0;
+      width: 40%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 5% 0 2%;
+      z-index: 2;
+      opacity: 0;
+      transform: translateX(100px);
+      background: #000;
+      will-change: transform, opacity;
+    }
+    .career-tag { font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; color: #38bdf8; margin-bottom: 20px; font-weight: 600; }
+    .career-title { font-size: clamp(32px, 4vw, 56px); font-weight: 700; line-height: 1.1; color: white; margin-bottom: 24px; }
+    .career-desc { font-size: 17px; color: rgba(255, 255, 255, 0.5); line-height: 1.6; margin-bottom: 40px; }
+    .career-link { display: inline-flex; align-items: center; gap: 12px; color: white; text-decoration: none; font-weight: 600; font-size: 15px; transition: color 0.3s; }
+    .career-link:hover { color: #38bdf8; }
+    .career-link svg { transition: transform 0.3s; }
+    .career-link:hover svg { transform: translateX(5px); }
+  </style>
+</head>
+
+<body>
+
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+  <canvas id="particle-canvas"></canvas>
+
+  <nav>
+    <a href="/" class="nav-logo">
+      <img src="{% static 'assets/logo.svg' %}" alt="HandyBase" width="160" height="32" style="height:32px;width:auto;object-fit:contain;" />
+    </a>
+    <ul class="nav-links">
+      <li><a href="#hero-pinned">Home</a></li>
+      <li><a href="#unified-track">Services</a></li>
+      <li><a href="#">Pricing</a></li>
+    </ul>
+    <a href="{% url 'auth:login' %}" class="nav-cta">Get Started</a>
+  </nav>
+
+  <main>
+    <section class="video-hero-section">
+      <video class="video-bg" autoplay loop muted playsinline width="1920" height="1080">
+        <source src="{% static 'assets/logo_video.mp4' %}" type="video/mp4">
+      </video>
+      <div class="quote-overlay">
+        <h2 class="quote-text">"Excellence is not a skill, it's an attitude."</h2>
+      </div>
+    </section>
+
+    <div class="hero-sequence-wrapper" id="hero-sequence-wrapper">
+      <section class="hero-section" id="hero-pinned">
+        <canvas id="frame-canvas"></canvas>
+        <div class="bg-overlay"></div>
+        <div class="hero-text-minimal">
+          <p class="hero-eyebrow">Introducing HandyBase</p>
+          <h1 class="hero-title">Skilled Hands.<br><span class="grad">Trusted Service.</span></h1>
+          <p class="hero-sub">The intelligent marketplace uniting verified professionals with clients who need them. Fully scalable. Built for speed.</p>
+          <div class="hero-cta-row">
+            <a href="{% url 'auth:login' %}" class="hero-cta-btn">
+              Get Started
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+              </svg>
+            </a>
+            <a href="{% url 'auth:login' %}" class="hero-cta-outline">Become a Provider</a>
+          </div>
+        </div>
+        <div class="scroll-hint"><span>Scroll to explore</span><div class="shl"></div></div>
+      </section>
+    </div>
+
+    <section class="showcase-section">
+      <div class="showcase-header rv">
+        <p class="showcase-eyebrow">Our Services</p>
+        <h2 class="showcase-title">Explore what's<br><span class="grad">possible.</span></h2>
+        <p class="showcase-sub">Browse our curated categories — from construction to creative, find the right professional for every need.</p>
+      </div>
+
+      <div class="slider-row">
+        <div class="slider-track slider-ltr" id="unified-track">
+
+          <div class="svc-card">
+            <div class="svc-card-icon bg-blue"><img src="{% static 'assets/Construction Project Engineer.webp' %}" class="svc-card-bg" alt="Construction" width="760" height="440" loading="lazy" /></div>
+            <div class="svc-card-overlay"></div>
+            <div class="svc-card-body">
+              <div class="svc-card-tag tag-blue">Trade</div>
+              <div class="svc-card-title">Construction</div>
+              <div class="svc-card-sub">Engineers · Masons · Draftsmen</div>
+            </div>
+          </div>
+
+          <div class="svc-card">
+            <div class="svc-card-icon bg-amber"><img src="{% static 'assets/electrician.jpeg' %}" class="svc-card-bg" alt="Electrician" width="760" height="440" loading="lazy" /></div>
+            <div class="svc-card-overlay"></div>
+            <div class="svc-card-body">
+              <div class="svc-card-tag tag-amber">Trade</div>
+              <div class="svc-card-title">Electrical</div>
+              <div class="svc-card-sub">Electricians · Auto Electricians</div>
+            </div>
+          </div>
+
+          <div class="svc-card">
+            <div class="svc-card-icon bg-teal"><img src="{% static 'assets/plumber.png' %}" class="svc-card-bg" alt="Plumber" width="760" height="440" loading="lazy" /></div>
+            <div class="svc-card-overlay"></div>
+            <div class="svc-card-body">
+              <div class="svc-card-tag tag-teal">Trade</div>
+              <div class="svc-card-title">Plumbing</div>
+              <div class="svc-card-sub">Plumbers · Pipe Fitting</div>
+            </div>
+          </div>
+
+          <div class="svc-card">
+            <div class="svc-card-icon bg-orange"><img src="{% static 'assets/mechanic.webp' %}" class="svc-card-bg" alt="Mechanic" width="760" height="440" loading="lazy" /></div>
+            <div class="svc-card-overlay"></div>
+            <div class="svc-card-body">
+              <div class="svc-card-tag tag-orange">Automotive</div>
+              <div class="svc-card-title">Automotive</div>
+              <div class="svc-card-sub">Mechanics · Diagnostics</div>
+            </div>
+          </div>
+
+          <div class="svc-card">
+            <div class="svc-card-icon bg-navy"><img src="{% static 'assets/lawyer.jpeg' %}" class="svc-card-bg" alt="Legal" width="760" height="440" loading="lazy" /></div>
+            <div class="svc-card-overlay"></div>
+            <div class="svc-card-body">
+              <div class="svc-card-tag tag-navy">Professional</div>
+              <div class="svc-card-title">Legal</div>
+              <div class="svc-card-sub">Lawyers · Compliance · Brokers</div>
+            </div>
+          </div>
+
+          <div class="svc-card">
+            <div class="svc-card-icon bg-purple">📸</div>
+            <div class="svc-card-overlay"></div>
+            <div class="svc-card-body">
+              <div class="svc-card-tag tag-purple">Creative</div>
+              <div class="svc-card-title">Photography</div>
+              <div class="svc-card-sub">Photographers · Videographers</div>
+            </div>
+          </div>
+
+          <div class="svc-card">
+            <div class="svc-card-icon bg-red"><img src="{% static 'assets/cook.png' %}" class="svc-card-bg" alt="Catering" width="760" height="440" loading="lazy" /></div>
+            <div class="svc-card-overlay"></div>
+            <div class="svc-card-body">
+              <div class="svc-card-tag tag-red">Hospitality</div>
+              <div class="svc-card-title">Catering</div>
+              <div class="svc-card-sub">Caterers · Mixologists</div>
+            </div>
+          </div>
+
+          <div class="svc-card">
+            <div class="svc-card-icon bg-green">💆</div>
+            <div class="svc-card-overlay"></div>
+            <div class="svc-card-body">
+              <div class="svc-card-tag tag-green">Wellness</div>
+              <div class="svc-card-title">Health &amp; Wellness</div>
+              <div class="svc-card-sub">Therapists · Trainers</div>
+            </div>
+          </div>
+
+          <div class="svc-card">
+            <div class="svc-card-icon bg-purple">💅</div>
+            <div class="svc-card-overlay"></div>
+            <div class="svc-card-body">
+              <div class="svc-card-tag tag-purple">Beauty</div>
+              <div class="svc-card-title">Beauty &amp; Grooming</div>
+              <div class="svc-card-sub">Hair · Barbers · Nails</div>
+            </div>
+          </div>
+
+          <div class="svc-card">
+            <div class="svc-card-icon bg-blue"><img src="{% static 'assets/Construction Project Engineer.webp' %}" class="svc-card-bg" alt="Construction" width="760" height="440" loading="lazy" /></div>
+            <div class="svc-card-overlay"></div>
+            <div class="svc-card-body">
+              <div class="svc-card-tag tag-blue">Trade</div>
+              <div class="svc-card-title">Construction</div>
+              <div class="svc-card-sub">Engineers · Masons</div>
+            </div>
+          </div>
+          <div class="svc-card">
+            <div class="svc-card-icon bg-amber"><img src="{% static 'assets/electrician.jpeg' %}" class="svc-card-bg" alt="Electrician" width="760" height="440" loading="lazy" /></div>
+            <div class="svc-card-overlay"></div>
+            <div class="svc-card-body">
+              <div class="svc-card-tag tag-amber">Trade</div>
+              <div class="svc-card-title">Electrical</div>
+              <div class="svc-card-sub">Electricians · Auto</div>
+            </div>
+          </div>
+          <div class="svc-card">
+            <div class="svc-card-icon bg-teal"><img src="{% static 'assets/plumber.png' %}" class="svc-card-bg" alt="Plumber" width="760" height="440" loading="lazy" /></div>
+            <div class="svc-card-overlay"></div>
+            <div class="svc-card-body">
+              <div class="svc-card-tag tag-teal">Trade</div>
+              <div class="svc-card-title">Plumbing</div>
+              <div class="svc-card-sub">Plumbers · Pipe Fitting</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="career-scroll-container">
+      <div class="career-sticky">
+        <div class="career-image-box">
+          <img src="{% static 'assets/carrer.webp' %}" alt="Join the team" width="1920" height="1080" loading="lazy" />
+        </div>
+        <div class="career-content-box">
+          <span class="career-tag">Careers</span>
+          <h2 class="career-title">Build a career that's as exciting as the world we're shaping</h2>
+          <p class="career-desc">Grow personally and professionally in a global ecosystem that helps you unlock your full potential and make a real-world impact.</p>
+          <a href="#" class="career-link">
+            Join our team
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="prompt-contact-section">
+      <div class="contact-container rv">
+        <h2 class="contact-title">Connect with <span class="grad">HandyBase</span></h2>
+        <p class="contact-description">
+          Whether you're a professional looking to scale your business or a client seeking trusted expertise,
+          our team at SpireHubs is here to assist you in navigating the HandyBase ecosystem.
+        </p>
+        <div class="contact-grid">
+          <div class="contact-item">
+            <span class="contact-label">Direct Line</span>
+            <a href="tel:6203296773" class="contact-value">6203296773</a>
+          </div>
+          <div class="contact-item">
+            <span class="contact-label">Email Inquiry</span>
+            <a href="mailto:abhisek@spirehubs.com" class="contact-value">abhisek@spirehubs.com</a>
+          </div>
+          <div class="contact-item">
+            <span class="contact-label">Development Hub</span>
+            <span class="contact-value">SpireHubs Solutions</span>
+          </div>
+        </div>
+        <div class="contact-footer-minimal">
+          Built with precision. Scaled for performance. © 2026 HandyBase.
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    /* ── Custom cursor ── */
+    const curEl = document.getElementById('cursor');
+    const ringEl = document.getElementById('cursor-ring');
+    let mx = -300, my = -300, rx = -300, ry = -300;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    (function tick() {
+      curEl.style.left = mx + 'px'; curEl.style.top = my + 'px';
+      rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+      ringEl.style.left = rx + 'px'; ringEl.style.top = ry + 'px';
+      requestAnimationFrame(tick);
+    })();
+
+    /* ── GSAP: pinned hero + frame sequence ── */
+    document.addEventListener('DOMContentLoaded', () => {
+      gsap.registerPlugin(ScrollTrigger);
+
+      const canvasSeq = document.getElementById('frame-canvas');
+      const ctxSeq = canvasSeq.getContext('2d');
+      canvasSeq.width = 1920; canvasSeq.height = 1080;
+
+      const frameCount = 80;
+      const staticBasePath = "{% static 'assets/images/01.png' %}".replace('01.png', '');
+      const currentFrame = i => `${staticBasePath}${(i + 1).toString().padStart(2, '0')}.png`;
+      const images = [];
+      const state = { frame: 0 };
+
+      for (let i = 0; i < frameCount; i++) {
+        const img = new Image();
+        img.onload = () => { if (i === 0) render(); };
+        img.src = currentFrame(i);
+        images.push(img);
+      }
+
+      function render() {
+        ctxSeq.clearRect(0, 0, canvasSeq.width, canvasSeq.height);
+        const img = images[state.frame];
+        if (img && img.complete && img.naturalWidth) {
+          const r = Math.max(canvasSeq.width / img.width, canvasSeq.height / img.height);
+          const cx = (canvasSeq.width - img.width * r) / 2;
+          const cy = (canvasSeq.height - img.height * r) / 2;
+          ctxSeq.drawImage(img, 0, 0, img.width, img.height, cx, cy, img.width * r, img.height * r);
+        }
+      }
+
+      /* FIX: Triggered off the new wrapper, NO GSAP PINNING */
+      gsap.to(state, {
+        frame: frameCount - 1, snap: 'frame', ease: 'none',
+        scrollTrigger: { 
+          trigger: '#hero-sequence-wrapper', 
+          start: 'top top', 
+          end: 'bottom bottom', 
+          scrub: 0.5 
+          /* REMOVED pin: true */
+        },
+        onUpdate: render
+      });
+
+      /* FIX: Trigger changed to wrapper */
+      gsap.to('.hero-text-minimal', {
+        opacity: 0, scale: 0.95, filter: 'blur(10px)',
+        scrollTrigger: { trigger: '#hero-sequence-wrapper', start: 'top top', end: '+=800', scrub: 0.5 }
+      });
+      gsap.to('.scroll-hint', {
+        opacity: 0,
+        scrollTrigger: { trigger: '#hero-sequence-wrapper', start: 'top top', end: '+=200', scrub: true }
+      });
+
+      // 4. CAREER SCROLL TRANSITION
+      /* FIX: Removed pin and pinSpacing. CSS position: sticky handles it gracefully now */
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: ".career-scroll-container",
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1
+        }
+      })
+        .to(".career-image-box", { width: "60%", ease: "none" })
+        .to(".career-content-box", { opacity: 1, x: 0, ease: "none" }, 0);
+    });
+
+    /* ── Particle canvas ── */
+    const cv = document.getElementById('particle-canvas');
+    const ctx = cv.getContext('2d');
+    let W, H, pts = [], mouse = { x: -500, y: -500 };
+    function resize() { W = cv.width = window.innerWidth; H = cv.height = window.innerHeight; }
+    window.addEventListener('resize', resize); resize();
+    document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+    class Pt {
+      constructor() { this.init(true); }
+      init(rand) {
+        this.x = Math.random() * W; this.y = rand ? Math.random() * H : H + 10;
+        this.z = Math.random() * 0.7 + 0.3;
+        this.vx = (Math.random() - 0.5) * 0.35 * this.z;
+        this.vy = -(Math.random() * 0.5 + 0.1) * this.z;
+        this.r = this.z * 1.8; this.a = Math.random() * 0.5 + 0.08;
+        this.blue = Math.random() > 0.6;
+      }
+      move() {
+        const dx = mouse.x - this.x, dy = mouse.y - this.y;
+        if (dx * dx + dy * dy < 25000) { this.vx += dx * 0.00005; this.vy += dy * 0.00005; }
+        this.x += this.vx; this.y += this.vy;
+        if (this.y < -10 || this.x < -10 || this.x > W + 10) this.init(false);
+      }
+      draw() {
+        ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = this.blue ? `rgba(41,151,255,${this.a})` : `rgba(255,255,255,${this.a * 0.55})`;
+        ctx.fill();
+      }
+    }
+    for (let i = 0; i < 150; i++) pts.push(new Pt());
+    function drawLines() {
+      const D = 95;
+      for (let i = 0; i < pts.length; i++)
+        for (let j = i + 1; j < pts.length; j++) {
+          const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y, d = Math.sqrt(dx * dx + dy * dy);
+          if (d < D) { ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[j].x, pts[j].y); ctx.strokeStyle = `rgba(41,151,255,${(1 - d / D) * 0.12})`; ctx.lineWidth = 0.5; ctx.stroke(); }
+        }
+    }
+    function drawGlow() {
+      const g = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 280);
+      g.addColorStop(0, 'rgba(41,151,255,0.06)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    }
+    (function frame() { ctx.clearRect(0, 0, W, H); drawGlow(); drawLines(); pts.forEach(p => { p.move(); p.draw(); }); requestAnimationFrame(frame); })();
+
+    /* ── Scroll reveal ── */
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+  </script>
+</body>
+</html>

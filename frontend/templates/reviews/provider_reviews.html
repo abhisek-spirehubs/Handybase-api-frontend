@@ -1,0 +1,33 @@
+{% extends 'layouts/_base_dashboard.html' %}  {# or base.html – adapt to your layout #}
+{% load i18n %}
+
+{% block title %}{% trans "Provider Reviews" %} | HandyBase{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto py-8">
+    <h1 class="text-2xl font-bold text-gray-900 mb-6">{% trans "Reviews" %}</h1>
+
+    {% if error %}
+        <div class="p-4 bg-red-50 text-red-700 rounded-xl mb-4">{{ error }}</div>
+    {% endif %}
+
+    {% if reviews %}
+        {% for review in reviews %}
+            {% include 'reviews/review_item.html' with review=review %}
+        {% endfor %}
+        {# Pagination – simple next/prev #}
+        {% if total > limit %}
+            <div class="flex justify-center gap-4 mt-4">
+                {% if page > 1 %}
+                    <a href="?page={{ page|add:"-1" }}&limit={{ limit }}{% if min_rating %}&min_rating={{ min_rating }}{% endif %}" class="text-blue-600">{% trans "Previous" %}</a>
+                {% endif %}
+                {% if page|add:"1" <= total|divisibleby:limit|add:"1" %}  {# rough check #}
+                    <a href="?page={{ page|add:"1" }}&limit={{ limit }}{% if min_rating %}&min_rating={{ min_rating }}{% endif %}" class="text-blue-600">{% trans "Next" %}</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        <p class="text-gray-500">{% trans "No reviews yet." %}</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,153 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "My Given Reviews" %} | HandyBase{% endblock %}
+
+{% block content %}
+<div class="mb-8 flex justify-between items-center">
+    <div>
+        <h1 class="text-2xl font-bold text-foreground">{% trans "My Reviews for Providers" %}</h1>
+        <p class="text-muted-foreground mt-1">{% trans "Manage the feedback you've shared about the professionals you've hired." %}</p>
+    </div>
+    <a href="{% url 'dashboard:client_bookings' %}" class="text-sm font-medium text-blue-600 hover:underline flex items-center gap-1">
+        <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        {% trans "Back to Bookings" %}
+    </a>
+</div>
+
+<div class="space-y-6">
+    {% for review in reviews %}
+    <div class="bg-secondary rounded-xl p-6 border border-border shadow-sm transition hover:shadow-md">
+        <div class="flex items-start justify-between">
+            <div class="flex-1">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold uppercase border border-blue-200">
+                        {{ review.provider_name|default:"P"|make_list|first }}
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-foreground">{{ review.provider_name|default:_("Anonymous Provider") }}</h3>
+                        <div class="text-xs text-muted-foreground">
+                            {% trans "Booking" %} #{{ review.booking_id|truncatechars:12 }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="flex text-yellow-400 text-lg">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= review.rating|floatformat:"0"|add:"0" %}
+                                ★
+                            {% else %}
+                                <span class="text-gray-300">★</span>
+                            {% endif %}
+                        {% endfor %}
+                    </span>
+                    <span class="text-sm font-bold text-foreground">{{ review.rating|floatformat:1 }}</span>
+                    <span class="text-xs text-muted-foreground ml-2">{{ review.created_at|slice:":10" }}</span>
+                </div>
+
+                <p class="text-foreground/90 bg-background/50 p-4 rounded-lg border border-border italic">
+                    "{{ review.comment }}"
+                </p>
+            </div>
+
+            <div class="flex flex-col gap-2 ml-4">
+                <button onclick="openEditModal('{{ review.id }}', '{{ review.rating }}', '{{ review.comment|escapejs }}')" 
+                    class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition" title="{% trans 'Edit Review' %}">
+                    <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                </button>
+                <form action="{% url 'reviews:delete' review_id=review.id %}" method="POST" onsubmit="return confirm('{% trans "Are you sure you want to delete this review?" %}');">
+                    {% csrf_token %}
+                    <button type="submit" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition" title="{% trans 'Delete Review' %}">
+                        <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="bg-secondary rounded-xl p-12 text-center border border-border border-dashed">
+        <div class="size-16 bg-background rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="size-8 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+        </div>
+        <h3 class="text-foreground font-bold text-lg">{% trans "No reviews given yet" %}</h3>
+        <p class="text-muted-foreground mt-1">{% trans "You haven't submitted any reviews for providers yet." %}</p>
+        <div class="mt-6">
+            <a href="{% url 'dashboard:client_bookings' %}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-6 rounded-xl transition">
+                {% trans "Go to My Bookings" %}
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Simple Edit Modal -->
+<div id="edit-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-secondary w-full max-w-md rounded-2xl shadow-2xl border border-border p-6 scale-95 opacity-0 transition-all duration-300" id="modal-content">
+        <h2 class="text-xl font-bold text-foreground mb-4">{% trans "Edit Your Review" %}</h2>
+        <form id="edit-form" method="POST">
+            {% csrf_token %}
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-foreground mb-2">{% trans "Rating" %}</label>
+                    <select name="rating" id="edit-rating" class="w-full bg-background border border-border rounded-lg p-2.5 text-foreground outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="1">1 ★</option>
+                        <option value="2">2 ★</option>
+                        <option value="3">3 ★</option>
+                        <option value="4">4 ★</option>
+                        <option value="5">5 ★</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-foreground mb-2">{% trans "Comment" %}</label>
+                    <textarea name="comment" id="edit-comment" rows="4" class="w-full bg-background border border-border rounded-lg p-3 text-foreground outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl transition">
+                        {% trans "Update Review" %}
+                    </button>
+                    <button type="button" onclick="closeModal()" class="flex-1 bg-background hover:bg-muted text-foreground font-bold py-2.5 rounded-xl border border-border transition">
+                        {% trans "Cancel" %}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openEditModal(id, rating, comment) {
+        const modal = document.getElementById('edit-modal');
+        const content = document.getElementById('modal-content');
+        const form = document.getElementById('edit-form');
+        
+        // Use the reviews:update URL for client-to-provider reviews
+        form.action = `/reviews/${id}/update/`;
+        document.getElementById('edit-rating').value = Math.round(rating);
+        document.getElementById('edit-comment').value = comment;
+        
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        setTimeout(() => {
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+        }, 10);
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('edit-modal');
+        const content = document.getElementById('modal-content');
+        
+        content.classList.add('scale-95', 'opacity-0');
+        content.classList.remove('scale-100', 'opacity-100');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }, 300);
+    }
+
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('edit-modal')) closeModal();
+    }
+</script>
+{% endblock %}

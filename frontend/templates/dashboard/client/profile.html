@@ -1,0 +1,80 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+
+{% block title %}My Profile | HandyBase{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <div class="mb-8">
+        <h1 class="text-2xl font-bold text-foreground">Personal Information</h1>
+        <p class="text-muted-foreground mt-1">Update your contact details and profile picture.</p>
+    </div>
+
+    <form action="{% url 'dashboard:client_profile' %}" method="post" enctype="multipart/form-data" class="bg-secondary rounded-xl shadow-sm border border-border p-6 space-y-6">
+        {% csrf_token %}
+
+        <!-- Avatar Upload Section -->
+        <div class="flex items-center gap-6 pb-6 border-b border-gray-100">
+            <div class="relative group">
+                <div class="h-24 w-24 rounded-full overflow-hidden bg-background border-2 border-border">
+                    <img id="avatarPreview" src="{{ profile.avatar_url|default:'https://ui-avatars.com/api/?name='|add:profile.fname|add:'+'|add:profile.lname|add:'&background=EBF4FF&color=1E3A8A' }}" alt="Profile" class="h-full w-full object-cover">
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-muted-foreground mb-2">Profile Photo</label>
+                <input type="file" name="avatar" id="avatarInput" accept="image/*" class="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer" onchange="previewImage(event)">
+                <p class="text-xs text-muted-foreground mt-2">JPG, PNG or GIF. Max size 5MB.</p>
+            </div>
+        </div>
+
+        <!-- Form Fields -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-sm font-medium text-muted-foreground mb-1">First Name</label>
+                <input type="text" name="fname" value="{{ profile.fname|default:'' }}" class="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-blue-600 outline-none">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-muted-foreground mb-1">Last Name</label>
+                <input type="text" name="lname" value="{{ profile.lname|default:'' }}" class="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-blue-600 outline-none">
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-muted-foreground mb-1">Email Address</label>
+                <!-- Email is intentionally disabled/readonly as it usually requires a separate verification flow to change -->
+                <input type="email" value="{{ profile.email }}" disabled class="w-full px-4 py-2 bg-background border border-border rounded-lg text-muted-foreground cursor-not-allowed">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-muted-foreground mb-1">Phone Number</label>
+                <input type="text" name="phone" value="{{ profile.phone|default:'' }}" placeholder="+1234567890" class="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-blue-600 outline-none">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-muted-foreground mb-1">Date of Birth</label>
+                <!-- Slice ensures we only grab the YYYY-MM-DD part from the ISO timestamp for the date input -->
+                <input type="date" name="date_of_birth" value="{{ profile.date_of_birth|slice:':10' }}" class="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-blue-600 outline-none">
+            </div>
+        </div>
+
+        <div class="pt-4 flex justify-end">
+            <button type="submit" class="px-6 py-2.5 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition shadow-sm">
+                Save Changes
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Simple script for immediate image preview -->
+<script>
+function previewImage(event) {
+    const reader = new FileReader();
+    reader.onload = function(){
+        const output = document.getElementById('avatarPreview');
+        output.src = reader.result;
+    };
+    if(event.target.files[0]) {
+        reader.readAsDataURL(event.target.files[0]);
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% load i18n %}
+<div class="border-b border-gray-100 pb-4 mb-4 last:border-0">
+  <div class="flex items-start justify-between">
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="text-yellow-500 text-lg">
+          {% for i in "12345" %}
+            {% if forloop.counter <= review.rating %}
+              ★
+            {% else %}
+              ☆
+            {% endif %}
+          {% endfor %}
+        </span>
+        <span class="text-sm text-gray-500">{{ review.rating|floatformat:1 }}</span>
+      </div>
+      {% if review.comment %}
+        <p class="mt-2 text-gray-700">{{ review.comment }}</p>
+      {% endif %}
+      <div class="mt-2 text-xs text-gray-400">
+        {% if review.provider_name %}
+          {% trans "From" %} {{ review.provider_name }}
+        {% elif review.client_name %}
+          {% trans "About" %} {{ review.client_name }}
+        {% endif %}
+        — {{ review.created_at|default:"" }}
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      {% if can_delete %}
+      <form method="post" action="{% url 'client_reviews:delete' review_id=review.id %}" onsubmit="return confirm('Delete this review?');">
+        {% csrf_token %}
+        <button type="submit" class="text-red-500 text-xs hover:text-red-700">{% trans "Delete" %}</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</div>

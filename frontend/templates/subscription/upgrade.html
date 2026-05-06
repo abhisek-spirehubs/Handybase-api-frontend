@@ -1,0 +1,177 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Upgrade Plan" %} | HandyBase{% endblock %}
+
+{% block content %}
+<div class="w-full space-y-8">
+  <div>
+    <h1 class="text-3xl font-bold tracking-tight text-foreground">
+      {% trans "The plan that fits your business" %}
+    </h1>
+    <p class="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+      {% trans "From profile visibility to full analytics – upgrade anytime and scale your service." %}
+    </p>
+  </div>
+
+  {% if plans %}
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      {% for plan in plans %}
+        <article
+          class="plan-card flex flex-col rounded-xl border bg-secondary p-6 shadow-sm transition hover:shadow-md
+                 {% if current_plan == plan.display_name or current_plan == plan.id %}
+                   border-border
+                 {% endif %}"
+          data-plan-id="{{ plan.id }}"
+          data-plan-price="{{ plan.display_price }}"
+          data-plan-name="{{ plan.display_name }}"
+          data-is-current="{% if current_plan == plan.display_name or current_plan == plan.id %}true{% else %}false{% endif %}"
+        >
+          <div class="flex items-start justify-between">
+            <h2 class="text-xl font-bold text-foreground">{{ plan.display_name }}</h2>
+            {% if current_plan == plan.display_name or current_plan == plan.id %}
+              <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700">
+                {% trans "Current" %}
+              </span>
+            {% endif %}
+          </div>
+          <p class="mt-2 text-sm text-muted-foreground">{{ plan.description }}</p>
+          <ul class="mt-6 flex-1 space-y-3 text-sm text-muted-foreground">
+            {% for feature in plan.display_features %}
+              <li class="flex gap-3">
+                <svg class="mt-0.5 size-5 shrink-0 text-emerald-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M16.704 5.29a1 1 0 0 1 .006 1.414l-7.25 7.31a1 1 0 0 1-1.42.003l-3.75-3.79a1 1 0 1 1 1.42-1.407l3.04 3.072 6.54-6.596a1 1 0 0 1 1.414-.006Z" clip-rule="evenodd"/>
+                </svg>
+                <span>{{ feature }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+          <div class="mt-6">
+            {% if current_plan == plan.display_name or current_plan == plan.id %}
+              <button disabled type="button" class="w-full rounded-lg bg-background px-4 py-3 text-sm font-bold text-muted-foreground cursor-not-allowed">
+                {% trans "Current Plan" %}
+              </button>
+            {% else %}
+              <!-- 🚨 FIX 1: Added type="button" so it doesn't accidentally trigger page refreshes -->
+              <button
+                type="button" 
+                class="select-plan-btn w-full rounded-lg border border-border bg-secondary px-4 py-3 text-sm font-bold text-muted-foreground transition hover:bg-background"
+                data-plan-id="{{ plan.id }}"
+                data-plan-price="{{ plan.display_price }}"
+                data-plan-name="{{ plan.display_name }}"
+              >
+                {% trans "Select Plan" %}
+              </button>
+            {% endif %}
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+    <!-- Selected plan summary & CTA -->
+    <form method="post" action="{% url 'subscription:upgrade' %}" class="mt-10 flex flex-col gap-4 rounded-xl border border-border bg-background p-6 sm:flex-row sm:items-center sm:justify-between">
+      {% csrf_token %}
+      <input type="hidden" name="plan_id" id="selected-plan-id" value="">
+      <input type="hidden" name="amount" id="selected-plan-amount" value="">
+      <div>
+        <p class="text-sm font-semibold text-muted-foreground">{% trans "Selected plan" %}</p>
+        <p class="mt-1 text-2xl font-bold text-foreground" id="selected-plan-name">-</p>
+        <p class="text-lg text-muted-foreground" id="selected-plan-price">-</p>
+      </div>
+      <button
+        type="submit"
+        class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 whitespace-nowrap"
+      >
+        {% trans "Start 7‑day free trial" %}
+      </button>
+    </form>
+  {% else %}
+    <div class="rounded-xl border border-dashed border-border bg-secondary p-10 text-center">
+      <h2 class="text-lg font-bold text-foreground">{% trans "No plans available" %}</h2>
+      <p class="mt-2 text-sm text-muted-foreground">{% trans "Plans could not be loaded for this account type." %}</p>
+    </div>
+  {% endif %}
+</div>
+
+<script>
+  // A self-executing function that safely initializes the plan selection logic
+  (function initPlanSelection() {
+    
+    // Prevent double-initialization if the page is loaded dynamically
+    const form = document.getElementById('selected-plan-id');
+    if (!form || form.dataset.initialized) return;
+    form.dataset.initialized = 'true';
+
+    function selectPlan(planId, planName, planPrice) {
+      if (!planId) return;
+
+      // 1. Update the hidden form inputs REQUIRED for the Django view to process the POST
+      document.getElementById('selected-plan-id').value = planId;
+      document.getElementById('selected-plan-amount').value = planPrice || 0;
+
+      // 2. Update the text summary
+      document.getElementById('selected-plan-name').textContent = planName;
+      document.getElementById('selected-plan-price').textContent = '$' + planPrice + '/month';
+
+      // 3. Update the visual UI of the cards
+      document.querySelectorAll('.plan-card').forEach(card => {
+        const isSelected = card.getAttribute('data-plan-id') === planId;
+        
+        // Update Card Borders
+        card.classList.toggle('ring-2', isSelected);
+        card.classList.toggle('ring-blue-500', isSelected);
+        card.classList.toggle('border-blue-300', isSelected);
+        
+        // Update Button Styling
+        const btn = card.querySelector('.select-plan-btn');
+        if (btn) {
+          btn.classList.toggle('bg-blue-600', isSelected);
+          btn.classList.toggle('text-white', isSelected);
+          btn.classList.toggle('hover:bg-blue-700', isSelected);
+          btn.classList.toggle('border', !isSelected);
+          btn.classList.toggle('border-border', !isSelected);
+          btn.classList.toggle('bg-secondary', !isSelected);
+          btn.classList.toggle('text-muted-foreground', !isSelected);
+          btn.classList.toggle('hover:bg-background', !isSelected);
+          btn.textContent = isSelected ? '{% trans "Selected" %}' : '{% trans "Select Plan" %}';
+        }
+      });
+    }
+
+    // EVENT DELEGATION: This captures the click no matter how the page was loaded
+    document.addEventListener('click', function(e) {
+      const btn = e.target.closest('.select-plan-btn');
+      if (!btn) return; // Ignore clicks that aren't on our plan buttons
+      
+      e.preventDefault();
+      
+      const planId = btn.getAttribute('data-plan-id');
+      const planName = btn.getAttribute('data-plan-name');
+      const planPrice = btn.getAttribute('data-plan-price');
+      
+      selectPlan(planId, planName, planPrice);
+    });
+
+    // Auto-select the first valid plan on page load
+    const cards = document.querySelectorAll('.plan-card');
+    let preselected = null;
+    for (const card of cards) {
+      if (card.getAttribute('data-is-current') !== 'true') {
+        preselected = card;
+        break;
+      }
+    }
+    
+    // Fallback to the first card if all else fails
+    if (!preselected && cards.length > 0) preselected = cards[0];
+    
+    if (preselected) {
+      selectPlan(
+        preselected.getAttribute('data-plan-id'),
+        preselected.getAttribute('data-plan-name'),
+        preselected.getAttribute('data-plan-price')
+      );
+    }
+  })();
+</script>
+{% endblock %}

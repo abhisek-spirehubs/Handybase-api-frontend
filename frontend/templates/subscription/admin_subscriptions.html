@@ -1,0 +1,42 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Subscriptions (Admin)" %} | HandyBase{% endblock %}
+
+{% block content %}
+<div class="w-full">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold">{% trans "Subscriptions" %}</h1>
+    <form method="post" action="{% url 'subscription:trigger_expiry' %}">{% csrf_token %}<button class="inline-flex items-center rounded bg-red-600 px-4 py-2 text-white">{% trans "Trigger Expiry" %}</button></form>
+  </div>
+
+  <div class="mt-6 overflow-x-auto">
+    <table class="w-full text-left text-sm">
+      <thead>
+        <tr class="border-b">
+          <th class="pb-3 pr-4">{% trans "User" %}</th>
+          <th class="pb-3 pr-4">{% trans "Plan" %}</th>
+          <th class="pb-3 pr-4">{% trans "Amount" %}</th>
+          <th class="pb-3 pr-4">{% trans "Status" %}</th>
+          <th class="pb-3">{% trans "Actions" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for sub in subscriptions %}
+          <tr>
+            <td class="py-4 pr-4">{{ sub.user_email|default:sub.user_id }}</td>
+            <td class="py-4 pr-4">{{ sub.plan_name|default:sub.plan_id }}</td>
+            <td class="py-4 pr-4">{{ sub.amount_paid|default:sub.price }} {{ sub.currency|default:'USD' }}</td>
+            <td class="py-4 pr-4">{{ sub.status }}</td>
+            <td class="py-4">
+              <a href="{% url 'subscription:detail' sub.id %}" class="inline-flex items-center rounded border px-3 py-1 text-sm">{% trans "View" %}</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="5" class="py-6 text-center">{% trans "No subscriptions found." %}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

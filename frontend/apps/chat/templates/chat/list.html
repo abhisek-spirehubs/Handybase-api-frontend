@@ -1,0 +1,73 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n static %}
+
+{% block title %}{% trans "Messages" %} | HandyBase{% endblock %}
+
+{% block content %}
+<div class="max-w-[1000px] mx-auto">
+    <div class="mb-8">
+        <h1 class="text-2xl font-bold text-foreground">{% trans "Messages" %}</h1>
+        <p class="text-muted-foreground mt-1">{% trans "Communicate with your clients and providers about active bookings." %}</p>
+    </div>
+
+    <div class="bg-secondary rounded-2xl border border-border overflow-hidden shadow-sm">
+        <div class="divide-y divide-border">
+            {% for conv in conversations %}
+            <a href="{% url 'chat:room' booking_id=conv.booking_id %}" class="block p-5 hover:bg-muted/50 transition duration-200">
+                <div class="flex items-center gap-4">
+                    <!-- Avatar/Icon -->
+                    <div class="size-14 bg-primary/10 rounded-full flex items-center justify-center text-primary shrink-0 border border-primary/20">
+                        <svg class="size-7" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+
+                    <!-- Details -->
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-start mb-1">
+                            <h3 class="font-bold text-foreground truncate">
+                                {{ conv.other_user_name|default:_("Chat Room") }}
+                            </h3>
+                            <span class="text-xs text-muted-foreground whitespace-nowrap ml-2">
+                                {{ conv.last_message_time|default:"" }}
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center gap-4">
+                            <p class="text-sm text-muted-foreground truncate italic">
+                                {% if conv.last_message %}
+                                    {{ conv.last_message }}
+                                {% else %}
+                                    {% trans "No messages yet. Start the conversation!" %}
+                                {% endif %}
+                            </p>
+                            
+                            {% if conv.unread_count > 0 %}
+                            <span class="bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0">
+                                {{ conv.unread_count }}
+                            </span>
+                            {% endif %}
+                        </div>
+                        <div class="mt-2 text-[10px] uppercase tracking-wider font-semibold text-muted-foreground/70">
+                            {% trans "Booking" %} #{{ conv.booking_id|truncatechars:10 }}
+                        </div>
+                    </div>
+
+                    <!-- Arrow -->
+                    <div class="text-muted-foreground/40">
+                        <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                </div>
+            </a>
+            {% empty %}
+            <div class="p-12 text-center">
+                <div class="size-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="size-8 text-muted-foreground/50" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <h3 class="text-foreground font-bold text-lg">{% trans "No conversations yet" %}</h3>
+                <p class="text-muted-foreground mt-1 max-w-xs mx-auto">
+                    {% trans "Chat rooms are automatically created once a booking is confirmed by the provider." %}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

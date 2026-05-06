@@ -1,0 +1,1772 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-01 04:55-0500\n"
+"PO-Revision-Date: 2026-05-01 12:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: French\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: templates/authentication/login.html:7
+msgid "Login"
+msgstr "Connexion"
+
+#: templates/authentication/login.html:193
+#: templates/authentication/register_client.html:185
+msgid "Future of Work"
+msgstr "L'Avenir du Travail"
+
+#: templates/authentication/login.html:198
+#: templates/authentication/register_client.html:190
+msgid "Seamless."
+msgstr "Fluide."
+
+#: templates/authentication/login.html:199
+#: templates/authentication/register_client.html:191
+msgid "Scalable."
+msgstr "Évolutif."
+
+#: templates/authentication/login.html:202
+#: templates/authentication/register_client.html:194
+msgid "Supercharged."
+msgstr "Ultra-puissant."
+
+#: templates/authentication/login.html:208
+#: templates/authentication/register_client.html:200
+msgid ""
+"The intelligent layer for service business management—built to move fast and "
+"stay reliable."
+msgstr ""
+"La couche intelligente pour la gestion d'entreprise de services — conçue "
+"pour être rapide et fiable."
+
+#: templates/authentication/login.html:214
+#: templates/authentication/register_client.html:206
+msgid "Secure by design"
+msgstr "Sécurisé par conception"
+
+#: templates/authentication/login.html:218
+#: templates/authentication/register_client.html:210
+msgid "Fast onboarding"
+msgstr "Intégration rapide"
+
+#: templates/authentication/login.html:222
+#: templates/authentication/register_client.html:214
+msgid "Actionable insights"
+msgstr "Informations exploitables"
+
+#: templates/authentication/login.html:236
+msgid "Welcome back"
+msgstr "Bon retour"
+
+#: templates/authentication/login.html:239
+msgid "Sign in to continue your session."
+msgstr "Connectez-vous pour continuer votre session."
+
+#: templates/authentication/login.html:248
+#: templates/dashboard/client/overview.html:39
+#: templates/dashboard/provider/overview.html:37
+msgid "Email"
+msgstr "E-mail"
+
+#: templates/authentication/login.html:263
+#: templates/authentication/register_client.html:285
+msgid "Password"
+msgstr "Mot de passe"
+
+#: templates/authentication/login.html:266
+msgid "Forgot?"
+msgstr "Oublié ?"
+
+#: templates/authentication/login.html:286
+msgid "Enter Dashboard"
+msgstr "Accéder au tableau de bord"
+
+#: templates/authentication/login.html:296
+msgid "Don't have an account?"
+msgstr "Vous n'avez pas de compte ?"
+
+#: templates/authentication/login.html:301
+msgid "Join now"
+msgstr "Rejoignez-nous"
+
+#: templates/authentication/login.html:307
+msgid "Explore HandyBase"
+msgstr "Explorer HandyBase"
+
+#: templates/authentication/login.html:321
+msgid "Built for service teams"
+msgstr "Conçu pour les équipes de service"
+
+#: templates/authentication/login.html:324
+msgid "Run your service business with clarity, speed, and control."
+msgstr "Gérez votre entreprise de services avec clarté, rapidité et contrôle."
+
+#: templates/authentication/login.html:327
+msgid ""
+"From bookings to provider management and subscriptions—HandyBase helps you "
+"stay on top of every moving part."
+msgstr ""
+"Des réservations à la gestion des prestataires et abonnements — HandyBase "
+"vous aide à tout maîtriser."
+
+#: templates/authentication/login.html:339
+msgid "Smart Workflow"
+msgstr "Flux de travail intelligent"
+
+#: templates/authentication/login.html:340
+msgid ""
+"Automate repetitive steps and keep teams aligned—so work moves without "
+"friction."
+msgstr ""
+"Automatisez les tâches répétitives et gardez les équipes alignées — pour un "
+"travail sans friction."
+
+#: templates/authentication/login.html:350
+msgid "Real-time Visibility"
+msgstr "Visibilité en temps réel"
+
+#: templates/authentication/login.html:351
+msgid "See progress, spot bottlenecks, and make decisions with confidence."
+msgstr ""
+"Suivez la progression, repérez les obstacles et prenez des décisions en "
+"toute confiance."
+
+#: templates/authentication/login.html:361
+msgid "Subscription-ready"
+msgstr "Prêt pour l'abonnement"
+
+#: templates/authentication/login.html:362
+msgid "Manage plans, billing cycles, and customer access—without manual chaos."
+msgstr ""
+"Gérez les forfaits, cycles de facturation et accès clients — sans chaos "
+"manuel."
+
+#: templates/authentication/login.html:371
+msgid "Designed for modern operators"
+msgstr "Conçu pour les opérateurs modernes"
+
+#: templates/authentication/login.html:372
+msgid ""
+"HandyBase brings structure to service delivery—so you can focus on quality, "
+"not spreadsheets."
+msgstr ""
+"HandyBase structure la prestation de services — concentrez-vous sur la "
+"qualité, pas sur les tableurs."
+
+#: templates/authentication/login.html:381
+msgid "Uptime focus"
+msgstr "Priorité à la disponibilité"
+
+#: templates/authentication/login.html:382
+msgid "Setup time"
+msgstr "Temps de configuration"
+
+#: templates/authentication/login.html:383
+msgid "Monitoring ready"
+msgstr "Prêt pour la surveillance"
+
+#: templates/authentication/login.html:384
+msgid "Actionable reports"
+msgstr "Rapports exploitables"
+
+#: templates/authentication/login.html:394
+msgid "HandyBase"
+msgstr "HandyBase"
+
+#: templates/authentication/login.html:395
+msgid "Service business management—simplified."
+msgstr "La gestion d'entreprise de services — simplifiée."
+
+#: templates/authentication/login.html:397
+msgid "© "
+msgstr "© "
+
+#: templates/authentication/login.html:397
+msgid "All rights reserved."
+msgstr "Tous droits réservés."
+
+#: templates/authentication/register_client.html:7
+msgid "Register as Client"
+msgstr "S'inscrire comme Client"
+
+#: templates/authentication/register_client.html:229
+msgid "Create Client Account"
+msgstr "Créer un Compte Client"
+
+#: templates/authentication/register_client.html:232
+msgid "Join to find and book trusted local professionals."
+msgstr ""
+"Rejoignez-nous pour trouver et réserver des professionnels locaux de "
+"confiance."
+
+#: templates/authentication/register_client.html:249
+msgid "First Name"
+msgstr "Prénom"
+
+#: templates/authentication/register_client.html:256
+msgid "Last Name"
+msgstr "Nom de famille"
+
+#: templates/authentication/register_client.html:266
+msgid "Email Address"
+msgstr "Adresse E-mail"
+
+#: templates/authentication/register_client.html:275
+msgid "Phone (Optional)"
+msgstr "Téléphone (Facultatif)"
+
+#: templates/authentication/register_client.html:292
+#: templates/dashboard/provider/bookings.html:57
+msgid "Confirm"
+msgstr "Confirmer"
+
+#: templates/authentication/register_client.html:305
+msgid "Create Account"
+msgstr "Créer un Compte"
+
+#: templates/authentication/register_client.html:317
+msgid "Already have an account?"
+msgstr "Vous avez déjà un compte ?"
+
+#: templates/authentication/register_client.html:319
+msgid "Sign in"
+msgstr "Se connecter"
+
+#: templates/authentication/register_client.html:323
+msgid "Are you a professional?"
+msgstr "Êtes-vous un professionnel ?"
+
+#: templates/authentication/register_client.html:325
+msgid "Join as Provider"
+msgstr "Rejoindre comme Prestataire"
+
+#: templates/components/molecules/_language_switcher.html:9
+msgid "Language"
+msgstr "Langue"
+
+#: templates/components/organisms/_navbar.html:7
+#: templates/components/organisms/_sidebar.html:121
+msgid "Find Providers"
+msgstr "Trouver des prestataires"
+
+#: templates/components/organisms/_navbar.html:8
+msgid "How it Works"
+msgstr "Comment ça marche"
+
+#: templates/components/organisms/_navbar.html:14
+msgid "Log In"
+msgstr "Connexion"
+
+#: templates/components/organisms/_navbar.html:15
+msgid "Sign Up"
+msgstr "S'inscrire"
+
+#: templates/components/organisms/_sidebar.html:3
+msgid "Sidebar"
+msgstr "Barre latérale"
+
+#: templates/components/organisms/_sidebar.html:18
+msgid "Close"
+msgstr "Fermer"
+
+#: templates/components/organisms/_sidebar.html:27
+msgid "Main Menu"
+msgstr "Menu principal"
+
+#: templates/components/organisms/_sidebar.html:33
+#: templates/components/organisms/_sidebar.html:109
+msgid "Dashboard Home"
+msgstr "Accueil du Tableau de bord"
+
+#: templates/components/organisms/_sidebar.html:39
+#: templates/components/organisms/_sidebar.html:115
+msgid "My Bookings"
+msgstr "Mes Réservations"
+
+#: templates/components/organisms/_sidebar.html:45
+msgid "My Services"
+msgstr "Mes Services"
+
+#: templates/components/organisms/_sidebar.html:51
+#: templates/components/organisms/_sidebar.html:127
+#: templates/subscription/plans_list.html:4
+msgid "Plans"
+msgstr "Forfaits"
+
+#: templates/components/organisms/_sidebar.html:57
+#: templates/components/organisms/_sidebar.html:133
+#: templates/subscription/manage.html:4
+msgid "Manage Subscription"
+msgstr "Gérer l'abonnement"
+
+#: templates/components/organisms/_sidebar.html:65
+msgid "Overview"
+msgstr "Aperçu"
+
+#: templates/components/organisms/_sidebar.html:71
+msgid "All Bookings"
+msgstr "Toutes les Réservations"
+
+#: templates/components/organisms/_sidebar.html:77
+msgid "Provider Approvals"
+msgstr "Approbations des Prestataires"
+
+#: templates/components/organisms/_sidebar.html:83
+msgid "Service Approvals"
+msgstr "Approbations des Services"
+
+#: templates/components/organisms/_sidebar.html:89
+msgid "Manage Clients"
+msgstr "Gérer les Clients"
+
+#: templates/components/organisms/_sidebar.html:95
+msgid "Manage Providers"
+msgstr "Gérer les Prestataires"
+
+#: templates/components/organisms/_sidebar.html:101
+msgid "Categories"
+msgstr "Catégories"
+
+#: templates/components/organisms/_sidebar.html:138
+msgid "Account Settings"
+msgstr "Paramètres du compte"
+
+#: templates/components/organisms/_sidebar.html:143
+msgid "My Profile"
+msgstr "Mon Profil"
+
+#: templates/components/organisms/_sidebar.html:149
+msgid "Change Password"
+msgstr "Changer le mot de passe"
+
+#: templates/components/organisms/_sidebar.html:158
+msgid "Log Out"
+msgstr "Se déconnecter"
+
+#: templates/dashboard/client/overview.html:4
+msgid "Client Dashboard"
+msgstr "Tableau de bord Client"
+
+#: templates/dashboard/client/overview.html:10
+msgid "Client Workspace"
+msgstr "Espace Client"
+
+# Client Bookings page
+#: templates/dashboard/client/bookings.html:9
+msgid "Track and manage your service requests in one place."
+msgstr "Suivez et gérez vos demandes de service en un seul endroit."
+
+#: templates/dashboard/client/bookings.html:12
+msgid "Book New Service"
+msgstr "Réserver un nouveau service"
+
+#: templates/dashboard/client/bookings.html:16
+msgid "Service Date"
+msgstr "Date du service"
+
+#: templates/dashboard/client/bookings.html:17
+msgid "Provider & Service"
+msgstr "Prestataire et service"
+
+#: templates/dashboard/client/bookings.html:18
+msgid "Location"
+msgstr "Emplacement"
+
+#: templates/dashboard/client/bookings.html:44
+msgid "Service Package"
+msgstr "Forfait de service"
+
+#: templates/dashboard/client/bookings.html:46
+msgid "Assigned Provider"
+msgstr "Prestataire attribué"
+
+#: templates/dashboard/client/bookings.html:48
+msgid "Ref:"
+msgstr "Réf :"
+
+#: templates/dashboard/client/bookings.html:35
+msgid "UTC"
+msgstr "UTC"
+
+#: templates/dashboard/client/bookings.html:88
+msgid "Cancel this booking request?"
+msgstr "Annuler cette demande de réservation ?"
+
+#: templates/dashboard/client/bookings.html:100
+msgid "Remove this booking from your history?"
+msgstr "Supprimer cette réservation de votre historique ?"
+
+#: templates/dashboard/client/bookings.html:114
+msgid "No bookings yet"
+msgstr "Aucune réservation pour le moment"
+
+#: templates/dashboard/client/bookings.html:115
+msgid "Start by exploring our expert providers and scheduling your first service."
+msgstr "Commencez par explorer nos prestataires experts et planifier votre premier service."
+
+#: templates/dashboard/client/bookings.html:116
+msgid "Browse Provider Directory"
+msgstr "Parcourir l'annuaire des prestataires"
+
+#: templates/dashboard/client/overview.html:12
+msgid "Welcome,"
+msgstr "Bienvenue,"
+
+#: templates/dashboard/client/overview.html:12
+#: templates/subscription/plan_form.html:27
+msgid "Client"
+msgstr "Client"
+
+#: templates/dashboard/client/overview.html:14
+msgid ""
+"Find providers, manage bookings, and control your subscription from one "
+"place."
+msgstr ""
+"Trouvez des prestataires, gérez les réservations et contrôlez votre "
+"abonnement au même endroit."
+
+#: templates/dashboard/client/overview.html:18
+#: templates/dashboard/provider/overview.html:16
+msgid "View Subscription"
+msgstr "Voir l'Abonnement"
+
+#: templates/dashboard/client/overview.html:26
+msgid "Account Overview"
+msgstr "Aperçu du Compte"
+
+#: templates/dashboard/client/overview.html:35
+#: templates/subscription/plan_form.html:13
+msgid "Name"
+msgstr "Nom"
+
+#: templates/dashboard/client/overview.html:43
+#: templates/dashboard/provider/overview.html:41
+msgid "Current Subscription"
+msgstr "Abonnement Actuel"
+
+#: templates/dashboard/client/overview.html:47
+#: templates/dashboard/provider/overview.html:45
+msgid "Subscription Actions"
+msgstr "Actions d'Abonnement"
+
+#: templates/dashboard/client/overview.html:49
+msgid "Manage Billing"
+msgstr "Gérer la Facturation"
+
+#: templates/dashboard/client/overview.html:50
+#: templates/dashboard/provider/overview.html:48
+msgid "View Plans"
+msgstr "Voir les Forfaits"
+
+#: templates/dashboard/provider/bookings.html:4
+msgid "Manage Bookings"
+msgstr "Mes Réservations"
+
+#: templates/dashboard/provider/bookings.html:8
+msgid "Manage Service Bookings"
+msgstr "Gérer les réservations de service"
+
+#: templates/dashboard/provider/bookings.html:9
+msgid "Review, confirm, and complete your client requests."
+msgstr "Examinez, confirmez et traitez les demandes de vos clients."
+
+#: templates/dashboard/provider/bookings.html:17
+msgid "Scheduled Date"
+msgstr "Date prévue"
+
+#: templates/dashboard/provider/bookings.html:18
+msgid "Client Info"
+msgstr "Informations client"
+
+#: templates/dashboard/provider/bookings.html:19
+msgid "Service ID"
+msgstr "ID du service"
+
+#: templates/dashboard/provider/bookings.html:20
+#: templates/subscription/admin_subscriptions.html:20
+#: templates/subscription/manage.html:60 templates/subscription/manage.html:136
+#: templates/subscription/subscription_detail.html:15
+msgid "Status"
+msgstr "Statut"
+
+#: templates/dashboard/provider/bookings.html:21
+#: templates/subscription/admin_subscriptions.html:21
+msgid "Actions"
+msgstr "Actions"
+
+#: templates/dashboard/provider/bookings.html:40
+msgid "PENDING"
+msgstr "EN ATTENTE"
+
+#: templates/dashboard/provider/bookings.html:42
+msgid "CONFIRMED"
+msgstr "CONFIRMÉ"
+
+#: templates/dashboard/provider/bookings.html:44
+msgid "COMPLETED"
+msgstr "TERMINÉ"
+
+# dynamic statuses
+#: templates/dashboard/provider/bookings.html:0
+msgid "CANCELLED"
+msgstr "ANNULÉ"
+
+#: templates/dashboard/provider/bookings.html:62
+msgid "Mark this service as fully completed?"
+msgstr "Marquer ce service comme entièrement terminé ?"
+
+#: templates/dashboard/provider/bookings.html:67
+msgid "Mark Completed"
+msgstr "Marquer comme terminé"
+
+#: templates/dashboard/provider/bookings.html:72
+msgid "Enter cancellation reason (required):"
+msgstr "Entrez la raison de l'annulation (obligatoire) :"
+
+#: templates/dashboard/provider/bookings.html:73
+msgid "Provider cannot fulfill at this time."
+msgstr "Le prestataire ne peut pas répondre pour le moment."
+
+#: templates/dashboard/provider/bookings.html:79
+msgid "Reject"
+msgstr "Rejeter"
+
+#: templates/dashboard/provider/bookings.html:89
+msgid "No bookings found for your services yet."
+msgstr "Aucune réservation trouvée pour vos services pour le moment."
+
+#: templates/dashboard/provider/overview.html:4
+msgid "Provider Dashboard"
+msgstr "Tableau de bord Prestataire"
+
+#: templates/dashboard/provider/overview.html:10
+msgid "Provider Workspace"
+msgstr "Espace Prestataire"
+
+#: templates/dashboard/provider/overview.html:11
+msgid "Welcome back,"
+msgstr "Bon retour,"
+
+#: templates/dashboard/provider/overview.html:11
+#: templates/subscription/plan_form.html:28
+msgid "Provider"
+msgstr "Prestataire"
+
+#: templates/dashboard/provider/overview.html:12
+msgid "Manage your services, bookings, and subscription access from one place."
+msgstr ""
+"Gérez vos services, réservations et accès aux abonnements au même endroit."
+
+#: templates/dashboard/provider/overview.html:24
+msgid "Business Overview"
+msgstr "Aperçu de l'Entreprise"
+
+#: templates/dashboard/provider/overview.html:26
+msgid "Approved"
+msgstr "Approuvé"
+
+#: templates/dashboard/provider/overview.html:28
+msgid "Pending"
+msgstr "En attente"
+
+#: templates/dashboard/provider/overview.html:33
+msgid "Business Name"
+msgstr "Nom de l'Entreprise"
+
+#: templates/dashboard/provider/overview.html:34
+msgid "Not set"
+msgstr "Non défini"
+
+#: templates/dashboard/provider/overview.html:47
+msgid "Manage"
+msgstr "Gérer"
+
+#: templates/home.html:26
+msgid "Find the perfect professional for your next project."
+msgstr "Trouvez le professionnel idéal pour votre prochain projet."
+
+#: templates/home.html:29
+msgid ""
+"Connect with vetted service providers in your area. Fast, secure, and "
+"reliable."
+msgstr ""
+"Contactez des prestataires vérifiés dans votre région. Rapide, sécurisé et "
+"fiable."
+
+#: templates/home.html:32
+msgid "Hire a Pro"
+msgstr "Engager un Pro"
+
+#: templates/home.html:33
+msgid "Become a Provider"
+msgstr "Devenir Prestataire"
+
+#: templates/subscription/admin_subscriptions.html:4
+msgid "Subscriptions (Admin)"
+msgstr "Abonnements (Admin)"
+
+#: templates/subscription/admin_subscriptions.html:9
+msgid "Subscriptions"
+msgstr "Abonnements"
+
+#: templates/subscription/admin_subscriptions.html:10
+msgid "Trigger Expiry"
+msgstr "Déclencher l'Expiration"
+
+#: templates/subscription/admin_subscriptions.html:17
+#: templates/subscription/subscription_detail.html:12
+msgid "User"
+msgstr "Utilisateur"
+
+#: templates/subscription/admin_subscriptions.html:18
+#: templates/subscription/manage.html:134
+#: templates/subscription/plan_form.html:4
+#: templates/subscription/subscription_detail.html:13
+msgid "Plan"
+msgstr "Forfait"
+
+#: templates/subscription/admin_subscriptions.html:19
+#: templates/subscription/manage.html:73 templates/subscription/manage.html:135
+#: templates/subscription/subscription_detail.html:14
+msgid "Amount"
+msgstr "Montant"
+
+#: templates/subscription/admin_subscriptions.html:32
+msgid "View"
+msgstr "Voir"
+
+#: templates/subscription/admin_subscriptions.html:36
+msgid "No subscriptions found."
+msgstr "Aucun abonnement trouvé."
+
+#: templates/subscription/manage.html:10
+msgid "Billing"
+msgstr "Facturation"
+
+#: templates/subscription/manage.html:11
+msgid "Manage subscription"
+msgstr "Gérer l'abonnement"
+
+#: templates/subscription/manage.html:13
+msgid "Review your current plan, update access, and track billing activity."
+msgstr ""
+"Examinez votre forfait actuel, mettez à jour l'accès et suivez l'activité de "
+"facturation."
+
+#: templates/subscription/manage.html:20
+msgid "Subscription Access"
+msgstr "Accès à l'abonnement"
+
+#: templates/subscription/manage.html:29
+msgid "Basic Client"
+msgstr "Client Basique"
+
+#: templates/subscription/manage.html:33
+msgid ""
+"Upgrade to unlock booking execution, messaging, and advanced request "
+"workflows."
+msgstr ""
+"Mettez à niveau pour débloquer l'exécution des réservations, la messagerie "
+"et les flux de requêtes avancés."
+
+#: templates/subscription/manage.html:38
+msgid "Browse Plans"
+msgstr "Parcourir les Forfaits"
+
+#: templates/subscription/manage.html:47
+msgid "Current Plan Details"
+msgstr "Détails du Forfait Actuel"
+
+#: templates/subscription/manage.html:57
+msgid "Active plan"
+msgstr "Forfait actif"
+
+#: templates/subscription/manage.html:62
+msgid "No active subscription"
+msgstr "Aucun abonnement actif"
+
+#: templates/subscription/manage.html:63
+msgid "Choose a plan to unlock subscription features."
+msgstr "Choisissez un forfait pour débloquer les fonctionnalités d'abonnement."
+
+#: templates/subscription/manage.html:89
+msgid "Renewal"
+msgstr "Renouvellement"
+
+#: templates/subscription/manage.html:108
+msgid "Change Plan"
+msgstr "Changer de Forfait"
+
+#: templates/subscription/manage.html:115
+msgid "Cancel Subscription"
+msgstr "Annuler l'Abonnement"
+
+#: templates/subscription/manage.html:125
+msgid "Billing History"
+msgstr "Historique de Facturation"
+
+#: templates/subscription/manage.html:126
+msgid "Recent transactions"
+msgstr "Transactions récentes"
+
+#: templates/subscription/manage.html:137
+msgid "Date"
+msgstr "Date"
+
+#: templates/subscription/manage.html:179
+msgid "No billing history yet."
+msgstr "Aucun historique de facturation pour le moment."
+
+#: templates/subscription/plan_form.html:8
+msgid "Create Plan"
+msgstr "Créer un Forfait"
+
+#: templates/subscription/plan_form.html:8
+msgid "Edit Plan"
+msgstr "Modifier le Forfait"
+
+#: templates/subscription/plan_form.html:17
+msgid "Price (USD)"
+msgstr "Prix (USD)"
+
+#: templates/subscription/plan_form.html:21
+msgid "Description"
+msgstr "Description"
+
+#: templates/subscription/plan_form.html:25
+msgid "User Type"
+msgstr "Type d'Utilisateur"
+
+#: templates/subscription/plan_form.html:33
+msgid "Save"
+msgstr "Enregistrer"
+
+#: templates/subscription/plan_form.html:34
+msgid "Cancel"
+msgstr "Annuler"
+
+#: templates/subscription/plans_list.html:10
+msgid "Choose Your Perfect Plan"
+msgstr "Choisissez Votre Forfait Idéal"
+
+#: templates/subscription/plans_list.html:13
+msgid ""
+"Upgrade your account to unlock premium features, boost your visibility, and "
+"grow your business."
+msgstr ""
+"Mettez à niveau votre compte pour débloquer des fonctionnalités premium, "
+"booster votre visibilité et développer votre entreprise."
+
+#: templates/subscription/plans_list.html:40
+#: templates/subscription/upgrade.html:52
+msgid "Current Plan"
+msgstr "Forfait Actuel"
+
+#: templates/subscription/plans_list.html:42
+msgid "Upgrade Now"
+msgstr "Mettre à Niveau Maintenant"
+
+#: templates/subscription/plans_list.html:44
+msgid "Get Started"
+msgstr "Commencer"
+
+#: templates/subscription/plans_list.html:50
+msgid "What's included"
+msgstr "Ce qui est inclus"
+
+#: templates/subscription/plans_list.html:66
+msgid "Standard access"
+msgstr "Accès standard"
+
+#: templates/subscription/plans_list.html:72
+msgid "Basic support"
+msgstr "Support de base"
+
+#: templates/subscription/plans_list.html:81
+msgid "No plans available right now"
+msgstr "Aucun forfait disponible pour le moment"
+
+#: templates/subscription/plans_list.html:82
+msgid "Please check back later or contact support."
+msgstr "Veuillez vérifier plus tard ou contacter le support."
+
+#: templates/subscription/subscription_detail.html:4
+#: templates/subscription/subscription_detail.html:8
+msgid "Subscription Detail"
+msgstr "Détail de l'Abonnement"
+
+#: templates/subscription/subscription_detail.html:16
+msgid "Start"
+msgstr "Début"
+
+#: templates/subscription/subscription_detail.html:17
+msgid "End"
+msgstr "Fin"
+
+#: templates/subscription/subscription_detail.html:20
+msgid "Subscription not found."
+msgstr "Abonnement introuvable."
+
+#: templates/subscription/upgrade.html:4
+msgid "Upgrade Plan"
+msgstr "Mettre à Niveau le Forfait"
+
+#: templates/subscription/upgrade.html:10
+msgid "The plan that fits your business"
+msgstr "Le forfait adapté à votre entreprise"
+
+#: templates/subscription/upgrade.html:13
+msgid ""
+"From profile visibility to full analytics – upgrade anytime and scale your "
+"service."
+msgstr ""
+"De la visibilité du profil aux analyses complètes – mettez à niveau à tout "
+"moment et faites évoluer votre service."
+
+#: templates/subscription/upgrade.html:34
+msgid "Current"
+msgstr "Actuel"
+
+#: templates/subscription/upgrade.html:63
+#: templates/subscription/upgrade.html:136
+msgid "Select Plan"
+msgstr "Sélectionner un Forfait"
+
+#: templates/subscription/upgrade.html:77
+msgid "Selected plan"
+msgstr "Forfait sélectionné"
+
+#: templates/subscription/upgrade.html:85
+msgid "Start 7‑day free trial"
+msgstr "Commencer l'essai gratuit de 7 jours"
+
+#: templates/subscription/upgrade.html:90
+msgid "No plans available"
+msgstr "Aucun forfait disponible"
+
+#: templates/subscription/upgrade.html:91
+msgid "Plans could not be loaded for this account type."
+msgstr "Les forfaits n'ont pas pu être chargés pour ce type de compte."
+
+#: templates/subscription/upgrade.html:136
+msgid "Selected"
+msgstr "Sélectionné"
+
+#~ msgid "Messages"
+#~ msgstr "Messages"
+
+#~ msgid "Site Maps"
+#~ msgstr "Plans du site"
+
+#~ msgid "Static Files"
+#~ msgstr "Fichiers statiques"
+
+#~ msgid "Syndication"
+#~ msgstr "Syndication"
+
+#~ msgid "Jan."
+#~ msgstr "Janv."
+
+#~ msgid "Feb."
+#~ msgstr "Févr."
+
+#~ msgid "March"
+#~ msgstr "Mars"
+
+#~ msgid "April"
+#~ msgstr "Avril"
+
+#~ msgid "May"
+#~ msgstr "Mai"
+
+#~ msgid "June"
+#~ msgstr "Juin"
+
+#~ msgid "July"
+#~ msgstr "Juil."
+
+#~ msgid "Aug."
+#~ msgstr "Août"
+
+#~ msgid "Sept."
+#~ msgstr "Sept."
+
+#~ msgid "Oct."
+#~ msgstr "Oct."
+
+#~ msgid "Nov."
+#~ msgstr "Nov."
+
+#~ msgid "Dec."
+#~ msgstr "Déc."
+
+#~ msgid "January"
+#~ msgstr "Janvier"
+
+#~ msgid "February"
+#~ msgstr "Février"
+
+#~ msgid "August"
+#~ msgstr "Août"
+
+#~ msgid "September"
+#~ msgstr "Septembre"
+
+#~ msgid "October"
+#~ msgstr "Octobre"
+
+#~ msgid "November"
+#~ msgstr "Novembre"
+
+#~ msgid "December"
+#~ msgstr "Décembre"
+
+#~ msgid "…"
+#~ msgstr "…"
+
+#~ msgid "That page number is not an integer"
+#~ msgstr "Ce numéro de page n'est pas un entier"
+
+#~ msgid "That page number is less than 1"
+#~ msgstr "Ce numéro de page est inférieur à 1"
+
+#~ msgid "That page contains no results"
+#~ msgstr "Cette page ne contient aucun résultat"
+
+#~ msgid "Enter a valid value."
+#~ msgstr "Saisissez une valeur valide."
+
+#~ msgid "Enter a valid domain name."
+#~ msgstr "Saisissez un nom de domaine valide."
+
+#~ msgid "Enter a valid URL."
+#~ msgstr "Saisissez une URL valide."
+
+#~ msgid "Enter a valid integer."
+#~ msgstr "Saisissez un entier valide."
+
+#~ msgid "Enter a valid email address."
+#~ msgstr "Saisissez une adresse e-mail valide."
+
+#~ msgid ""
+#~ "Enter a valid “slug” consisting of letters, numbers, underscores or "
+#~ "hyphens."
+#~ msgstr ""
+#~ "Saisissez un slug valide composé de lettres, chiffres, tirets bas ou "
+#~ "tirets."
+
+#~ msgid ""
+#~ "Enter a valid “slug” consisting of Unicode letters, numbers, underscores, "
+#~ "or hyphens."
+#~ msgstr ""
+#~ "Saisissez un slug valide composé de lettres Unicode, chiffres, tirets bas "
+#~ "ou tirets."
+
+#~ msgid "Enter a valid %(protocol)s address."
+#~ msgstr "Saisissez une adresse %(protocol)s valide."
+
+#~ msgid "IPv4"
+#~ msgstr "IPv4"
+
+#~ msgid "IPv6"
+#~ msgstr "IPv6"
+
+#~ msgid "IPv4 or IPv6"
+#~ msgstr "IPv4 ou IPv6"
+
+#~ msgid "Enter only digits separated by commas."
+#~ msgstr "Saisissez uniquement des chiffres séparés par des virgules."
+
+#~ msgid "Ensure this value is %(limit_value)s (it is %(show_value)s)."
+#~ msgstr ""
+#~ "Assurez-vous que cette valeur est %(limit_value)s (elle est de "
+#~ "%(show_value)s)."
+
+#~ msgid "Ensure this value is less than or equal to %(limit_value)s."
+#~ msgstr ""
+#~ "Assurez-vous que cette valeur est inférieure ou égale à %(limit_value)s."
+
+#~ msgid "Ensure this value is greater than or equal to %(limit_value)s."
+#~ msgstr ""
+#~ "Assurez-vous que cette valeur est supérieure ou égale à %(limit_value)s."
+
+#~ msgid "Ensure this value is a multiple of step size %(limit_value)s."
+#~ msgstr "Assurez-vous que cette valeur est un multiple de %(limit_value)s."
+
+#~ msgid ""
+#~ "Ensure this value is a multiple of step size %(limit_value)s, starting "
+#~ "from %(offset)s, e.g. %(offset)s, %(valid_value1)s, %(valid_value2)s, and "
+#~ "so on."
+#~ msgstr ""
+#~ "Assurez-vous que cette valeur est un multiple de %(limit_value)s, à "
+#~ "partir de %(offset)s, par ex. %(offset)s, %(valid_value1)s, "
+#~ "%(valid_value2)s, etc."
+
+#~ msgid ""
+#~ "Ensure this value has at least %(limit_value)d character (it has "
+#~ "%(show_value)d)."
+#~ msgid_plural ""
+#~ "Ensure this value has at least %(limit_value)d characters (it has "
+#~ "%(show_value)d)."
+#~ msgstr[0] ""
+#~ "Assurez-vous que cette valeur comporte au moins %(limit_value)d caractère "
+#~ "(elle en a %(show_value)d)."
+#~ msgstr[1] ""
+#~ "Assurez-vous que cette valeur comporte au moins %(limit_value)d "
+#~ "caractères (elle en a %(show_value)d)."
+
+#~ msgid ""
+#~ "Ensure this value has at most %(limit_value)d character (it has "
+#~ "%(show_value)d)."
+#~ msgid_plural ""
+#~ "Ensure this value has at most %(limit_value)d characters (it has "
+#~ "%(show_value)d)."
+#~ msgstr[0] ""
+#~ "Assurez-vous que cette valeur comporte au maximum %(limit_value)d "
+#~ "caractère (elle en a %(show_value)d)."
+#~ msgstr[1] ""
+#~ "Assurez-vous que cette valeur comporte au maximum %(limit_value)d "
+#~ "caractères (elle en a %(show_value)d)."
+
+#~ msgid "Enter a number."
+#~ msgstr "Saisissez un nombre."
+
+#~ msgid "Ensure that there are no more than %(max)s digit in total."
+#~ msgid_plural "Ensure that there are no more than %(max)s digits in total."
+#~ msgstr[0] "Assurez-vous qu'il n'y a pas plus de %(max)s chiffre au total."
+#~ msgstr[1] "Assurez-vous qu'il n'y a pas plus de %(max)s chiffres au total."
+
+#~ msgid "Ensure that there are no more than %(max)s decimal place."
+#~ msgid_plural "Ensure that there are no more than %(max)s decimal places."
+#~ msgstr[0] "Assurez-vous qu'il n'y a pas plus de %(max)s décimale."
+#~ msgstr[1] "Assurez-vous qu'il n'y a pas plus de %(max)s décimales."
+
+#~ msgid ""
+#~ "Ensure that there are no more than %(max)s digit before the decimal point."
+#~ msgid_plural ""
+#~ "Ensure that there are no more than %(max)s digits before the decimal "
+#~ "point."
+#~ msgstr[0] ""
+#~ "Assurez-vous qu'il n'y a pas plus de %(max)s chiffre avant la virgule."
+#~ msgstr[1] ""
+#~ "Assurez-vous qu'il n'y a pas plus de %(max)s chiffres avant la virgule."
+
+#~ msgid ""
+#~ "File extension “%(extension)s” is not allowed. Allowed extensions are: "
+#~ "%(allowed_extensions)s."
+#~ msgstr ""
+#~ "L'extension “%(extension)s” n'est pas autorisée. Celles autorisées sont : "
+#~ "%(allowed_extensions)s."
+
+#~ msgid "Null characters are not allowed."
+#~ msgstr "Les caractères nuls ne sont pas autorisés."
+
+#~ msgid "and"
+#~ msgstr "et"
+
+#~ msgid "%(model_name)s with this %(field_labels)s already exists."
+#~ msgstr "Un objet %(model_name)s avec ce %(field_labels)s existe déjà."
+
+#~ msgid "Constraint “%(name)s” is violated."
+#~ msgstr "La contrainte “%(name)s” est violée."
+
+#~ msgid "Value %(value)r is not a valid choice."
+#~ msgstr "La valeur %(value)r n'est pas un choix valide."
+
+#~ msgid "This field cannot be null."
+#~ msgstr "Ce champ ne peut pas être nul."
+
+#~ msgid "This field cannot be blank."
+#~ msgstr "Ce champ ne peut pas être vide."
+
+#~ msgid "%(model_name)s with this %(field_label)s already exists."
+#~ msgstr "Un objet %(model_name)s avec ce %(field_label)s existe déjà."
+
+#~ msgid ""
+#~ "%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s."
+#~ msgstr ""
+#~ "%(field_label)s doit être unique pour %(date_field_label)s "
+#~ "%(lookup_type)s."
+
+#~ msgid "Field of type: %(field_type)s"
+#~ msgstr "Champ de type : %(field_type)s"
+
+#~ msgid "“%(value)s” value must be either True or False."
+#~ msgstr "La valeur “%(value)s” doit être True ou False."
+
+#~ msgid "“%(value)s” value must be either True, False, or None."
+#~ msgstr "La valeur “%(value)s” doit être True, False ou None."
+
+#~ msgid "Boolean (Either True or False)"
+#~ msgstr "Booléen (True ou False)"
+
+#~ msgid "String (up to %(max_length)s)"
+#~ msgstr "Chaîne (jusqu'à %(max_length)s)"
+
+#~ msgid "String (unlimited)"
+#~ msgstr "Chaîne (illimitée)"
+
+#~ msgid "Comma-separated integers"
+#~ msgstr "Entiers séparés par des virgules"
+
+#~ msgid ""
+#~ "“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD "
+#~ "format."
+#~ msgstr ""
+#~ "La valeur “%(value)s” a un format de date invalide. Il doit être AAAA-MM-"
+#~ "JJ."
+
+#~ msgid ""
+#~ "“%(value)s” value has the correct format (YYYY-MM-DD) but it is an "
+#~ "invalid date."
+#~ msgstr "La valeur “%(value)s” a le bon format mais la date est invalide."
+
+#~ msgid "Date (without time)"
+#~ msgstr "Date (sans l'heure)"
+
+#~ msgid ""
+#~ "“%(value)s” value has an invalid format. It must be in YYYY-MM-DD HH:MM[:"
+#~ "ss[.uuuuuu]][TZ] format."
+#~ msgstr "Format invalide. Il doit être AAAA-MM-JJ HH:MM[:ss[.uuuuuu]][TZ]."
+
+#~ msgid ""
+#~ "“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
+#~ "[TZ]) but it is an invalid date/time."
+#~ msgstr "Date/heure invalide. “%(value)s”."
+
+#~ msgid "Date (with time)"
+#~ msgstr "Date (avec l'heure)"
+
+#~ msgid "“%(value)s” value must be a decimal number."
+#~ msgstr "La valeur “%(value)s” doit être un nombre décimal."
+
+#~ msgid "Decimal number"
+#~ msgstr "Nombre décimal"
+
+#~ msgid ""
+#~ "“%(value)s” value has an invalid format. It must be in [DD] [[HH:]MM:]ss[."
+#~ "uuuuuu] format."
+#~ msgstr "Format invalide. Utilisez [JJ] [[HH:]MM:]ss[.uuuuuu]. “%(value)s”."
+
+#~ msgid "Duration"
+#~ msgstr "Durée"
+
+#~ msgid "Email address"
+#~ msgstr "Adresse e-mail"
+
+#~ msgid "File path"
+#~ msgstr "Chemin du fichier"
+
+#~ msgid "“%(value)s” value must be a float."
+#~ msgstr "La valeur “%(value)s” doit être un flottant."
+
+#~ msgid "Floating point number"
+#~ msgstr "Nombre à virgule flottante"
+
+#~ msgid "“%(value)s” value must be an integer."
+#~ msgstr "La valeur “%(value)s” doit être un entier."
+
+#~ msgid "Integer"
+#~ msgstr "Entier"
+
+#~ msgid "Big (8 byte) integer"
+#~ msgstr "Grand entier (8 octets)"
+
+#~ msgid "Small integer"
+#~ msgstr "Petit entier"
+
+#~ msgid "IPv4 address"
+#~ msgstr "Adresse IPv4"
+
+#~ msgid "IP address"
+#~ msgstr "Adresse IP"
+
+#~ msgid "“%(value)s” value must be either None, True or False."
+#~ msgstr "La valeur “%(value)s” doit être None, True ou False."
+
+#~ msgid "Boolean (Either True, False or None)"
+#~ msgstr "Booléen (True, False ou None)"
+
+#~ msgid "Positive big integer"
+#~ msgstr "Grand entier positif"
+
+#~ msgid "Positive integer"
+#~ msgstr "Entier positif"
+
+#~ msgid "Positive small integer"
+#~ msgstr "Petit entier positif"
+
+#~ msgid "Slug (up to %(max_length)s)"
+#~ msgstr "Slug (jusqu'à %(max_length)s)"
+
+#~ msgid "Text"
+#~ msgstr "Texte"
+
+#~ msgid ""
+#~ "“%(value)s” value has an invalid format. It must be in HH:MM[:ss[."
+#~ "uuuuuu]] format."
+#~ msgstr "Format d'heure invalide. “%(value)s”."
+
+#~ msgid ""
+#~ "“%(value)s” value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is "
+#~ "an invalid time."
+#~ msgstr "Heure invalide. “%(value)s”."
+
+#~ msgid "Time"
+#~ msgstr "Heure"
+
+#~ msgid "URL"
+#~ msgstr "URL"
+
+#~ msgid "Raw binary data"
+#~ msgstr "Données binaires brutes"
+
+#~ msgid "“%(value)s” is not a valid UUID."
+#~ msgstr "“%(value)s” n'est pas un UUID valide."
+
+#~ msgid "Universally unique identifier"
+#~ msgstr "Identifiant unique universel"
+
+#~ msgid "File"
+#~ msgstr "Fichier"
+
+#~ msgid "Image"
+#~ msgstr "Image"
+
+#~ msgid "A JSON object"
+#~ msgstr "Un objet JSON"
+
+#~ msgid "Value must be valid JSON."
+#~ msgstr "La valeur doit être du JSON valide."
+
+#~ msgid "%(model)s instance with %(field)s %(value)r is not a valid choice."
+#~ msgstr "Instance %(model)s avec %(field)s %(value)r invalide."
+
+#~ msgid "Foreign Key (type determined by related field)"
+#~ msgstr "Clé étrangère (type déterminé par le champ associé)"
+
+#~ msgid "One-to-one relationship"
+#~ msgstr "Relation un-à-un"
+
+#~ msgid "%(from)s-%(to)s relationship"
+#~ msgstr "Relation %(from)s-%(to)s"
+
+#~ msgid "%(from)s-%(to)s relationships"
+#~ msgstr "Relations %(from)s-%(to)s"
+
+#~ msgid "Many-to-many relationship"
+#~ msgstr "Relation plusieurs-à-plusieurs"
+
+#~ msgid ":?.!"
+#~ msgstr ":?.!"
+
+#~ msgid "This field is required."
+#~ msgstr "Ce champ est obligatoire."
+
+#~ msgid "Enter a whole number."
+#~ msgstr "Saisissez un nombre entier."
+
+#~ msgid "Enter a valid date."
+#~ msgstr "Saisissez une date valide."
+
+#~ msgid "Enter a valid time."
+#~ msgstr "Saisissez une heure valide."
+
+#~ msgid "Enter a valid date/time."
+#~ msgstr "Saisissez une date/heure valide."
+
+#~ msgid "Enter a valid duration."
+#~ msgstr "Saisissez une durée valide."
+
+#~ msgid "The number of days must be between {min_days} and {max_days}."
+#~ msgstr ""
+#~ "Le nombre de jours doit être compris entre {min_days} et {max_days}."
+
+#~ msgid "No file was submitted. Check the encoding type on the form."
+#~ msgstr "Aucun fichier soumis. Vérifiez le type d'encodage du formulaire."
+
+#~ msgid "No file was submitted."
+#~ msgstr "Aucun fichier n'a été soumis."
+
+#~ msgid "The submitted file is empty."
+#~ msgstr "Le fichier soumis est vide."
+
+#~ msgid ""
+#~ "Ensure this filename has at most %(max)d character (it has %(length)d)."
+#~ msgid_plural ""
+#~ "Ensure this filename has at most %(max)d characters (it has %(length)d)."
+#~ msgstr[0] ""
+#~ "Assurez-vous que ce nom de fichier ne dépasse pas %(max)d caractère (il "
+#~ "en a %(length)d)."
+#~ msgstr[1] ""
+#~ "Assurez-vous que ce nom de fichier ne dépasse pas %(max)d caractères (il "
+#~ "en a %(length)d)."
+
+#~ msgid "Please either submit a file or check the clear checkbox, not both."
+#~ msgstr ""
+#~ "Veuillez soumettre un fichier ou cocher la case d'effacement, pas les "
+#~ "deux."
+
+#~ msgid ""
+#~ "Upload a valid image. The file you uploaded was either not an image or a "
+#~ "corrupted image."
+#~ msgstr ""
+#~ "Téléchargez une image valide. Le fichier n'était pas une image ou était "
+#~ "corrompu."
+
+#~ msgid ""
+#~ "Select a valid choice. %(value)s is not one of the available choices."
+#~ msgstr ""
+#~ "Sélectionnez un choix valide. %(value)s ne fait pas partie des choix "
+#~ "disponibles."
+
+#~ msgid "Enter a list of values."
+#~ msgstr "Saisissez une liste de valeurs."
+
+#~ msgid "Enter a complete value."
+#~ msgstr "Saisissez une valeur complète."
+
+#~ msgid "Enter a valid UUID."
+#~ msgstr "Saisissez un UUID valide."
+
+#~ msgid "Enter a valid JSON."
+#~ msgstr "Saisissez un JSON valide."
+
+#~ msgid ":"
+#~ msgstr ":"
+
+#~ msgid "(Hidden field %(name)s) %(error)s"
+#~ msgstr "(Champ masqué %(name)s) %(error)s"
+
+#~ msgid ""
+#~ "ManagementForm data is missing or has been tampered with. Missing fields: "
+#~ "%(field_names)s. You may need to file a bug report if the issue persists."
+#~ msgstr ""
+#~ "Données de ManagementForm manquantes ou altérées. Champs : "
+#~ "%(field_names)s."
+
+#~ msgid "Please submit at most %(num)d form."
+#~ msgid_plural "Please submit at most %(num)d forms."
+#~ msgstr[0] "Veuillez soumettre au maximum %(num)d formulaire."
+#~ msgstr[1] "Veuillez soumettre au maximum %(num)d formulaires."
+
+#~ msgid "Please submit at least %(num)d form."
+#~ msgid_plural "Please submit at least %(num)d forms."
+#~ msgstr[0] "Veuillez soumettre au moins %(num)d formulaire."
+#~ msgstr[1] "Veuillez soumettre au moins %(num)d formulaires."
+
+#~ msgid "Order"
+#~ msgstr "Ordre"
+
+#~ msgid "Delete"
+#~ msgstr "Supprimer"
+
+#~ msgid "Please correct the duplicate data for %(field)s."
+#~ msgstr "Veuillez corriger les données dupliquées pour %(field)s."
+
+#~ msgid ""
+#~ "Please correct the duplicate data for %(field)s, which must be unique."
+#~ msgstr ""
+#~ "Veuillez corriger les données dupliquées pour %(field)s, qui doit être "
+#~ "unique."
+
+#~ msgid ""
+#~ "Please correct the duplicate data for %(field_name)s which must be unique "
+#~ "for the %(lookup)s in %(date_field)s."
+#~ msgstr ""
+#~ "Veuillez corriger les données dupliquées pour %(field_name)s qui doit "
+#~ "être unique pour le %(lookup)s dans %(date_field)s."
+
+#~ msgid "Please correct the duplicate values below."
+#~ msgstr "Veuillez corriger les valeurs dupliquées ci-dessous."
+
+#~ msgid "The inline value did not match the parent instance."
+#~ msgstr "La valeur en ligne ne correspond pas à l'instance parente."
+
+#~ msgid ""
+#~ "Select a valid choice. That choice is not one of the available choices."
+#~ msgstr "Sélectionnez un choix valide."
+
+#~ msgid "“%(pk)s” is not a valid value."
+#~ msgstr "“%(pk)s” n'est pas une valeur valide."
+
+#~ msgid ""
+#~ "%(datetime)s couldn’t be interpreted in time zone %(current_timezone)s; "
+#~ "it may be ambiguous or it may not exist."
+#~ msgstr ""
+#~ "%(datetime)s n'a pas pu être interprété dans le fuseau horaire "
+#~ "%(current_timezone)s."
+
+#~ msgid "Clear"
+#~ msgstr "Effacer"
+
+#~ msgid "Currently"
+#~ msgstr "Actuellement"
+
+#~ msgid "Change"
+#~ msgstr "Modifier"
+
+#~ msgid "Unknown"
+#~ msgstr "Inconnu"
+
+#~ msgid "Yes"
+#~ msgstr "Oui"
+
+#~ msgid "No"
+#~ msgstr "Non"
+
+#~ msgctxt "Task"
+#~ msgid "Ready"
+#~ msgstr "Prêt"
+
+#~ msgctxt "Task"
+#~ msgid "Running"
+#~ msgstr "En cours"
+
+#~ msgctxt "Task"
+#~ msgid "Failed"
+#~ msgstr "Échoué"
+
+#~ msgctxt "Task"
+#~ msgid "Successful"
+#~ msgstr "Réussi"
+
+#~ msgid "yes,no,maybe"
+#~ msgstr "oui,non,peut-être"
+
+#~ msgid "%(size)d byte"
+#~ msgid_plural "%(size)d bytes"
+#~ msgstr[0] "%(size)d octet"
+#~ msgstr[1] "%(size)d octets"
+
+#~ msgid "%s KB"
+#~ msgstr "%s Ko"
+
+#~ msgid "%s MB"
+#~ msgstr "%s Mo"
+
+#~ msgid "%s GB"
+#~ msgstr "%s Go"
+
+#~ msgid "%s TB"
+#~ msgstr "%s To"
+
+#~ msgid "%s PB"
+#~ msgstr "%s Po"
+
+#~ msgid "p.m."
+#~ msgstr "p.m."
+
+#~ msgid "a.m."
+#~ msgstr "a.m."
+
+#~ msgid "PM"
+#~ msgstr "PM"
+
+#~ msgid "AM"
+#~ msgstr "AM"
+
+#~ msgid "midnight"
+#~ msgstr "minuit"
+
+#~ msgid "noon"
+#~ msgstr "midi"
+
+#~ msgid "Monday"
+#~ msgstr "Lundi"
+
+#~ msgid "Tuesday"
+#~ msgstr "Mardi"
+
+#~ msgid "Wednesday"
+#~ msgstr "Mercredi"
+
+#~ msgid "Thursday"
+#~ msgstr "Jeudi"
+
+#~ msgid "Friday"
+#~ msgstr "Vendredi"
+
+#~ msgid "Saturday"
+#~ msgstr "Samedi"
+
+#~ msgid "Sunday"
+#~ msgstr "Dimanche"
+
+#~ msgid "Mon"
+#~ msgstr "Lun"
+
+#~ msgid "Tue"
+#~ msgstr "Mar"
+
+#~ msgid "Wed"
+#~ msgstr "Mer"
+
+#~ msgid "Thu"
+#~ msgstr "Jeu"
+
+#~ msgid "Fri"
+#~ msgstr "Ven"
+
+#~ msgid "Sat"
+#~ msgstr "Sam"
+
+#~ msgid "Sun"
+#~ msgstr "Dim"
+
+#~ msgid "jan"
+#~ msgstr "janv"
+
+#~ msgid "feb"
+#~ msgstr "févr"
+
+#~ msgid "mar"
+#~ msgstr "mars"
+
+#~ msgid "apr"
+#~ msgstr "avr"
+
+#~ msgid "may"
+#~ msgstr "mai"
+
+#~ msgid "jun"
+#~ msgstr "juin"
+
+#~ msgid "jul"
+#~ msgstr "juil"
+
+#~ msgid "aug"
+#~ msgstr "août"
+
+#~ msgid "sep"
+#~ msgstr "sept"
+
+#~ msgid "oct"
+#~ msgstr "oct"
+
+#~ msgid "nov"
+#~ msgstr "nov"
+
+#~ msgid "dec"
+#~ msgstr "déc"
+
+#~ msgid "This is not a valid IPv6 address."
+#~ msgstr "Ce n'est pas une adresse IPv6 valide."
+
+#~ msgctxt "String to return when truncating text"
+#~ msgid "%(truncated_text)s…"
+#~ msgstr "%(truncated_text)s…"
+
+#~ msgid "or"
+#~ msgstr "ou"
+
+#~ msgid ", "
+#~ msgstr ", "
+
+#~ msgid "%(num)d year"
+#~ msgid_plural "%(num)d years"
+#~ msgstr[0] "%(num)d an"
+#~ msgstr[1] "%(num)d ans"
+
+#~ msgid "%(num)d month"
+#~ msgid_plural "%(num)d months"
+#~ msgstr[0] "%(num)d mois"
+#~ msgstr[1] "%(num)d mois"
+
+#~ msgid "%(num)d week"
+#~ msgid_plural "%(num)d weeks"
+#~ msgstr[0] "%(num)d semaine"
+#~ msgstr[1] "%(num)d semaines"
+
+#~ msgid "%(num)d day"
+#~ msgid_plural "%(num)d days"
+#~ msgstr[0] "%(num)d jour"
+#~ msgstr[1] "%(num)d jours"
+
+#~ msgid "%(num)d hour"
+#~ msgid_plural "%(num)d hours"
+#~ msgstr[0] "%(num)d heure"
+#~ msgstr[1] "%(num)d heures"
+
+#~ msgid "%(num)d minute"
+#~ msgid_plural "%(num)d minutes"
+#~ msgstr[0] "%(num)d minute"
+#~ msgstr[1] "%(num)d minutes"
+
+#~ msgid "Forbidden"
+#~ msgstr "Interdit"
+
+#~ msgid "CSRF verification failed. Request aborted."
+#~ msgstr "Échec de la vérification CSRF. Requête interrompue."
+
+#~ msgid ""
+#~ "You are seeing this message because this HTTPS site requires a “Referer "
+#~ "header” to be sent by your web browser, but none was sent. This header is "
+#~ "required for security reasons, to ensure that your browser is not being "
+#~ "hijacked by third parties."
+#~ msgstr "En-tête Referer manquant pour des raisons de sécurité."
+
+#~ msgid ""
+#~ "If you have configured your browser to disable “Referer” headers, please "
+#~ "re-enable them, at least for this site, or for HTTPS connections, or for "
+#~ "“same-origin” requests."
+#~ msgstr "Veuillez réactiver les en-têtes Referer dans votre navigateur."
+
+#~ msgid ""
+#~ "If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag "
+#~ "or including the “Referrer-Policy: no-referrer” header, please remove "
+#~ "them. The CSRF protection requires the “Referer” header to do strict "
+#~ "referer checking. If you’re concerned about privacy, use alternatives "
+#~ "like <a rel=\"noreferrer\" …> for links to third-party sites."
+#~ msgstr "Veuillez supprimer les balises désactivant le Referer."
+
+#~ msgid ""
+#~ "You are seeing this message because this site requires a CSRF cookie when "
+#~ "submitting forms. This cookie is required for security reasons, to ensure "
+#~ "that your browser is not being hijacked by third parties."
+#~ msgstr ""
+#~ "Un cookie CSRF est requis pour soumettre ce formulaire en toute sécurité."
+
+#~ msgid ""
+#~ "If you have configured your browser to disable cookies, please re-enable "
+#~ "them, at least for this site, or for “same-origin” requests."
+#~ msgstr "Veuillez réactiver les cookies dans votre navigateur."
+
+#~ msgid "More information is available with DEBUG=True."
+#~ msgstr "Plus d'informations sont disponibles avec DEBUG=True."
+
+#~ msgid "No year specified"
+#~ msgstr "Aucune année spécifiée"
+
+#~ msgid "Date out of range"
+#~ msgstr "Date hors limite"
+
+#~ msgid "No month specified"
+#~ msgstr "Aucun mois spécifié"
+
+#~ msgid "No day specified"
+#~ msgstr "Aucun jour spécifié"
+
+#~ msgid "No week specified"
+#~ msgstr "Aucune semaine spécifiée"
+
+#~ msgid "No %(verbose_name_plural)s available"
+#~ msgstr "Aucun(e) %(verbose_name_plural)s disponible"
+
+#~ msgid ""
+#~ "Future %(verbose_name_plural)s not available because %(class_name)s."
+#~ "allow_future is False."
+#~ msgstr ""
+#~ "Les %(verbose_name_plural)s futurs ne sont pas disponibles, "
+#~ "%(class_name)s."
+
+#~ msgid "Invalid date string “%(datestr)s” given format “%(format)s”"
+#~ msgstr "Chaîne de date invalide “%(datestr)s” pour le format “%(format)s”"
+
+#~ msgid "No %(verbose_name)s found matching the query"
+#~ msgstr "Aucun(e) %(verbose_name)s ne correspond à la requête"
+
+#~ msgid "Page is not “last”, nor can it be converted to an int."
+#~ msgstr "La page n'est ni “last” ni convertible en entier."
+
+#~ msgid "Invalid page (%(page_number)s): %(message)s"
+#~ msgstr "Page invalide (%(page_number)s) : %(message)s"
+
+#~ msgid "Empty list and “%(class_name)s.allow_empty” is False."
+#~ msgstr "Liste vide et “%(class_name)s.allow_empty” est False."
+
+#~ msgid "Directory indexes are not allowed here."
+#~ msgstr "Les index de répertoire ne sont pas autorisés ici."
+
+#~ msgid "“%(path)s” does not exist"
+#~ msgstr "“%(path)s” n'existe pas"
+
+#~ msgid "Index of %(directory)s"
+#~ msgstr "Index de %(directory)s"
+
+#~ msgid "The install worked successfully! Congratulations!"
+#~ msgstr "L'installation a réussi ! Félicitations !"
+
+#~ msgid ""
+#~ "View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
+#~ "target=\"_blank\" rel=\"noopener\">release notes</a> for Django "
+#~ "%(version)s"
+#~ msgstr "Voir les notes de version pour Django %(version)s"
+
+#~ msgid ""
+#~ "You are seeing this page because <a href=\"https://docs.djangoproject.com/"
+#~ "en/%(version)s/ref/settings/#debug\" target=\"_blank\" "
+#~ "rel=\"noopener\">DEBUG=True</a> is in your settings file and you have not "
+#~ "configured any URLs."
+#~ msgstr ""
+#~ "Vous voyez cette page car DEBUG=True et aucune URL n'est configurée pour "
+#~ "%(version)s."
+
+#~ msgid "Django Documentation"
+#~ msgstr "Documentation Django"
+
+#~ msgid "Topics, references, &amp; how-to’s"
+#~ msgstr "Sujets, références et tutoriels"
+
+#~ msgid "Tutorial: A Polling App"
+#~ msgstr "Tutoriel : Une application de sondage"
+
+#~ msgid "Get started with Django"
+#~ msgstr "Commencer avec Django"
+
+#~ msgid "Django Community"
+#~ msgstr "Communauté Django"
+
+#~ msgid "Connect, get help, or contribute"
+#~ msgstr "Connectez-vous, obtenez de l'aide ou contribuez"
+
+#~ msgid "Open menu"
+#~ msgstr "Ouvrir le menu"
+
+#~ msgid "Skilled Hands. Trusted Service."
+#~ msgstr "Des mains expertes. Un service de confiance."
+
+#~ msgid "Platform Capabilities"
+#~ msgstr "Fonctionnalités de la plateforme"
+
+#~ msgid "Discovery"
+#~ msgstr "Découverte"
+
+#~ msgid "Unlocked"
+#~ msgstr "Débloqué"
+
+#~ msgid ""
+#~ "You can browse service categories, view basic provider profiles, and "
+#~ "search for specific skills in your area."
+#~ msgstr ""
+#~ "Vous pouvez parcourir les catégories de services, consulter les profils "
+#~ "de base des prestataires et rechercher des compétences."
+
+#~ msgid "Booking & Communication"
+#~ msgstr "Réservation et communication"
+
+#~ msgid "Direct in-app messaging"
+#~ msgstr "Messagerie directe dans l'application"
+
+#~ msgid "Post custom job requests"
+#~ msgstr "Publier des demandes de travail personnalisées"
+
+#~ msgid "Request price quotations"
+#~ msgstr "Demander des devis"
+
+#~ msgid "Post Job"
+#~ msgstr "Publier un travail"
+
+#~ msgid "Feature Locked"
+#~ msgstr "Fonctionnalité verrouillée"
+
+#~ msgid ""
+#~ "Direct messaging, booking execution, job posting, and advanced filters "
+#~ "are not available on your current plan. Upgrade to unlock full access."
+#~ msgstr "Mettez à niveau pour débloquer l'accès complet."

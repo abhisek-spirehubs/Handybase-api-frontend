@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Handybase</title>
+
+  <style>
+    body {
+      background-color: #fff8f1;
+      padding: 20px;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .card {
+      max-width: 600px;
+      margin: auto;
+      background: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #090909;
+    }
+
+    .content {
+      padding: 25px 20px;
+      text-align: center;
+      color: #333333;
+    }
+
+    .info-box {
+      background: #e9f0f1;
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px dashed #0c0c0c;
+      margin: 20px auto;
+      font-size: 14px;
+      line-height: 1.6;
+      width: fit-content;
+      text-align: left;
+      display: inline-block;
+      color: #333333;
+    }
+
+    hr {
+      border: 0;
+      border-top: 1px solid #d8f5f6;
+      margin: 25px 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+
+    <!-- HEADER -->
+    <table width="100%" role="presentation">
+      <tr>
+        <td align="center" style="padding: 12px 0;">
+          <img
+            src="https://via.placeholder.com/420x130?text=Handybase"
+            alt="Handybase"
+            width="420"
+            style="display:block;width:100%;max-width:420px;height:auto;"
+          />
+        </td>
+      </tr>
+    </table>
+
+    <!-- BODY -->
+    <div class="content">
+      <p>
+        Hi
+        <strong style="color:#0084ff;">
+          {{ fname }}
+        </strong>,
+      </p>
+
+      <!-- Client registration -->
+      {% if userRegisteration %}
+      <p style="margin-top:15px; font-weight:bold; font-size:18px;">
+        Welcome to Handybase!
+      </p>
+
+      <div class="info-box">
+        <p><strong>Email:</strong> {{ email }}</p>
+        <p><strong>Status:</strong> Active</p>
+      </div>
+      {% endif %}
+
+      <!-- Provider registration -->
+      {% if providerRegisteration %}
+      <p style="margin-top:15px; font-weight:bold; font-size:18px;">
+        Your provider account is under review.
+      </p>
+
+      <div class="info-box">
+        <p><strong>Email:</strong> {{ email }}</p>
+        <p><strong>Status:</strong> Pending Approval</p>
+      </div>
+      {% endif %}
+
+
+      {% if providerApproved %}
+      <p style="margin-top:15px;font-size:18px;font-weight:700;color:#111;">
+        Your provider account has been approved
+      </p>
+
+      <p style="margin-top:10px;font-size:15px;color:#444;line-height:1.6;">
+        Congratulations! Your provider account has been successfully verified by the Handybase team.
+        You can now log in and start listing your services, managing bookings, and growing your business.
+      </p>
+
+      <div class="info-box">
+        <p><strong>Account Email:</strong> {{ email }}</p>
+        <p><strong>Status:</strong> Approved</p>
+      </div>
+
+      <p style="margin-top:18px;font-size:14px;color:#555;">
+        If you have any questions, feel free to contact our support team.
+      </p>
+      {% endif %}
+
+
+      {% if providerRejected %}
+      <p style="margin-top:15px;font-size:18px;font-weight:700;color:#111;">
+        Your provider account was not approved
+      </p>
+
+      <p style="margin-top:10px;font-size:15px;color:#444;line-height:1.6;">
+        Unfortunately, your provider application did not meet our requirements at this time.
+      </p>
+
+      <div class="info-box">
+        <p><strong>Account Email:</strong> {{ email }}</p>
+        <p><strong>Status:</strong> Rejected</p>
+        {% if reason %}
+        <p><strong>Reason:</strong> {{ reason }}</p>
+        {% endif %}
+      </div>
+
+      <p style="margin-top:18px;font-size:14px;color:#555;">
+        You may update your details and apply again, or contact support for assistance.
+      </p>
+      {% endif %}
+
+
+
+      {% if serviceRejected %}
+      <p style="margin-top:15px;font-size:18px;font-weight:700;color:#111;">
+        Your service was not approved
+      </p>
+
+      <p style="margin-top:10px;font-size:15px;color:#444;line-height:1.6;">
+        Your submitted service did not pass our review process.
+        Please review the feedback below and resubmit after making corrections.
+      </p>
+
+      <div class="info-box">
+        <p><strong>Service:</strong> {{ serviceTitle }}</p>
+        <p><strong>Status:</strong> Rejected</p>
+        {% if reason %}
+        <p><strong>Reason:</strong> {{ reason }}</p>
+        {% endif %}
+      </div>
+
+      <p style="margin-top:18px;font-size:14px;color:#555;">
+        You can update the service details and submit it again for approval.
+      </p>
+      {% endif %}
+
+
+
+      {% if serviceApproved %}
+      <p style="margin-top:15px;font-size:18px;font-weight:700;color:#111;">
+        Your service is now live
+      </p>
+
+      <p style="margin-top:10px;font-size:15px;color:#444;line-height:1.6;">
+        Good news! Your service has been reviewed and approved by our team.
+        It is now visible to customers and available for bookings.
+      </p>
+
+      <div class="info-box">
+        <p><strong>Service:</strong> {{ serviceTitle }}</p>
+        <p><strong>Status:</strong> Approved</p>
+      </div>
+
+      <p style="margin-top:18px;font-size:14px;color:#555;">
+        Keep your availability updated to receive more bookings.
+      </p>
+      {% endif %}
+
+
+
+
+      <!-- OTP -->
+      {% if sendOtp %}
+      <p style="margin-top:15px;">Your OTP code:</p>
+
+      <div class="info-box" style="font-size:24px; font-weight:bold;">
+        {{ otpCode }}
+      </div>
+      {% endif %}
+
+      <!-- Password reset -->
+      {% if forgetPassword %}
+      <p>Password reset successfully.</p>
+      {% endif %}
+
+      <!-- Password changed -->
+      {% if passwordChanged %}
+      <p>Password changed successfully.</p>
+      {% endif %}
+
+
+      <!-- ── Invoice block — shown on all subscription emails ── -->
+      {% if showInvoice %}
+      <div style="margin-top:25px;">
+        <p style="font-size:16px;font-weight:700;color:#111;margin-bottom:10px;">
+          Invoice Details
+        </p>
+
+        <div class="info-box" style="width:100%;box-sizing:border-box;">
+          <table style="width:100%;font-size:14px;line-height:2;">
+            <tr>
+              <td><strong>Invoice #</strong></td>
+              <td align="right">{{ invoiceNumber }}</td>
+            </tr>
+            <tr>
+              <td><strong>Date</strong></td>
+              <td align="right">{{ invoiceDate }}</td>
+            </tr>
+            <tr>
+              <td><strong>Type</strong></td>
+              <td align="right">{{ invoiceType }}</td>
+            </tr>
+            <tr>
+              <td><strong>Plan</strong></td>
+              <td align="right">{{ planName }}</td>
+            </tr>
+            <tr>
+              <td><strong>Billing Period</strong></td>
+              <td align="right">{{ periodStart }} → {{ periodEnd }}</td>
+            </tr>
+            <tr><td colspan="2"><hr style="border:0;border-top:1px solid #ccc;"/></td></tr>
+            <tr>
+              <td>Subtotal</td>
+              <td align="right">{{ currency }} {{ subtotal }}</td>
+            </tr>
+            <tr>
+              <td>Tax ({{ taxRate }})</td>
+              <td align="right">{{ currency }} {{ taxAmount }}</td>
+            </tr>
+            <tr>
+              <td><strong>Total</strong></td>
+              <td align="right"><strong>{{ currency }} {{ total }}</strong></td>
+            </tr>
+            <tr><td colspan="2"><hr style="border:0;border-top:1px solid #ccc;"/></td></tr>
+            <tr>
+              <td>Payment Ref</td>
+              <td align="right" style="font-size:12px;color:#666;">{{ paymentId }}</td>
+            </tr>
+            <tr>
+              <td>Billed To</td>
+              <td align="right">{{ billingName }}<br/>{{ billingEmail }}</td>
+            </tr>
+          </table>
+        </div>
+
+        <p style="font-size:12px;color:#888;margin-top:10px;">
+          Please keep this invoice for your records.
+          Contact support if you have any questions.
+        </p>
+      </div>
+      {% endif %}
+
+      <!-- Subscription confirmed -->
+      {% if subscriptionConfirmed %}
+      <p style="margin-top:15px;font-size:18px;font-weight:700;color:#111;">
+        Subscription Confirmed
+      </p>
+      <p style="font-size:15px;color:#444;line-height:1.6;">
+        Thank you for subscribing. Your plan is now active and all features are unlocked.
+      </p>
+      {% endif %}
+
+      <!-- Subscription upgraded -->
+      {% if subscriptionUpgraded %}
+      <p style="margin-top:15px;font-size:18px;font-weight:700;color:#111;">
+        Plan Upgraded Successfully
+      </p>
+      <p style="font-size:15px;color:#444;line-height:1.6;">
+        Your plan has been upgraded. New features are available immediately.
+      </p>
+      {% endif %}
+
+      <!-- Subscription renewed -->
+      {% if subscriptionRenewed %}
+      <p style="margin-top:15px;font-size:18px;font-weight:700;color:#111;">
+        Subscription Renewed
+      </p>
+      <p style="font-size:15px;color:#444;line-height:1.6;">
+        Your subscription has been renewed for another cycle.
+      </p>
+      {% endif %}
+
+      <!-- Subscription cancelled -->
+      {% if subscriptionCancelled %}
+      <p style="margin-top:15px;font-size:18px;font-weight:700;color:#111;">
+        Subscription Cancelled
+      </p>
+      <p style="font-size:15px;color:#444;line-height:1.6;">
+        Your subscription has been cancelled. You have been moved back to the free plan.
+      </p>
+      <div class="info-box">
+        <p><strong>Plan:</strong> {{ planName }}</p>
+        <p><strong>Cancelled On:</strong> {{ cancelledAt }}</p>
+        {% if reason %}
+        <p><strong>Reason:</strong> {{ reason }}</p>
+        {% endif %}
+      </div>
+      <p style="font-size:14px;color:#555;margin-top:15px;">
+        You can resubscribe at any time from your account settings.
+      </p>
+      {% endif %}
+
+
+
+      <!-- ── Support Reply ───────────────────────────── -->
+      {% if supportReply %}
+      <p style="margin-top:15px;font-size:18px;font-weight:700;color:#111;">
+        Support Team Reply
+      </p>
+
+      <p style="margin-top:10px;font-size:15px;color:#444;line-height:1.6;">
+        Our support team has responded to your ticket.
+      </p>
+
+      <div class="info-box">
+        <p><strong>Ticket ID:</strong> {{ ticket_id }}</p>
+        <p><strong>Message:</strong></p>
+        <p>{{ message }}</p>
+      </div>
+      {% endif %}
+
+
+      <!-- ── Ticket Closed ───────────────────────────── -->
+      {% if ticketClosed %}
+      <p style="margin-top:15px;font-size:18px;font-weight:700;color:#111;">
+        Your Support Ticket Has Been Resolved
+      </p>
+
+      <p style="margin-top:10px;font-size:15px;color:#444;line-height:1.6;">
+        Your issue has been resolved by our support team.
+      </p>
+
+      <div class="info-box">
+        <p><strong>Ticket ID:</strong> {{ ticket_id }}</p>
+        <p><strong>Status:</strong> Closed</p>
+      </div>
+      {% endif %}
+
+
+      <hr />
+
+      <p>
+        Best regards,<br />
+        <strong>Handybase Team</strong>
+      </p>
+    </div>
+  </div>
+</body>
+</html>

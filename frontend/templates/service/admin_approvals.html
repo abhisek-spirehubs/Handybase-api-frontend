@@ -1,0 +1,76 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+{% block title %}Service Approvals | Admin{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-2xl font-bold text-foreground">Service Approvals</h1>
+    <p class="text-muted-foreground mt-1">Review and approve new services submitted by providers.</p>
+</div>
+
+<div class="bg-secondary rounded-xl shadow-sm border border-border overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead class="bg-background border-b border-border">
+                <tr>
+                    <th class="p-4 text-muted-foreground font-semibold w-16">Image</th>
+                    <th class="p-4 text-muted-foreground font-semibold">Service Details</th>
+                    <th class="p-4 text-muted-foreground font-semibold">Pricing</th>
+                    <th class="p-4 text-muted-foreground font-semibold">Provider ID</th>
+                    <th class="p-4 text-muted-foreground font-semibold text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% for service in services %}
+                <tr class="hover:bg-background transition">
+                    <td class="p-4">
+                        <div class="h-12 w-12 rounded bg-gray-200 overflow-hidden">
+                            {% if service.images %}
+                                <img src="{{ service.images.0 }}" class="w-full h-full object-cover">
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td class="p-4">
+                        <strong class="text-foreground block">{{ service.title }}</strong>
+                        <span class="text-muted-foreground text-xs line-clamp-1">{{ service.description }}</span>
+                    </td>
+                    <td class="p-4">
+                        <strong class="text-foreground">${{ service.price|floatformat:2 }}</strong>
+                        <span class="text-muted-foreground text-xs block">{{ service.duration }} mins</span>
+                    </td>
+                    <td class="p-4">
+                        <span class="text-xs text-muted-foreground font-mono bg-background px-2 py-1 rounded">{{ service.provider_id|truncatechars:12 }}</span>
+                    </td>
+                    <td class="p-4 text-right">
+                        <div class="flex justify-end gap-2">
+                            <form method="post" class="inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="service_id" value="{{ service.id }}">
+                                <input type="hidden" name="action" value="approve">
+                                <button type="submit" class="px-3 py-1.5 bg-green-50 text-green-700 font-bold text-xs rounded hover:bg-green-100 border border-green-200">Approve</button>
+                            </form>
+                            <form method="post" class="inline" onsubmit="return prompt('Enter rejection reason:');">
+                                {% csrf_token %}
+                                <input type="hidden" name="service_id" value="{{ service.id }}">
+                                <input type="hidden" name="action" value="reject">
+                                <!-- JS prompt replaces this value before submit if desired, or keep simple -->
+                                <input type="hidden" name="reason" value="Does not meet platform guidelines.">
+                                <button type="submit" class="px-3 py-1.5 bg-red-50 text-red-700 font-bold text-xs rounded hover:bg-red-100 border border-red-200">Reject</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="p-12 text-center text-muted-foreground">
+                        <div class="text-4xl mb-2">🎉</div>
+                        <p class="font-semibold text-foreground">All caught up!</p>
+                        <p class="text-sm">There are no pending services to approve.</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

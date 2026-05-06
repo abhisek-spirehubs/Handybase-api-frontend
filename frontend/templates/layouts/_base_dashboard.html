@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+{% load i18n static %}
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <title>{% block title %}SENTINEL AI | Dashboard{% endblock %}</title> -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/preline/dist/preline.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <style>
+        :root {
+            /* Sleek, professional light theme */
+            --background: 0 0% 98%;      /* Very light gray background (#fafafa) */
+            --foreground: 222 84% 5%;    /* Deep slate for highly readable text */
+            
+            --primary: 25 35% 45%;       /* Professional Earthy Brown */
+            --primary-foreground: 0 0% 100%; 
+            
+            --secondary: 0 0% 100%;      
+            --secondary-foreground: 222 47% 11%;
+            
+            --muted: 210 40% 96%;        
+            --muted-foreground: 215 16% 47%; 
+            
+            --accent: 25 35% 95%;        /* Soft brown accent */
+            --accent-foreground: 25 35% 25%;
+            
+            --destructive: 0 84% 60%;
+            
+            --border: 214 32% 91%;       
+            --input: 214 32% 91%;        
+            --ring: 25 35% 45%;
+            
+            --radius: 0.5rem;
+            --nav-button: 210 40% 96%;
+            --hero-bg: 0 0% 100%;        /* White fallback */
+        }
+
+        body {
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            font-family: 'Sora', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Global Form Input Standard - Perfectly Readable */
+        input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
+        textarea,
+        select {
+            background-color: hsl(0 0% 100%); /* Solid white for perfect readability */
+            color: hsl(var(--foreground));
+            border-color: hsl(var(--border));
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); /* Subtle depth */
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: hsl(var(--ring));
+            box-shadow: 0 0 0 1px hsl(var(--ring));
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: hsl(var(--muted-foreground));
+            opacity: 0.7;
+        }
+    </style>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sora: ["Sora", "sans-serif"] },
+                    colors: {
+                        background: 'hsl(var(--background))',
+                        foreground: 'hsl(var(--foreground))',
+                        primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+                        secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+                        muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+                        accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+                        destructive: 'hsl(var(--destructive))',
+                        border: 'hsl(var(--border))',
+                        input: 'hsl(var(--input))',
+                        ring: 'hsl(var(--ring))',
+                        'nav-button': 'hsl(var(--nav-button))',
+                        'hero-bg': 'hsl(var(--hero-bg))',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-background text-foreground antialiased overflow-x-hidden font-sora">
+
+    <div class="flex w-full min-h-screen relative z-0">
+        <!-- Sidebar -->
+        {% include 'components/organisms/_sidebar.html' %}
+
+        <main class="flex-1 w-full lg:ml-64 flex flex-col min-w-0">
+            <!-- Solid Translucent Header -->
+            <header class="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border">
+                <div class="h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+                    <div class="flex items-center gap-4">
+                        <button type="button"
+                            class="lg:hidden size-10 bg-secondary border border-border text-foreground hover:bg-secondary/80 rounded-lg flex items-center justify-center shrink-0"
+                            data-hs-overlay="#hs-sidebar-offcanvas">
+                            <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+
+                        <!-- Navbar Logo -->
+                        <div class="lg:hidden">
+                            <a href="{% url 'home' %}" class="flex items-center gap-2.5 group outline-none">
+                                <img src="{% static 'assets/logo.svg' %}" alt="HandyBase Logo"
+                                    class="h-8 w-auto object-contain transition duration-300 group-hover:drop-shadow-[0_0_8px_#3B82F6]" />
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        {% include 'components/molecules/_language_switcher.html' %}
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content Container -->
+            <div class="p-6 sm:p-10 w-full max-w-[1400px] mx-auto flex-1">
+                {% include 'components/molecules/_alerts.html' %}
+                <div class="w-full block clear-both mt-2">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </main>
+    </div>
+
+    {% comment %}
+    <!-- Lazy-load Spline viewer to avoid blocking initial render -->
+    <script>
+            (function () {
+                const PLACE_ATTR = 'data-spline-placeholder';
+                const el = document.querySelector('[' + PLACE_ATTR + ']');
+                if (!el) return;
+
+                let loaded = false;
+
+                function loadSpline() {
+                    if (loaded) return; loaded = true;
+
+                    // load the remote module script asynchronously
+                    const s = document.createElement('script');
+                    s.type = 'module';
+                    s.src = 'https://unpkg.com/@splinetool/viewer@1.0.94/build/spline-viewer.js';
+                    s.async = true;
+                    s.onload = () => {
+                        const url = el.getAttribute('data-spline-url');
+                        const viewer = document.createElement('spline-viewer');
+                        viewer.setAttribute('url', url);
+                        viewer.setAttribute('events-target', 'global');
+                        viewer.className = 'w-full h-full';
+                        // replace placeholder content
+                        el.innerHTML = '';
+                        el.appendChild(viewer);
+                    };
+                    document.body.appendChild(s);
+                }
+
+                // Load when placeholder becomes visible
+                if ('IntersectionObserver' in window) {
+                    const io = new IntersectionObserver((entries) => {
+                        entries.forEach(en => {
+                            if (en.isIntersecting) { loadSpline(); io.disconnect(); }
+                        });
+                    }, { rootMargin: '200px' });
+                    io.observe(el);
+                } else {
+                    // Fallback: load after short timeout
+                    setTimeout(loadSpline, 1500);
+                }
+
+                // Also allow user interaction to force-load earlier
+                ['click', 'keydown', 'touchstart', 'mousemove'].forEach(evt => {
+                    const handler = () => { loadSpline(); removeListeners(); };
+                    window.addEventListener(evt, handler, { passive: true });
+                    function removeListeners() { ['click', 'keydown', 'touchstart', 'mousemove'].forEach(e => window.removeEventListener(e, handler)); }
+                });
+            })();
+    </script>
+    {% endcomment %}
+
+    <!-- Notification Toast Container -->
+    <div id="notification-toast-container" class="fixed bottom-5 right-5 z-[100] flex flex-col gap-3 max-w-sm w-full"></div>
+
+    <script>
+        /**
+         * Enterprise Notification Polling System
+         * Periodically checks for new unread notifications and shows a toast popup.
+         */
+        (function() {
+            const POLLING_INTERVAL = 10000; // 10 seconds for better reactivity
+            let lastSeenId = localStorage.getItem('last_notification_id');
+            console.log('Notification system initialized. Polling every 10s.');
+
+            async function checkNotifications() {
+                console.log('Checking for new notifications...');
+                try {
+                    const response = await fetch('{% url "notifications:api_latest" %}');
+                    const data = await response.json();
+
+                    if (data.count !== undefined) {
+                        updateBadge(data.count);
+                    }
+
+                    if (data.latest && data.latest.id !== lastSeenId) {
+                        showToast(data.latest);
+                        lastSeenId = data.latest.id;
+                        localStorage.setItem('last_notification_id', lastSeenId);
+                    }
+                } catch (error) {
+                    console.error('Notification check failed:', error);
+                }
+            }
+
+            function updateBadge(count) {
+                const badge = document.getElementById('notification-badge');
+                if (!badge) return;
+                
+                if (count > 0) {
+                    badge.innerText = count;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+
+            function showToast(notification) {
+                const container = document.getElementById('notification-toast-container');
+                if (!container) return;
+
+                const toast = document.createElement('div');
+                toast.className = "bg-secondary/95 backdrop-blur-md border border-border p-4 rounded-xl shadow-2xl transform transition-all duration-500 translate-y-10 opacity-0 flex gap-4 items-start ring-1 ring-black/5";
+                
+                // Icon based on type
+                let iconColor = "text-blue-600 bg-blue-600/10";
+                if (notification.type === 'success') iconColor = "text-green-600 bg-green-600/10";
+                if (notification.type === 'danger') iconColor = "text-red-600 bg-red-600/10";
+                if (notification.type === 'warning') iconColor = "text-yellow-600 bg-yellow-600/10";
+
+                toast.innerHTML = `
+                    <div class="shrink-0 p-2 rounded-lg ${iconColor}">
+                        <svg class="size-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="text-sm font-bold text-foreground truncate">${notification.title}</h4>
+                        <p class="text-xs text-muted-foreground mt-1 line-clamp-2">${notification.message}</p>
+                    </div>
+                    <button onclick="this.parentElement.remove()" class="text-muted-foreground hover:text-foreground">
+                        <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                `;
+
+                container.appendChild(toast);
+                
+                // Animation
+                setTimeout(() => {
+                    toast.classList.remove('translate-y-10', 'opacity-0');
+                }, 100);
+
+                // Auto-remove after 8 seconds
+                setTimeout(() => {
+                    toast.classList.add('opacity-0');
+                    setTimeout(() => toast.remove(), 500);
+                }, 8000);
+            }
+
+            // Initial check and start polling
+            if (document.getElementById('notification-badge')) {
+                setInterval(checkNotifications, POLLING_INTERVAL);
+            }
+        })();
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,451 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | HandyBase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: #09090b;
+      color: #fafafa;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .auth-container {
+      display: flex;
+      width: 100%;
+      max-width: 1100px;
+      min-height: 700px;
+      background-color: #18181b;
+      border-radius: 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      border: 1px solid #27272a;
+      overflow: hidden;
+      animation: fadeIn 0.6s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .auth-media {
+      flex: 1;
+      position: relative;
+      background-color: #000;
+      display: none;
+    }
+
+    @media (min-width: 900px) {
+      .auth-media {
+        display: block;
+      }
+    }
+
+    .auth-media-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      opacity: 0.6;
+      background-color: #000;
+    }
+
+    .auth-media-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(9, 9, 11, 0.2), rgba(9, 9, 11, 0.9));
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .brand-logo {
+      height: 28px;
+      width: auto;
+    }
+
+    .media-text-wrap h1 {
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      letter-spacing: -0.03em;
+    }
+
+    .media-text-wrap p {
+      color: #a1a1aa;
+      font-size: 16px;
+      line-height: 1.5;
+      max-width: 90%;
+    }
+
+    .auth-form-wrapper {
+      flex: 1;
+      padding: 48px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+
+    @media (min-width: 600px) {
+      .auth-form-wrapper {
+        padding: 64px;
+      }
+    }
+
+    .back-link {
+      position: absolute;
+      top: 48px;
+      right: 48px;
+      color: #a1a1aa;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: #fafafa;
+    }
+
+    .auth-view {
+      display: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+    }
+
+    .auth-view.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .view-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .view-subtitle {
+      color: #a1a1aa;
+      font-size: 15px;
+      margin-bottom: 40px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 500;
+      color: #e4e4e7;
+      margin-bottom: 8px;
+    }
+
+    .form-label a {
+      color: #a78bfa;
+      text-decoration: none;
+    }
+
+    .form-label a:hover {
+      color: #c4b5fd;
+    }
+
+    .form-input {
+      width: 100%;
+      background-color: #27272a;
+      border: 1px solid transparent;
+      color: #fafafa;
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .form-input::placeholder {
+      color: #71717a;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #8b5cf6;
+      background-color: #18181b;
+      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+    }
+
+    .form-submit {
+      width: 100%;
+      background-color: #fafafa;
+      color: #09090b;
+      border: none;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.2s;
+    }
+
+    .form-submit:hover {
+      background-color: #e4e4e7;
+      transform: translateY(-1px);
+    }
+
+    .auth-switch {
+      margin-top: 32px;
+      text-align: center;
+      font-size: 14px;
+      color: #a1a1aa;
+    }
+
+    .auth-switch-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 12px;
+    }
+
+    .auth-switch-links a {
+      color: #fafafa;
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+    }
+
+    .auth-switch-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background-color: #27272a;
+      transition: background-color 0.2s;
+    }
+
+    .auth-switch-links a:hover::after {
+      background-color: #fafafa;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="auth-container">
+    <div class="auth-media">
+      <video autoplay muted loop playsinline class="auth-media-video" width="1920" height="1080">
+        <source src="{% static 'assets/logo_video.mp4' %}" type="video/mp4">
+      </video>
+      <div class="auth-media-overlay">
+        <a href="{% url 'auth:landing' %}">
+          <img src="{% static 'assets/logo.svg' %}" alt="HandyBase" class="brand-logo" width="160" height="32" />
+        </a>
+        <div class="media-text-wrap">
+          <h1>Building the future<br>of local services.</h1>
+          <p>Join the professional network of trusted local services and skilled hands.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-form-wrapper">
+      <a href="{% url 'auth:landing' %}" class="back-link">Back to website</a>
+
+      <div id="view-login" class="auth-view active">
+        <h2 class="view-title">Welcome back</h2>
+        <p class="view-subtitle">Enter your credentials to access your account</p>
+
+        <form action="{% url 'auth:login' %}" method="POST">
+          {% csrf_token %}
+          <div class="form-group">
+            <label class="form-label">Email address</label>
+            <input type="email" name="email" class="form-input" placeholder="name@example.com" required>
+          </div>
+          <div class="form-group">
+            <div class="form-label">
+              <span>Password</span>
+              <a href="#" onclick="switchView('view-forgot')">Forgot password?</a>
+            </div>
+            <input type="password" name="password" class="form-input" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="form-submit">Sign In</button>
+        </form>
+
+        <div class="auth-switch">
+          Don't have an account?
+          <div class="auth-switch-links">
+            <a href="#" onclick="switchView('view-client')">Join as Client</a>
+            <a href="#" onclick="switchView('view-provider')">Join as Provider</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="view-client" class="auth-view">
+        <h2 class="view-title">Create account</h2>
+        <p class="view-subtitle">Join to book trusted local professionals</p>
+
+        <form action="{% url 'auth:register_client' %}" method="POST">
+          {% csrf_token %}
+          <div class="form-row">
+            <div>
+              <label class="form-label">First name</label>
+              <input type="text" name="fname" class="form-input" placeholder="John" required>
+            </div>
+            <div>
+              <label class="form-label">Last name</label>
+              <input type="text" name="lname" class="form-input" placeholder="Doe" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email address</label>
+            <input type="email" name="email" class="form-input" placeholder="name@example.com" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-input" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="form-submit">Create Client Account</button>
+        </form>
+
+        <div class="auth-switch">
+          Already have an account?
+          <div class="auth-switch-links">
+            <a href="#" onclick="switchView('view-login')">Sign in here</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="view-provider" class="auth-view">
+        <h2 class="view-title">Become a Provider</h2>
+        <p class="view-subtitle">Offer your services and grow your business</p>
+
+        <form action="{% url 'auth:register_provider' %}" method="POST">
+          {% csrf_token %}
+          <div class="form-row">
+            <div>
+              <label class="form-label">First name</label>
+              <input type="text" name="fname" class="form-input" placeholder="John" required>
+            </div>
+            <div>
+              <label class="form-label">Last name</label>
+              <input type="text" name="lname" class="form-input" placeholder="Doe" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Business name</label>
+            <input type="text" name="business_name" class="form-input" placeholder="Acme Services" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email address</label>
+            <input type="email" name="email" class="form-input" placeholder="business@example.com" required>
+          </div>
+          <div class="form-row">
+            <div>
+              <label class="form-label">Password</label>
+              <input type="password" name="password" class="form-input" placeholder="••••••••" required>
+            </div>
+            <div>
+              <label class="form-label">Confirm</label>
+              <input type="password" name="confirm_password" class="form-input" placeholder="••••••••" required>
+            </div>
+          </div>
+          <button type="submit" class="form-submit">Apply as Provider</button>
+        </form>
+
+        <div class="auth-switch">
+          Already have an account?
+          <div class="auth-switch-links">
+            <a href="#" onclick="switchView('view-login')">Sign in here</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="view-forgot" class="auth-view">
+        <h2 class="view-title">Reset password</h2>
+        <p class="view-subtitle">Enter your email to receive a secure reset link</p>
+
+        <form action="{% url 'auth:forgot_password' %}" method="POST">
+          {% csrf_token %}
+          <div class="form-group">
+            <label class="form-label">Email address</label>
+            <input type="email" name="email" class="form-input" placeholder="name@example.com" required>
+          </div>
+          <button type="submit" class="form-submit">Send Reset Link</button>
+        </form>
+
+        <div class="auth-switch">
+          Remember your password?
+          <div class="auth-switch-links">
+            <a href="#" onclick="switchView('view-login')">Back to sign in</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    function switchView(id) {
+      const views = document.querySelectorAll('.auth-view');
+      const target = document.getElementById(id);
+      views.forEach(v => {
+        if (v.classList.contains('active')) {
+          v.style.opacity = '0';
+          v.style.transform = 'translateY(-10px)';
+          setTimeout(() => {
+            v.classList.remove('active');
+            v.style.display = 'none';
+            v.style.transform = 'translateY(10px)';
+            target.style.display = 'block';
+            setTimeout(() => {
+              target.classList.add('active');
+            }, 30);
+          }, 300);
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,87 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+
+{% block title %}Manage Providers | HandyBase{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-8">
+    <div>
+        <h1 class="text-2xl font-bold text-foreground">Provider Management</h1>
+        <p class="text-muted-foreground mt-1">View, search, and manage all provider accounts.</p>
+    </div>
+</div>
+
+<div class="bg-secondary p-6 rounded-xl shadow-sm mb-8 border border-border">
+    <form method="get" class="flex gap-4">
+        <input type="text" name="search" value="{{ search }}" placeholder="Search by name, business, or email..." 
+               class="flex-1 p-2.5 border border-border rounded-lg focus:ring-2 focus:ring-blue-600 outline-none">
+        <button type="submit" class="px-6 py-2.5 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition">
+            🔍 Search
+        </button>
+        {% if search %}
+            <a href="{% url 'dashboard:admin_providers' %}" class="px-6 py-2.5 bg-background text-muted-foreground font-bold rounded-lg border border-border hover:bg-gray-200 transition flex items-center">Clear</a>
+        {% endif %}
+    </form>
+</div>
+
+<div class="bg-secondary rounded-xl shadow-sm overflow-hidden border border-border">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead class="bg-background border-b border-border">
+                <tr>
+                    <th class="p-4 text-muted-foreground font-semibold">Provider / Business</th>
+                    <th class="p-4 text-muted-foreground font-semibold">Contact Info</th>
+                    <th class="p-4 text-muted-foreground font-semibold">Status</th>
+                    <th class="p-4 text-muted-foreground font-semibold">Joined</th>
+                    <th class="p-4 text-muted-foreground font-semibold text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-border">
+                {% for provider in providers %}
+                <tr class="hover:bg-background transition">
+                    <td class="p-4">
+                        <strong class="text-foreground block">{{ provider.business_name|default:"-" }}</strong>
+                        <span class="text-muted-foreground text-sm">{{ provider.fname }} {{ provider.lname }}</span>
+                    </td>
+                    <td class="p-4">
+                        <span class="block text-foreground">{{ provider.email }}</span>
+                        <span class="text-muted-foreground text-sm">{{ provider.phone|default:"No phone" }}</span>
+                    </td>
+                    <td class="p-4">
+                        {% if provider.status == 'active' %}
+                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-800">Active</span>
+                        {% elif provider.status == 'pending' %}
+                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800">Pending</span>
+                        {% else %}
+                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-800">{{ provider.status|title }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="p-4 text-muted-foreground text-sm">{{ provider.created_at|slice:":10" }}</td>
+                    <td class="p-4 text-right">
+                        <div class="flex justify-end gap-2">
+                            {% if provider.status != 'deleted' %}
+                            <form method="post" onsubmit="return confirm('Are you sure you want to suspend/delete this provider?');">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="provider_id" value="{{ provider.id }}">
+                                <button type="submit" class="px-3 py-1.5 bg-red-50 text-red-700 border border-red-200 rounded text-sm hover:bg-red-100">Delete</button>
+                            </form>
+                            {% else %}
+                            <form method="post" onsubmit="return confirm('Are you sure you want to restore this provider?');">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="restore">
+                                <input type="hidden" name="provider_id" value="{{ provider.id }}">
+                                <button type="submit" class="px-3 py-1.5 bg-green-50 text-green-700 border border-green-200 rounded text-sm hover:bg-green-100">Restore</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="p-12 text-center text-muted-foreground">No providers found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

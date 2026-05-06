@@ -1,0 +1,142 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+
+{% block title %}My Bookings | HandyBase{% endblock %}
+
+{% block content %}
+<div class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div>
+        <h1 class="text-2xl font-bold text-foreground">{% trans "My Bookings" %}</h1>
+        <p class="text-muted-foreground mt-1">{% trans "Track and manage your service requests in one place." %}</p>
+    </div>
+    <a href="{% url 'dashboard:directory' %}" class="inline-flex items-center gap-x-2 px-5 py-2.5 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all shadow-sm active:scale-95">
+        <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 4.5v15m7.5-7.5h-15"></path></svg>
+        {% trans "Book New Service" %}
+    </a>
+</div>
+
+<div class="bg-secondary rounded-2xl shadow-sm border border-border overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead class="bg-background border-b border-border">
+                <tr>
+                    <th class="p-4 text-muted-foreground font-semibold text-sm uppercase tracking-wider">{% trans "Service Date" %}</th>
+                    <th class="p-4 text-muted-foreground font-semibold text-sm uppercase tracking-wider">{% trans "Provider & Service" %}</th>
+                    <th class="p-4 text-muted-foreground font-semibold text-sm uppercase tracking-wider">{% trans "Location" %}</th>
+                    <th class="p-4 text-muted-foreground font-semibold text-sm uppercase tracking-wider">{% trans "Status" %}</th>
+                    <th class="p-4 text-muted-foreground font-semibold text-sm uppercase tracking-wider text-right">{% trans "Actions" %}</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% for booking in bookings %}
+                <tr class="hover:bg-background/80 transition-colors group">
+                    <td class="p-4 whitespace-nowrap">
+                        <div class="text-foreground font-bold">{{ booking.booking_date|slice:":10" }}</div>
+                        <div class="text-xs text-muted-foreground font-medium mt-0.5">{{ booking.booking_date|slice:"11:16" }} ({% trans "UTC" %})</div>
+                    </td>
+                    
+                    <td class="p-4">
+                        <div class="flex flex-col">
+                            <span class="text-foreground font-bold text-base group-hover:text-blue-600 transition-colors">
+                                {{ booking.service_name|default:_("Service Package") }}
+                            </span>
+                            <span class="text-sm text-blue-600 font-semibold flex items-center gap-1">
+                                <svg class="size-3" fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"></path></svg>
+                                {{ booking.provider_name|default:_("Assigned Provider") }}
+                            </span>
+                            <div class="mt-1 flex items-center gap-1 text-[10px] text-muted-foreground font-mono uppercase">
+                                <span>{% trans "Ref:" %}</span>
+                                <span class="bg-background px-1 rounded">{{ booking.id|truncatechars:12 }}</span>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td class="p-4">
+                        <div class="text-sm text-muted-foreground flex items-start gap-1">
+                            <svg class="size-4 text-muted-foreground mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            <span>{{ booking.city }}, {{ booking.state }}</span>
+                        </div>
+                    </td>
+
+                    <td class="p-4">
+                        {% if booking.booking_status == 'PENDING' %}
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded-full">
+                                <span class="size-1.5 rounded-full bg-yellow-500 animate-pulse"></span> PENDING
+                            </span>
+                        {% elif booking.booking_status == 'CONFIRMED' %}
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded-full">
+                                <span class="size-1.5 rounded-full bg-blue-500"></span> CONFIRMED
+                            </span>
+                        {% elif booking.booking_status == 'COMPLETED' %}
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-green-100 text-green-800 text-xs font-bold rounded-full">
+                                <span class="size-1.5 rounded-full bg-green-500"></span> COMPLETED
+                            </span>
+                        {% elif booking.booking_status == 'CANCELLED' %}
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-100 text-red-800 text-xs font-bold rounded-full">
+                                <span class="size-1.5 rounded-full bg-red-500"></span> CANCELLED
+                            </span>
+                        {% endif %}
+                    </td>
+
+                    <td class="p-4 text-right">
+                        <div class="flex items-center justify-end gap-4">
+                            {% if booking.booking_status == 'PENDING' or booking.booking_status == 'CONFIRMED' %}
+                            {% trans "Cancel this booking request?" as cancel_confirm %}
+                            <form method="post" class="inline" onsubmit="return confirm('{{ cancel_confirm|escapejs }}');">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="cancel">
+                                <input type="hidden" name="booking_id" value="{{ booking.id }}">
+                                <button type="submit" class="text-xs font-bold text-red-600 hover:text-red-700 hover:bg-red-50 px-2 py-1 rounded transition-colors">
+                                    {% trans "Cancel" %}
+                                </button>
+                            </form>
+                            {% endif %}
+
+                            {% if booking.booking_status == 'COMPLETED' %}
+                            <a href="{% url 'reviews:create' booking_id=booking.id %}" class="text-xs font-bold text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-2 py-1 rounded transition-colors">
+                                {% trans "Review" %}
+                            </a>
+                            {% endif %}
+
+                            {% if booking.booking_status in 'CONFIRMED,COMPLETED' %}
+                            <a href="{% url 'chat:room' booking_id=booking.id %}" 
+                                class="text-xs font-bold text-primary hover:text-primary/80 hover:bg-primary/10 px-2 py-1 rounded transition-colors inline-flex items-center gap-1"
+                                title="{% trans 'Chat with provider' %}">
+                                <svg class="size-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                {% trans "Chat" %}
+                            </a>
+                            {% endif %}
+
+                            {% if booking.booking_status == 'COMPLETED' or booking.booking_status == 'CANCELLED' %}
+                            {% trans "Remove this booking from your history?" as remove_confirm %}
+                            <form method="post" class="inline" onsubmit="return confirm('{{ remove_confirm|escapejs }}');">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="booking_id" value="{{ booking.id }}">
+                                <button type="submit" class="text-muted-foreground hover:text-red-500 transition-colors" title="Clear History">
+                                    <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="p-20 text-center">
+                        <div class="max-w-xs mx-auto">
+                            <div class="bg-background rounded-full size-16 flex items-center justify-center mx-auto mb-4">
+                                <svg class="size-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            </div>
+                            <h3 class="text-foreground font-bold text-lg">{% trans "No bookings yet" %}</h3>
+                            <p class="text-muted-foreground text-sm mt-1 mb-6">{% trans "Start by exploring our expert providers and scheduling your first service." %}</p>
+                            <a href="{% url 'dashboard:directory' %}" class="text-blue-600 font-bold hover:underline">{% trans "Browse Provider Directory" %}</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

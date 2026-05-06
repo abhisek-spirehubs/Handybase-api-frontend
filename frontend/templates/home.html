@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+{% load i18n static %}
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HandyBase | Find Trusted Local Professionals</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- GSAP for Scroll Animation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           CINEMATIC HERO STYLES
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+        .cinematic-main {
+            background: #000;
+            color: white;
+            position: relative;
+        }
+
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #frame-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            object-fit: cover;
+        }
+
+        /* Gradient overlay to make text readable over the 3D frames */
+        .bg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.8) 100%);
+        }
+
+        .hero-text-minimal {
+            position: relative;
+            z-index: 10;
+            padding: 0 24px;
+            max-width: 800px;
+            display: column;
+            align-items: center;
+        }
+
+        .hero-eyebrow {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #38bdf8;
+            margin-bottom: 18px;
+            opacity: 0;
+            transform: translateY(14px);
+            animation: fadeUp .8s .3s forwards;
+        }
+
+        .hero-title {
+            font-size: clamp(52px, 9vw, 104px);
+            font-weight: 700;
+            letter-spacing: -0.045em;
+            line-height: 1.03;
+            color: white;
+            margin-bottom: 22px;
+            opacity: 0;
+            transform: translateY(22px);
+            animation: fadeUp .9s .5s forwards;
+        }
+
+        .hero-title .grad {
+            background: linear-gradient(120deg, #38bdf8 0%, #a5b4fc 45%, #ffffff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            font-size: clamp(17px, 2.5vw, 24px);
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
+            opacity: 0;
+            transform: translateY(18px);
+            animation: fadeUp .9s .7s forwards;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            animation: fadeIn 1s 1.5s forwards;
+            z-index: 10;
+        }
+
+        .scroll-hint span {
+            font-size: 11px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .shl {
+            width: 1px;
+            height: 48px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, .8), transparent);
+            animation: shAnim 2s ease-in-out infinite;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes shAnim {
+            0% {
+                transform: scaleY(0);
+                transform-origin: top
+            }
+
+            50% {
+                transform: scaleY(1);
+                transform-origin: top
+            }
+
+            51% {
+                transform: scaleY(1);
+                transform-origin: bottom
+            }
+
+            100% {
+                transform: scaleY(0);
+                transform-origin: bottom
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-secondary text-foreground flex flex-col min-h-screen">
+
+    <!-- Include Navbar -->
+    {% include 'components/organisms/_navbar.html' %}
+
+    <!-- Main Landing Page Content (Now Cinematic!) -->
+    <main class="flex-grow cinematic-main">
+
+        <section class="hero-section" id="hero-pinned">
+            <!-- 80-Frame Sequence Canvas -->
+            <canvas id="frame-canvas"></canvas>
+            <div class="bg-overlay"></div>
+
+            <!-- Centered Text (Fades out when scrolling) -->
+            <div class="hero-text-minimal">
+                <p class="hero-eyebrow">Introducing HandyBase</p>
+                <h1 class="hero-title">Skilled Hands.<br><span class="grad">Trusted Service.</span></h1>
+                <p class="hero-sub">The intelligent marketplace uniting verified professionals with clients who need
+                    them. Fully scalable. Built for speed.</p>
+            </div>
+
+            <div class="scroll-hint"><span>Scroll to explore</span>
+                <div class="shl"></div>
+            </div>
+
+            <!-- The Action Button (Fades in precisely at the end of the scroll) -->
+            <div id="enter-btn-wrap"
+                style="position: absolute; bottom: 15%; left: 50%; transform: translateX(-50%); opacity: 0; pointer-events: none; z-index: 50;">
+                <a href="{% url 'auth:login' %}"
+                    class="px-8 py-4 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-400 transition shadow-[0_10px_30px_rgba(59,130,246,0.4)] text-lg flex items-center gap-2">
+                    Enter HandyBase
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                    </svg>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Include Footer -->
+    {% include 'components/organisms/_footer.html' %}
+
+    <!-- Logic for the Canvas Sequence -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            const canvasSeq = document.getElementById("frame-canvas");
+            const ctxSeq = canvasSeq.getContext("2d");
+
+            // Set canvas to 1080p resolution
+            canvasSeq.width = 1920;
+            canvasSeq.height = 1080;
+
+            const frameCount = 80;
+
+            // Use Django's static path for your image sequence
+            const staticBasePath = "{% static 'assets/images/01.png' %}".replace('01.png', '');
+            const currentFrame = index => `${staticBasePath}${(index + 1).toString().padStart(2, '0')}.png`;
+
+            const images = [];
+            const sequenceState = { frame: 0 };
+
+            for (let i = 0; i < frameCount; i++) {
+                const img = new Image();
+                img.onload = () => { if (i === 0) renderSequence(); };
+                img.src = currentFrame(i);
+                images.push(img);
+            }
+
+            function renderSequence() {
+                ctxSeq.clearRect(0, 0, canvasSeq.width, canvasSeq.height);
+                const img = images[sequenceState.frame];
+                if (img && img.complete && img.naturalWidth !== 0) {
+                    const hRatio = canvasSeq.width / img.width;
+                    const vRatio = canvasSeq.height / img.height;
+                    const ratio = Math.max(hRatio, vRatio);
+                    const cx = (canvasSeq.width - img.width * ratio) / 2;
+                    const cy = (canvasSeq.height - img.height * ratio) / 2;
+                    ctxSeq.drawImage(img, 0, 0, img.width, img.height, cx, cy, img.width * ratio, img.height * ratio);
+                }
+            }
+
+            // 1. PIN THE HERO AND PLAY FRAMES
+            gsap.to(sequenceState, {
+                frame: frameCount - 1,
+                snap: "frame",
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "#hero-pinned",
+                    start: "top top",
+                    end: "+=2000",
+                    scrub: 0.5,
+                    pin: true
+                },
+                onUpdate: renderSequence
+            });
+
+            // 2. FADE OUT THE INTRO TEXT
+            gsap.to(".hero-text-minimal", {
+                opacity: 0,
+                scale: 0.95,
+                filter: "blur(10px)",
+                scrollTrigger: { trigger: "#hero-pinned", start: "top top", end: "+=800", scrub: 0.5 }
+            });
+
+            // 3. FADE OUT THE SCROLL HINT
+            gsap.to(".scroll-hint", {
+                opacity: 0,
+                scrollTrigger: { trigger: "#hero-pinned", start: "top top", end: "+=200", scrub: true }
+            });
+
+            // 4. FADE IN THE 'ENTER' BUTTON
+            // This happens between 1600px and 1900px of the scroll depth
+            gsap.to("#enter-btn-wrap", {
+                opacity: 1,
+                pointerEvents: "auto",
+                scrollTrigger: { trigger: "#hero-pinned", start: "top+=1600 top", end: "top+=1900 top", scrub: true }
+            });
+        });
+    </script>
+</body>
+
+</html>

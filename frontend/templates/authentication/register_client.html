@@ -1,0 +1,538 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>{% trans "Register as Client" %} | HandyBase</title>
+
+  <!-- Tailwind + GSAP -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <!-- Three.js -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --glass: rgba(5, 5, 12, 0.65);
+      --glass-border: rgba(99, 102, 241, 0.18);
+      --indigo: #6366f1;
+      --cyan: #22d3ee;
+      --pink: #ec4899;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: #020105;
+      color: white;
+      overflow-x: hidden;
+      margin: 0;
+      height: 100vh;
+    }
+
+    #three-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .content-layer {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      min-height: 100vh;
+      pointer-events: auto;
+    }
+
+    .glass-panel {
+      background: var(--glass);
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px);
+      border: 1px solid var(--glass-border);
+      position: relative;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      box-shadow: 
+        0 25px 50px -12px rgba(0,0,0,0.7),
+        inset 0 0 0 1px rgba(255,255,255,0.08),
+        0 0 20px rgba(99,102,241,0.15);
+      transition: box-shadow 0.5s ease, border-color 0.4s;
+    }
+
+    .glass-panel::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      background:
+        radial-gradient(600px circle at var(--x, 50%) var(--y, 50%), rgba(99,102,241,0.3), transparent 55%),
+        radial-gradient(600px circle at calc(var(--x, 50%) + 10%) calc(var(--y, 50%) + 10%), rgba(34,211,238,0.2), transparent 60%);
+      opacity: 0.8;
+      pointer-events: none;
+      filter: blur(12px);
+      transition: opacity 0.4s;
+      z-index: 0;
+    }
+
+    .glass-panel::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, 
+        rgba(99,102,241,0.12) 0%, 
+        rgba(236,72,153,0.08) 50%, 
+        rgba(34,211,238,0.1) 100%);
+      opacity: 0.7;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .glass-reflection {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(700px circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.07), transparent 45%);
+      pointer-events: none;
+      mix-blend-mode: screen;
+      opacity: 0.9;
+      z-index: 2;
+    }
+
+    .ai-input {
+      background: rgba(10, 10, 20, 0.5);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      box-shadow: 0 0 0 rgba(99,102,241,0);
+      color: white;
+    }
+
+    .ai-input:focus {
+      border-color: rgba(99, 102, 241, 0.95);
+      background: rgba(99, 102, 241, 0.09);
+      box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.2), 0 10px 40px rgba(99, 102, 241, 0.15);
+      outline: none;
+      transform: translateY(-1px);
+    }
+
+    .reveal-container { overflow: hidden; }
+    .reveal-item {
+      transform: translateY(110%) rotateX(-2deg);
+      opacity: 0;
+      display: block;
+      will-change: transform, opacity;
+    }
+
+    .shine-btn {
+      position: relative;
+      overflow: hidden;
+    }
+    .shine-btn::after {
+      content: "";
+      position: absolute;
+      top: -40%;
+      left: -60%;
+      width: 60%;
+      height: 180%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transform: rotate(12deg);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .shine-btn:hover::after {
+      opacity: 1;
+      animation: sheen 0.95s ease;
+    }
+    @keyframes sheen {
+      from { transform: translateX(0) rotate(12deg); }
+      to { transform: translateX(230%) rotate(12deg); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal-item { transform: none !important; opacity: 1 !important; }
+      .shine-btn::after { display: none; }
+      #three-canvas { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="three-canvas"></canvas>
+
+  <div class="content-layer">
+    <div class="relative z-10 w-full max-w-[1200px] mx-auto px-4 sm:px-6">
+      <!-- Grid: left branding + right card -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center py-10 lg:py-16">
+        <!-- Left: Branding (same as login) -->
+        <div class="hidden lg:flex flex-col space-y-8">
+          <div class="reveal-container">
+            <div class="reveal-item flex items-center gap-3 text-indigo-400 font-bold uppercase tracking-[0.3em] text-[10px]">
+              <span class="w-10 h-[1px] bg-indigo-500"></span>
+              <span>{% trans "Future of Work" %}</span>
+            </div>
+          </div>
+
+          <h1 class="text-6xl xl:text-7xl font-bold leading-[1.05] tracking-tight">
+            <span class="reveal-container block"><span class="reveal-item block">{% trans "Seamless." %}</span></span>
+            <span class="reveal-container block"><span class="reveal-item block">{% trans "Scalable." %}</span></span>
+            <span class="reveal-container block">
+              <span class="reveal-item block text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">
+                {% trans "Supercharged." %}
+              </span>
+            </span>
+          </h1>
+
+          <p id="hero-desc" class="text-slate-400 text-lg max-w-sm opacity-0">
+            {% trans "The intelligent layer for service business management—built to move fast and stay reliable." %}
+          </p>
+
+          <div id="hero-badges" class="mt-3 flex items-center gap-3 text-xs text-slate-500 opacity-0 reveal-container">
+            <span class="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-secondary/5 border border-white/10 backdrop-blur">
+              <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
+              {% trans "Secure by design" %}
+            </span>
+            <span class="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-secondary/5 border border-white/10 backdrop-blur">
+              <span class="w-2 h-2 rounded-full bg-cyan-300"></span>
+              {% trans "Fast onboarding" %}
+            </span>
+            <span class="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-secondary/5 border border-white/10 backdrop-blur">
+              <span class="w-2 h-2 rounded-full bg-pink-300"></span>
+              {% trans "Actionable insights" %}
+            </span>
+          </div>
+        </div>
+
+        <!-- Right: Registration Card -->
+        <div
+          id="register-card"
+          class="glass-panel tilt-card rounded-[2.5rem] p-8 sm:p-14 w-full max-w-[520px] mx-auto opacity-0 translate-y-10 scale-[0.98]"
+        >
+          <div class="glass-reflection"></div>
+
+          <div class="relative z-20">
+            <div class="mb-8">
+              <h2 class="text-3xl font-bold tracking-tight">
+                <span class="reveal-container block"><span class="reveal-item block">{% trans "Create Client Account" %}</span></span>
+              </h2>
+              <p class="text-slate-500 mt-2 opacity-0" id="register-subtitle">
+                {% trans "Join to find and book trusted local professionals." %}
+              </p>
+            </div>
+
+            <!-- Django form with errors -->
+            <form action="" method="post" novalidate class="space-y-5">
+              {% csrf_token %}
+
+              {% if form.non_field_errors %}
+                <div class="p-3 mb-2 bg-red-500/10 border border-red-400/20 rounded-xl text-red-300 text-sm font-medium text-center backdrop-blur-sm">
+                  {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                </div>
+              {% endif %}
+
+              <!-- First Name & Last Name -->
+              <div class="grid grid-cols-2 gap-4 form-row opacity-0 translate-y-4" data-reveal="row">
+                <div>
+                  <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-2">{% trans "First Name" %}</label>
+                  <input type="text" name="fname" value="{{ form.fname.value|default:'' }}" required
+                         class="ai-input w-full px-5 py-4 rounded-2xl text-sm placeholder-slate-500"
+                         placeholder="John" />
+                  {% if form.fname.errors %}<p class="text-red-400 text-xs mt-1 font-medium">{{ form.fname.errors.0 }}</p>{% endif %}
+                </div>
+                <div>
+                  <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-2">{% trans "Last Name" %}</label>
+                  <input type="text" name="lname" value="{{ form.lname.value|default:'' }}" required
+                         class="ai-input w-full px-5 py-4 rounded-2xl text-sm placeholder-slate-500"
+                         placeholder="Doe" />
+                  {% if form.lname.errors %}<p class="text-red-400 text-xs mt-1 font-medium">{{ form.lname.errors.0 }}</p>{% endif %}
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div class="form-row opacity-0 translate-y-4" data-reveal="row">
+                <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-2">{% trans "Email Address" %}</label>
+                <input type="email" name="email" value="{{ form.email.value|default:'' }}" required
+                       class="ai-input w-full px-5 py-4 rounded-2xl text-sm placeholder-slate-500"
+                       placeholder="you@example.com" />
+                {% if form.email.errors %}<p class="text-red-400 text-xs mt-1 font-medium">{{ form.email.errors.0 }}</p>{% endif %}
+              </div>
+
+              <!-- Phone (optional) -->
+              <div class="form-row opacity-0 translate-y-4" data-reveal="row">
+                <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-2">{% trans "Phone (Optional)" %}</label>
+                <input type="tel" name="phone" value="{{ form.phone.value|default:'' }}"
+                       class="ai-input w-full px-5 py-4 rounded-2xl text-sm placeholder-slate-500"
+                       placeholder="(555) 000-0000" />
+                {% if form.phone.errors %}<p class="text-red-400 text-xs mt-1 font-medium">{{ form.phone.errors.0 }}</p>{% endif %}
+              </div>
+
+              <!-- Password & Confirm -->
+              <div class="grid grid-cols-2 gap-4 form-row opacity-0 translate-y-4" data-reveal="row">
+                <div>
+                  <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-2">{% trans "Password" %}</label>
+                  <input type="password" name="password" required
+                         class="ai-input w-full px-5 py-4 rounded-2xl text-sm placeholder-slate-500"
+                         placeholder="••••••••" />
+                  {% if form.password.errors %}<p class="text-red-400 text-xs mt-1 font-medium">{{ form.password.errors.0 }}</p>{% endif %}
+                </div>
+                <div>
+                  <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-2">{% trans "Confirm" %}</label>
+                  <input type="password" name="confirm_password" required
+                         class="ai-input w-full px-5 py-4 rounded-2xl text-sm placeholder-slate-500"
+                         placeholder="••••••••" />
+                  {% if form.confirm_password.errors %}<p class="text-red-400 text-xs mt-1 font-medium">{{ form.confirm_password.errors.0 }}</p>{% endif %}
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="form-row opacity-0 translate-y-4" data-reveal="row">
+                <button type="submit" id="submit-btn"
+                        class="shine-btn w-full py-5 bg-secondary text-black font-bold rounded-2xl hover:bg-indigo-500 hover:text-white transition-all duration-500 shadow-xl shadow-white/5 active:scale-95 flex items-center justify-center gap-2">
+                  <span class="inline-flex items-center gap-2">
+                    {% trans "Create Account" %}
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path d="M13 7l5 5m0 0l-5 5m5-5H6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </form>
+
+            <!-- Links -->
+            <div class="mt-8 pt-6 border-t border-white/10 text-center space-y-2 form-row opacity-0 translate-y-4" data-reveal="row">
+              <p class="text-sm text-slate-400">
+                {% trans "Already have an account?" %}
+                <a href="{% url 'auth:login' %}" class="font-bold text-indigo-400 hover:text-indigo-300 transition ml-1">
+                  {% trans "Sign in" %}
+                </a>
+              </p>
+              <p class="text-sm text-slate-500">
+                {% trans "Are you a professional?" %}
+                <a href="{% url 'auth:register_provider' %}" class="font-bold text-white hover:text-indigo-300 transition ml-1 border-b border-white/20 hover:border-indigo-400">
+                  {% trans "Join as Provider" %}
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SCRIPTS ========== -->
+  <script type="module">
+    import * as THREE from 'three';
+
+    // ----- 3D SCENE (same as login) -----
+    const canvas = document.getElementById('three-canvas');
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x000000, 0);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 1.8, 7.2);
+    camera.lookAt(0, 0, 0);
+
+    const ambient = new THREE.AmbientLight(0x334466, 0.8);
+    scene.add(ambient);
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    dirLight.position.set(1, 2, 2);
+    scene.add(dirLight);
+    const mouseLight = new THREE.PointLight(0x6366f1, 1.3, 20);
+    mouseLight.position.set(0, 2, 3);
+    scene.add(mouseLight);
+
+    // Grids
+    const gridHelper = new THREE.GridHelper(12, 30, 0x6366f1, 0x222244);
+    gridHelper.position.y = -2.2;
+    scene.add(gridHelper);
+    const gridHelper2 = new THREE.GridHelper(18, 40, 0x22d3ee, 0x111133);
+    gridHelper2.position.y = -2.25;
+    scene.add(gridHelper2);
+
+    // Particles
+    const particleGeo = new THREE.BufferGeometry();
+    const particleCount = 800;
+    const positions = new Float32Array(particleCount * 3);
+    const colors = new Float32Array(particleCount * 3);
+    for (let i = 0; i < particleCount * 3; i += 3) {
+      positions[i] = (Math.random() - 0.5) * 14;
+      positions[i+1] = (Math.random() - 0.5) * 6 + 1;
+      positions[i+2] = (Math.random() - 0.5) * 10;
+      const choice = Math.random();
+      colors[i] = choice < 0.5 ? 0.6 : 0.4;
+      colors[i+1] = choice < 0.7 ? 0.4 : 0.2;
+      colors[i+2] = 1.0;
+    }
+    particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    const particleMat = new THREE.PointsMaterial({
+      size: 0.04,
+      vertexColors: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      transparent: true,
+      opacity: 0.8
+    });
+    const particles = new THREE.Points(particleGeo, particleMat);
+    scene.add(particles);
+
+    // Floating shapes
+    const shapes = [];
+    const createWire = (geo, color, pos, scale = 1) => {
+      const wireframe = new THREE.LineSegments(
+        new THREE.EdgesGeometry(geo),
+        new THREE.LineBasicMaterial({ color, linewidth: 1 })
+      );
+      wireframe.position.copy(pos);
+      wireframe.scale.set(scale, scale, scale);
+      return wireframe;
+    };
+    const icoGeo = new THREE.IcosahedronGeometry(0.5, 0);
+    const torusGeo = new THREE.TorusKnotGeometry(0.35, 0.1, 64, 8);
+    const dodeGeo = new THREE.DodecahedronGeometry(0.4, 0);
+    shapes.push(createWire(icoGeo, 0x6366f1, new THREE.Vector3(-2.2, 1.1, -1.2), 0.9));
+    shapes.push(createWire(torusGeo, 0x22d3ee, new THREE.Vector3(2.1, 0.7, -1.8), 0.85));
+    shapes.push(createWire(dodeGeo, 0xec4899, new THREE.Vector3(0.4, 1.5, -2), 0.7));
+    shapes.push(createWire(icoGeo, 0x818cf8, new THREE.Vector3(-1.5, -0.4, 1.8), 0.75));
+    const shapeGroup = new THREE.Group();
+    shapes.forEach(s => shapeGroup.add(s));
+    scene.add(shapeGroup);
+
+    // Mouse/scroll state
+    let mouseX = 0, mouseY = 0;
+    let targetMouseX = 0, targetMouseY = 0;
+    let scrollProgress = 0, targetScrollProgress = 0;
+
+    window.addEventListener('mousemove', (e) => {
+      targetMouseX = (e.clientX / window.innerWidth) * 2 - 1;
+      targetMouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+    });
+    window.addEventListener('scroll', () => {
+      const maxScroll = document.body.scrollHeight - window.innerHeight;
+      targetScrollProgress = maxScroll > 0 ? window.scrollY / maxScroll : 0;
+    });
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Animation loop
+    const clock = new THREE.Clock();
+    function animate() {
+      const dt = Math.min(clock.getDelta(), 0.1);
+      const time = performance.now() * 0.001;
+
+      mouseX += (targetMouseX - mouseX) * 0.08;
+      mouseY += (targetMouseY - mouseY) * 0.08;
+      scrollProgress += (targetScrollProgress - scrollProgress) * 0.05;
+
+      const baseZ = 7.2;
+      const maxZ = 12.5;
+      camera.position.z = baseZ + (maxZ - baseZ) * scrollProgress;
+      camera.position.y = 1.8 - scrollProgress * 0.8;
+      camera.rotation.y = mouseX * 0.15;
+      camera.rotation.x = mouseY * 0.1;
+
+      mouseLight.position.x = mouseX * 4;
+      mouseLight.position.z = 3 + mouseY * 2.5;
+      mouseLight.position.y = 2 + mouseY * 0.5;
+
+      shapeGroup.rotation.y += 0.002;
+      shapes.forEach((shape, i) => {
+        shape.rotation.x += 0.004 * (i+1);
+        shape.rotation.z += 0.003 * (i%2 ? 1 : -1);
+        shape.position.y += Math.sin(time + i) * 0.0005;
+      });
+
+      particles.rotation.y += 0.0003;
+      const posAttr = particleGeo.attributes.position;
+      for (let i = 1; i < posAttr.count * 3; i += 3) {
+        posAttr.array[i] += 0.005;
+        if (posAttr.array[i] > 4) posAttr.array[i] = -2.5;
+      }
+      posAttr.needsUpdate = true;
+
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+
+  <!-- GSAP UI Animations -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      gsap.registerPlugin(ScrollTrigger);
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const card = document.getElementById('register-card');
+
+      if (card) {
+        card.style.setProperty('--x', '50%');
+        card.style.setProperty('--y', '50%');
+      }
+
+      // 3D tilt
+      if (!prefersReduced && card) {
+        let rafId;
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const cx = rect.width / 2, cy = rect.height / 2;
+          const rotateX = (y - cy) / 14;
+          const rotateY = (cx - x) / 14;
+          if (rafId) cancelAnimationFrame(rafId);
+          rafId = requestAnimationFrame(() => {
+            card.style.setProperty('--x', `${x}px`);
+            card.style.setProperty('--y', `${y}px`);
+            gsap.to(card, { rotateX, rotateY, duration: 0.4, ease: 'power2.out' });
+          });
+        });
+        card.addEventListener('mouseleave', () => {
+          gsap.to(card, { rotateX: 0, rotateY: 0, duration: 1.0, ease: 'power3.out' });
+        });
+      }
+
+      // Entrance timeline
+      if (prefersReduced) {
+        document.querySelectorAll('.reveal-item, [data-reveal="row"]').forEach(el => el.style.opacity = 1);
+      } else {
+        const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+        tl.to('.reveal-item', { y: '0%', opacity: 1, duration: 1.2, stagger: 0.08, rotateX: 0 });
+        tl.to('#hero-desc', { opacity: 1, y: 0, duration: 0.9 }, '-=0.9');
+        tl.to('#register-subtitle', { opacity: 1, duration: 0.7 }, '-=0.95');
+        tl.to('#register-card', { opacity: 1, y: 0, scale: 1, duration: 1.15, ease: 'power4.out' }, '-=0.75');
+        tl.to('[data-reveal="row"]', { opacity: 1, y: 0, duration: 0.85, stagger: 0.1, ease: 'power3.out' }, '-=0.55');
+      }
+
+      // Input micro-interactions
+      document.querySelectorAll('.ai-input').forEach(input => {
+        input.addEventListener('focus', () => gsap.to(input, { y: -2, duration: 0.3, ease: 'power2.out' }));
+        input.addEventListener('blur', () => gsap.to(input, { y: 0, duration: 0.3, ease: 'power2.out' }));
+      });
+
+      const submitBtn = document.getElementById('submit-btn');
+      if (submitBtn) {
+        submitBtn.addEventListener('mouseenter', () => gsap.to(submitBtn, { boxShadow: '0 20px 80px rgba(99,102,241,0.3)', duration: 0.4, ease: 'power2.out' }));
+        submitBtn.addEventListener('mouseleave', () => gsap.to(submitBtn, { boxShadow: '0 0 0 rgba(99,102,241,0)', duration: 0.4, ease: 'power2.out' }));
+      }
+    });
+  </script>
+</body>
+</html>
