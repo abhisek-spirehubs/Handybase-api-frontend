@@ -1,0 +1,74 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+
+{% block title %}Manage Categories | HandyBase{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-8">
+    <h1 class="text-2xl font-bold text-foreground">Category Management</h1>
+</div>
+
+<div class="bg-secondary p-6 rounded-xl shadow-sm mb-8 border border-border">
+    <h3 class="text-lg font-bold text-foreground mb-4">Create New Category</h3>
+    <form method="post" action="{% url 'dashboard:admin_categories' %}" class="flex flex-col sm:flex-row gap-4 items-end">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="create">
+        <div class="flex-1 w-full">
+            <label class="block font-bold text-muted-foreground mb-1 text-sm">Name</label>
+            <input type="text" name="name" required class="w-full p-2.5 border border-border rounded-lg focus:ring-2 focus:ring-blue-600 outline-none">
+        </div>
+        <div class="flex-[2] w-full">
+            <label class="block font-bold text-muted-foreground mb-1 text-sm">Description</label>
+            <input type="text" name="description" class="w-full p-2.5 border border-border rounded-lg focus:ring-2 focus:ring-blue-600 outline-none">
+        </div>
+        <button type="submit" class="px-6 py-2.5 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition w-full sm:w-auto">
+            Add Category
+        </button>
+    </form>
+</div>
+
+<div class="bg-secondary rounded-xl shadow-sm overflow-hidden border border-border">
+    <table class="w-full text-left border-collapse">
+        <thead class="bg-background border-b border-border">
+            <tr>
+                <th class="p-4 text-muted-foreground font-semibold">Name</th>
+                <th class="p-4 text-muted-foreground font-semibold">Description</th>
+                <th class="p-4 text-muted-foreground font-semibold">Status</th>
+                <th class="p-4 text-muted-foreground font-semibold text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-border">
+            {% for cat in categories %}
+            <tr class="hover:bg-background transition">
+                <td class="p-4 font-bold text-foreground">{{ cat.name }}</td>
+                <td class="p-4 text-muted-foreground">{{ cat.description|default:"-" }}</td>
+                <td class="p-4">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold {% if cat.status == 'active' %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
+                        {{ cat.status|title }}
+                    </span>
+                </td>
+                <td class="p-4 text-right">
+                    <div class="flex justify-end gap-2">
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="toggle_status">
+                            <input type="hidden" name="category_id" value="{{ cat.id }}">
+                            <input type="hidden" name="status" value="{% if cat.status == 'active' %}inactive{% else %}active{% endif %}">
+                            <button type="submit" class="px-3 py-1.5 bg-background border border-border text-muted-foreground rounded text-sm hover:bg-gray-200">
+                                {% if cat.status == 'active' %}Deactivate{% else %}Activate{% endif %}
+                            </button>
+                        </form>
+                        <form method="post" onsubmit="return confirm('Delete this category?');">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="delete">
+                            <input type="hidden" name="category_id" value="{{ cat.id }}">
+                            <button type="submit" class="px-3 py-1.5 bg-red-50 text-red-700 border border-red-200 rounded text-sm hover:bg-red-100">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

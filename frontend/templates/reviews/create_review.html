@@ -1,0 +1,17 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Leave a Review" %} | HandyBase{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto">
+    <h1 class="text-2xl font-bold text-gray-900 mb-4">
+        {% if booking %}
+            {% blocktrans with name=booking.provider_name|default:_("provider") %}Review for {{ name }}{% endblocktrans %}
+        {% else %}
+            {% trans "Leave a Review" %}
+        {% endif %}
+    </h1>
+    {% include 'reviews/review_form.html' with booking_id=booking_id booking_completed=True user_review=False %}
+</div>
+{% endblock %}

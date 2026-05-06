@@ -1,0 +1,9 @@
+{% load i18n %}
+<a href="{{ url }}" class="w-full py-2 px-3 flex justify-center items-center text-sm font-semibold rounded-lg transition shadow-sm 
+    {% if style == 'primary' %}bg-blue-600 text-white hover:bg-blue-700
+    {% elif style == 'dark' %}bg-gray-800 text-white hover:bg-gray-900
+    {% elif style == 'outline' %}bg-secondary border border-border text-foreground hover:bg-background
+    {% else %}bg-background text-foreground hover:bg-gray-200{% endif %}">
+    {# Prefer translating an incoming text variable so callers can remain unchanged #}
+    {% if text %}{% trans text %}{% else %}{{ block.super|default:'' }}{% endif %}
+</a>

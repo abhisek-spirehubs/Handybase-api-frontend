@@ -1,0 +1,16 @@
+{% extends "base_auth.html" %}
+{% load i18n %}
+
+{% block title %}Pending Approval — HandyBase{% endblock %}
+
+{% block content %}
+<h1 class="auth-title">Registration Pending</h1>
+<p class="auth-subtitle">Your provider account is under review</p>
+
+<div class="alert alert-info">
+  <p>Thank you for registering as a provider. Your account is pending admin approval.</p>
+  <p>You will receive an email notification once your account has been reviewed and approved.</p>
+</div>
+
+<p><a href="{% url 'auth:login' %}" class="btn btn--primary">Back to login</a></p>
+{% endblock %}

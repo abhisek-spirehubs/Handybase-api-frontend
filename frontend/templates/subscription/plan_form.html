@@ -1,0 +1,38 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Plan" %} | HandyBase{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-2xl">
+  <h1 class="text-2xl font-bold">{% if action == 'create' %}{% trans "Create Plan" %}{% else %}{% trans "Edit Plan" %}{% endif %}</h1>
+
+  <form method="post" class="mt-6 space-y-4">
+    {% csrf_token %}
+    <div>
+      <label class="block text-sm font-medium text-muted-foreground">{% trans "Name" %}</label>
+      <input type="text" name="name" value="{{ plan.name|default:form.name }}" class="mt-1 block w-full rounded border px-3 py-2" required>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-muted-foreground">{% trans "Price (USD)" %}</label>
+      <input type="number" step="0.01" name="price" value="{{ plan.price|default:form.price }}" class="mt-1 block w-full rounded border px-3 py-2" required>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-muted-foreground">{% trans "Description" %}</label>
+      <textarea name="description" class="mt-1 block w-full rounded border px-3 py-2">{{ plan.description|default:form.description }}</textarea>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-muted-foreground">{% trans "User Type" %}</label>
+      <select name="user_type" class="mt-1 block w-full rounded border px-3 py-2">
+        <option value="client">{% trans "Client" %}</option>
+        <option value="provider">{% trans "Provider" %}</option>
+      </select>
+    </div>
+
+    <div class="flex gap-2">
+      <button type="submit" class="inline-flex items-center rounded bg-blue-600 px-4 py-2 text-white">{% trans "Save" %}</button>
+      <a href="{% url 'subscription:plans' %}" class="inline-flex items-center rounded border px-4 py-2">{% trans "Cancel" %}</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+
+{% block title %}Admin Dashboard | HandyBase{% endblock %}
+
+{% block content %}
+<div class="space-y-10">
+    
+    <!-- Header Section -->
+    <div class="reveal-header opacity-0 translate-y-4">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-foreground tracking-tight">Admin Command Center</h1>
+        <p class="text-muted-foreground mt-2 text-lg">Welcome back, <span class="font-semibold text-blue-400">{{ user.fname }}</span>. Here is what's happening today.</p>
+    </div>
+
+    <!-- Key Metrics Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Total Clients -->
+        <div class="metric-card opacity-0 translate-y-6 bg-secondary p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col group">
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-3 bg-blue-50 text-blue-600 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                    <svg class="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                </div>
+            </div>
+            <h3 class="text-muted-foreground text-xs font-bold uppercase tracking-widest mb-1">Total Clients</h3>
+            <!-- FIXED: Added .users. to path -->
+            <span class="text-4xl font-black text-foreground">{{ stats.users.total_clients|default:"0" }}</span>
+        </div>
+
+        <!-- Total Providers -->
+        <div class="metric-card opacity-0 translate-y-6 bg-secondary p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col group">
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl group-hover:bg-emerald-500 group-hover:text-white transition-colors duration-300">
+                    <svg class="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                </div>
+            </div>
+            <h3 class="text-muted-foreground text-xs font-bold uppercase tracking-widest mb-1">Total Providers</h3>
+            <!-- FIXED: Added .users. to path -->
+            <span class="text-4xl font-black text-foreground">{{ stats.users.total_providers|default:"0" }}</span>
+        </div>
+
+        <!-- Pending Approvals -->
+        <div class="metric-card opacity-0 translate-y-6 bg-secondary p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col group">
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-3 bg-amber-50 text-amber-600 rounded-xl group-hover:bg-amber-500 group-hover:text-white transition-colors duration-300">
+                    <svg class="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <!-- FIXED: Added .users. to path -->
+                {% if stats.users.pending_approvals > 0 %}
+                    <span class="flex size-3 relative">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full size-3 bg-amber-500"></span>
+                    </span>
+                {% endif %}
+            </div>
+            <h3 class="text-muted-foreground text-xs font-bold uppercase tracking-widest mb-1">Pending Approvals</h3>
+            <!-- FIXED: Added .users. to path -->
+            <span class="text-4xl font-black text-foreground">{{ stats.users.pending_approvals|default:"0" }}</span>
+        </div>
+
+        <!-- Total Services (Replaced Categories since backend doesn't send it) -->
+        <div class="metric-card opacity-0 translate-y-6 bg-secondary p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col group">
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-3 bg-purple-50 text-purple-600 rounded-xl group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">
+                    <svg class="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                </div>
+            </div>
+            <h3 class="text-muted-foreground text-xs font-bold uppercase tracking-widest mb-1">Total Services</h3>
+            <!-- FIXED: Switched to .services.total -->
+            <span class="text-4xl font-black text-foreground">{{ stats.services.total|default:"0" }}</span>
+        </div>
+    </div>
+
+    <!-- Quick Actions Panel -->
+    <div class="mt-12">
+        <h2 class="text-xl font-bold text-foreground mb-6 reveal-header opacity-0 translate-y-4">Quick Management</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <div class="action-card opacity-0 translate-y-6 bg-secondary border border-gray-100 rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col hover:-translate-y-1">
+                <h3 class="font-bold text-foreground mb-3 text-lg">Review Provider Applications</h3>
+                <p class="text-sm text-muted-foreground leading-relaxed flex-grow mb-8">Review and approve new service providers waiting to join the platform. Ensure quality standards are met.</p>
+                <div class="mt-auto">
+                    {% trans "Review Approvals →" as review_approvals_text %}
+                    {% include 'components/atoms/_action_link.html' with url='dashboard:admin_approvals' style='primary' text=review_approvals_text %}
+                </div>
+            </div>
+
+            <div class="action-card opacity-0 translate-y-6 bg-secondary border border-gray-100 rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col hover:-translate-y-1">
+                <h3 class="font-bold text-foreground mb-3 text-lg">Manage Users</h3>
+                <p class="text-sm text-muted-foreground leading-relaxed flex-grow mb-8">View, edit, suspend, or delete client and provider accounts from the active database.</p>
+                <div class="mt-auto flex flex-col gap-3">
+                    {% trans "Manage Clients" as manage_clients_text %}
+                    {% include 'components/atoms/_action_link.html' with url='dashboard:admin_clients' style='outline' text=manage_clients_text %}
+                    {% trans "Manage Providers" as manage_providers_text %}
+                    {% include 'components/atoms/_action_link.html' with url='dashboard:admin_providers' style='outline' text=manage_providers_text %}
+                </div>
+            </div>
+
+            <div class="action-card opacity-0 translate-y-6 bg-secondary border border-gray-100 rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col hover:-translate-y-1">
+                <h3 class="font-bold text-foreground mb-3 text-lg">Service Categories</h3>
+                <p class="text-sm text-muted-foreground leading-relaxed flex-grow mb-8">Create, edit, or disable the service categories displayed on the marketplace platform.</p>
+                <div class="mt-auto">
+                    {% trans "Manage Categories" as manage_categories_text %}
+                    {% include 'components/atoms/_action_link.html' with url='dashboard:admin_categories' style='dark' text=manage_categories_text %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Entrance Animations -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+        // Fade in header
+        tl.to(".reveal-header", { y: 0, opacity: 1, duration: 0.8, stagger: 0.2 })
+        // Pop in the stat cards one by one
+          .to(".metric-card", { y: 0, opacity: 1, duration: 0.6, stagger: 0.1 }, "-=0.4")
+        // Slide in the bottom action cards
+          .to(".action-card", { y: 0, opacity: 1, duration: 0.6, stagger: 0.15 }, "-=0.4");
+    });
+</script>
+{% endblock %}

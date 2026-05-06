@@ -1,0 +1,55 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Provider Dashboard" %} | HandyBase{% endblock %}
+
+{% block content %}
+<div class="w-full space-y-8">
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+            <p class="text-sm font-semibold uppercase tracking-wider text-blue-400">{% trans "Provider Workspace" %}</p>
+            <h1 class="mt-2 text-3xl font-bold tracking-tight text-foreground">{% trans "Welcome back," %} <span class="text-blue-400">{{ user.fname|default:_("Provider") }}!</span></h1>
+            <p class="mt-2 text-sm text-muted-foreground">{% trans "Manage your services, bookings, and subscription access from one place." %}</p>
+        </div>
+        <div class="flex flex-col gap-3 sm:flex-row">
+            <a href="{% url 'subscription:manage' %}" class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700">
+                {% trans "View Subscription" %}
+            </a>
+        </div>
+    </div>
+
+    <section class="w-full">
+        <article class="rounded-xl border border-border bg-secondary p-6 shadow-sm">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-4">
+                <h2 class="text-lg font-bold text-foreground">{% trans "Business Overview" %}</h2>
+                {% if user.is_provider_approved %}
+                    {% include 'components/atoms/_badge.html' with type='success' text=_('Approved') %}
+                {% else %}
+                    {% include 'components/atoms/_badge.html' with type='warning' text=_('Pending') %}
+                {% endif %}
+            </div>
+            <div class="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{% trans "Business Name" %}</p>
+                    <p class="mt-2 font-semibold text-foreground">{{ user.business_name|default:_("Not set") }}</p>
+                </div>
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{% trans "Email" %}</p>
+                    <p class="mt-2 font-semibold text-foreground">{{ user.email }}</p>
+                </div>
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{% trans "Current Subscription" %}</p>
+                    <p class="mt-2 font-semibold text-foreground">{{ display_plan }}</p>
+                </div>
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{% trans "Subscription Actions" %}</p>
+                    <div class="mt-2 flex flex-wrap gap-2">
+                        <a href="{% url 'subscription:manage' %}" class="rounded-lg bg-background px-3 py-2 text-xs font-bold text-muted-foreground transition hover:bg-gray-200">{% trans "Manage" %}</a>
+                        <a href="{% url 'subscription:plans' %}" class="rounded-lg bg-blue-50 px-3 py-2 text-xs font-bold text-blue-700 transition hover:bg-blue-100">{% trans "View Plans" %}</a>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </section>
+</div>
+{% endblock %}

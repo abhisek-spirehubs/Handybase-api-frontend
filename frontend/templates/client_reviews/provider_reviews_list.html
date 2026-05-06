@@ -1,0 +1,18 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Reviews I've Given" %} | HandyBase{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <h1 class="text-2xl font-bold text-gray-900 mb-6">{% trans "Reviews I've Given" %}</h1>
+    {% if reviews %}
+    {% for review in reviews %}
+    {% include 'client_reviews/_review_card.html' with review=review can_delete=True %}
+    {% endfor %}
+    <!-- Simple pagination (optional) -->
+    {% else %}
+    <p class="text-gray-500">{% trans "You haven't rated any clients yet." %}</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Plans" %} | HandyBase{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="text-center max-w-3xl mx-auto mb-16">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-foreground tracking-tight mb-4">
+            {% trans "Choose Your Perfect Plan" %}
+        </h1>
+        <p class="text-lg text-muted-foreground">
+            {% trans "Upgrade your account to unlock premium features, boost your visibility, and grow your business." %}
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        {% for plan in plans %}
+        <div class="flex flex-col bg-secondary rounded-2xl border border-border shadow-sm hover:shadow-xl transition-shadow duration-300 relative overflow-hidden">
+            
+            {% if plan.display_price > 0 %}
+            <div class="absolute top-0 inset-x-0 h-1.5 bg-blue-600"></div>
+            {% endif %}
+
+            <div class="p-8 flex-1">
+                <h2 class="text-2xl font-bold text-foreground mb-2">{{ plan.display_name }}</h2>
+                <p class="text-muted-foreground text-sm h-10">{{ plan.description }}</p>
+                
+                <div class="my-6 flex items-baseline">
+                    <span class="text-5xl font-extrabold text-foreground">${{ plan.display_price }}</span>
+                    <span class="text-muted-foreground ml-2 font-medium">/month</span>
+                </div>
+
+                <form action="{% url 'subscription:upgrade' %}" method="post" class="mt-8 w-full">
+                    {% csrf_token %}
+                    <input type="hidden" name="plan_id" value="{{ plan.id }}">
+                    <input type="hidden" name="amount" value="{{ plan.display_price }}">
+                    <button type="submit" class="w-full block py-3.5 px-4 {% if plan.display_price > 0 %}bg-blue-600 hover:bg-blue-700 text-white shadow-md{% else %}bg-background hover:bg-gray-200 text-foreground{% endif %} font-bold rounded-xl text-center transition-all duration-200">
+                        {% if current_plan == plan.id or current_plan == plan.display_name %}
+                            {% trans "Current Plan" %}
+                        {% elif plan.display_price > 0 %}
+                            {% trans "Upgrade Now" %}
+                        {% else %}
+                            {% trans "Get Started" %}
+                        {% endif %}
+                    </button>
+                </form>
+
+                <div class="mt-8 pt-8 border-t border-gray-100">
+                    <p class="text-sm font-bold text-foreground mb-4 uppercase tracking-wider">{% trans "What's included" %}</p>
+                    <ul class="space-y-4">
+                        {% if plan.display_features %}
+                            {% for feature in plan.display_features %}
+                            <li class="flex items-start">
+                                <svg class="h-5 w-5 text-blue-500 shrink-0 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span class="text-muted-foreground text-sm">{{ feature }}</span>
+                            </li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="flex items-start">
+                                <svg class="h-5 w-5 text-blue-500 shrink-0 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span class="text-muted-foreground text-sm">{% trans "Standard access" %}</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="h-5 w-5 text-blue-500 shrink-0 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span class="text-muted-foreground text-sm">{% trans "Basic support" %}</span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-1 md:col-span-3 text-center py-20 bg-secondary rounded-2xl border border-dashed border-border">
+            <h3 class="text-xl font-bold text-foreground">{% trans "No plans available right now" %}</h3>
+            <p class="text-muted-foreground mt-2">{% trans "Please check back later or contact support." %}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+{% block title %}Update Review | HandyBase{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="mb-8 flex items-center gap-4">
+        <a href="javascript:history.back()" class="text-muted-foreground hover:text-foreground transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        </a>
+        <div>
+            <h1 class="text-2xl font-bold text-foreground">{% trans "Update Review" %}</h1>
+            <p class="text-muted-foreground mt-1">{% trans "Modify your previous rating or comments." %}</p>
+        </div>
+    </div>
+
+    <div class="bg-secondary rounded-xl border border-border shadow-sm p-6">
+        <form action="{% url 'reviews:update' review_id=review_id %}" method="POST" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+            
+            <!-- Star Rating -->
+            <div>
+                <label class="block text-sm font-bold text-foreground mb-2">{% trans "Update Rating" %}</label>
+                <div class="flex items-center gap-2" id="star-rating">
+                    <input type="hidden" name="rating" id="rating-input" value="5" />
+                    {% for i in "12345" %}
+                        <button type="button" data-value="{{ forloop.counter }}" class="star-btn text-3xl focus:outline-none transition hover:scale-110 {% if forloop.counter <= 5 %}text-yellow-400{% else %}text-gray-300{% endif %}">★</button>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Comment -->
+            <div>
+                <label for="review-comment" class="block text-sm font-bold text-foreground mb-2">{% trans "Update Comment (optional)" %}</label>
+                <textarea id="review-comment" name="comment" rows="5" maxlength="1000" class="w-full bg-background text-foreground rounded-xl border border-border p-4 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition"></textarea>
+                <p class="text-xs text-muted-foreground mt-2">{% trans "Max 1000 characters" %}</p>
+            </div>
+
+            <!-- Media Upload -->
+            <div>
+                <label class="block text-sm font-bold text-foreground mb-2">{% trans "Replace Photos (optional)" %}</label>
+                <div class="flex items-center gap-2 mb-2">
+                    <input type="checkbox" id="replace_media" name="replace_media" value="true" class="rounded border-border text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                    <label for="replace_media" class="text-sm text-foreground">{% trans "Delete existing photos and replace with new ones below" %}</label>
+                </div>
+                
+                <div class="mt-2 flex flex-wrap gap-2" id="media-preview"></div>
+                <label class="mt-2 inline-flex cursor-pointer items-center gap-2 rounded-lg bg-background border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                    {% trans "Select New Images" %}
+                    <input type="file" id="media-files" name="media_files" multiple accept="image/*" class="hidden" />
+                </label>
+            </div>
+
+            <div class="pt-4 border-t border-border flex justify-end gap-3">
+                <a href="javascript:history.back()" class="px-6 py-3 bg-secondary text-foreground font-bold rounded-lg hover:bg-background border border-border transition shadow-sm">
+                    {% trans "Cancel" %}
+                </a>
+                <button type="submit" class="px-8 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition shadow-sm">
+                    {% trans "Save Changes" %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    (() => {
+        const stars = document.querySelectorAll('.star-btn');
+        const ratingInput = document.getElementById('rating-input');
+        const mediaInput = document.getElementById('media-files');
+        const mediaPreview = document.getElementById('media-preview');
+
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const value = star.getAttribute('data-value');
+                ratingInput.value = value;
+                stars.forEach((s, idx) => {
+                    s.classList.toggle('text-yellow-400', idx < value);
+                    s.classList.toggle('text-gray-300', idx >= value);
+                });
+            });
+        });
+
+        mediaInput.addEventListener('change', (e) => {
+            mediaPreview.innerHTML = '';
+            Array.from(e.target.files).forEach(file => {
+                if (!file.type.startsWith('image/')) return;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'h-20 w-20 object-cover rounded-lg border border-border';
+                    mediaPreview.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+            // Auto check the replace media checkbox if files are selected
+            if (e.target.files.length > 0) {
+                document.getElementById('replace_media').checked = true;
+            }
+        });
+    })();
+</script>
+{% endblock %}

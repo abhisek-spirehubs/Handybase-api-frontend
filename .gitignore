@@ -1,0 +1,90 @@
+# Python
+__pycache__/
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+/media
+/staticfiles
+/static
+
+# Node / frontend
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+package-lock.json
+pnpm-debug.log
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+Thumbs.db
+
+# Project-specific
+logs/
+*.pid
+*.seed
+*.pid.lock
+coverage/
+.nyc_output
+.cache
+.sass-cache
+
+# Sentry
+.sentry/
+
+# Pytest
+.pytest_cache/
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints
+
+# Local files
+local.py
+settings_local.py
+
+# Build outputs
+frontend/handybase-ui/.next/
+frontend/handybase-ui/out/
+
+# Misc
+*.bak
+*.tmp*.json

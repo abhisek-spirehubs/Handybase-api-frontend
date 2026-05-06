@@ -1,0 +1,62 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+{% block title %}{% trans "My Services" %} | HandyBase{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-8">
+    <div>
+        <h1 class="text-2xl font-bold text-foreground">{% trans "My Services" %}</h1>
+        <p class="text-muted-foreground mt-1">{% trans "Manage the services you offer to clients." %}</p>
+    </div>
+    <a href="{% url 'service:provider_create' %}" class="px-6 py-2.5 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition shadow-sm">
+        {% trans "+ Add New Service" %}
+    </a>
+</div>
+
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for service in services %}
+    <div class="bg-secondary rounded-xl shadow-sm border border-border overflow-hidden flex flex-col">
+        <div class="h-40 bg-background w-full relative">
+            {% if service.images %}
+                <img src="{{ service.images.0 }}" class="w-full h-full object-cover">
+            {% else %}
+                <div class="w-full h-full flex items-center justify-center text-muted-foreground">{% trans "No Image" %}</div>
+            {% endif %}
+            
+            <div class="absolute top-3 right-3">
+                {% if service.approval_status == 'PENDING' %}
+                    <span class="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded-full">{% trans "Pending Approval" %}</span>
+                {% elif service.approval_status == 'APPROVED' %}
+                    <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-bold rounded-full">{% trans "Active" %}</span>
+                {% else %}
+                    <span class="px-3 py-1 bg-red-100 text-red-800 text-xs font-bold rounded-full">{% trans "Rejected" %}</span>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="p-5 flex-grow">
+            <h3 class="font-bold text-lg text-foreground line-clamp-1">{{ service.title }}</h3>
+            <p class="text-blue-600 font-bold mt-1">${{ service.price|floatformat:2 }} <span class="text-muted-foreground text-sm font-normal">/ {{ service.duration }} {% trans "mins" %}</span></p>
+            <p class="text-sm text-muted-foreground mt-3 line-clamp-2">{{ service.description }}</p>
+        </div>
+        
+        <div class="p-4 bg-background border-t border-gray-100 flex gap-2">
+            <a href="{% url 'service:provider_edit' service.id %}" class="flex-1 text-center py-2 bg-secondary border border-border text-muted-foreground font-bold rounded-lg hover:bg-background transition">{% trans "Edit" %}</a>
+            
+            {% trans "Delete this service permanently?" as delete_msg %}
+            <form method="post" class="flex-1" onsubmit="return confirm('{{ delete_msg|escapejs }}');">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="service_id" value="{{ service.id }}">
+                <button type="submit" class="w-full text-center py-2 bg-red-50 text-red-600 font-bold rounded-lg hover:bg-red-100 transition">{% trans "Delete" %}</button>
+            </form>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-span-full py-16 text-center bg-secondary border border-dashed border-border rounded-xl">
+        <p class="text-muted-foreground font-medium">{% trans "You haven't added any services yet." %}</p>
+        <a href="{% url 'service:provider_create' %}" class="mt-4 inline-block px-6 py-2 bg-blue-50 text-blue-700 font-bold rounded-lg hover:bg-blue-100">{% trans "Add Your First Service" %}</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

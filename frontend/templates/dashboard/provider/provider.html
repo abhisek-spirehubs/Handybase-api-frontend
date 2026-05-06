@@ -1,0 +1,129 @@
+{% load i18n %}
+<!-- {% extends 'layouts/_base_dashboard.html' %}
+
+{% block title %}Provider Dashboard | HandyBase{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    
+    <!-- Header -->
+    <div>
+        <h1 class="text-3xl font-bold text-foreground">Welcome back, {{ user.fname }}!</h1>
+        <p class="text-muted-foreground mt-1 italic">Skilled Hands. Trusted Service.</p>
+    </div>
+
+    <!-- Business Overview -->
+    <div class="bg-secondary border border-border rounded-xl shadow-sm p-6">
+        <h3 class="text-lg font-bold text-foreground mb-4 border-b border-gray-100 pb-2">Business Overview</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+            
+            <div class="flex flex-col">
+                <span class="text-muted-foreground uppercase text-xs font-semibold tracking-wider mb-1">Business Name</span>
+                <span class="text-foreground font-medium">{{ user.business_name|default:"Not set" }}</span>
+            </div>
+            
+            <div class="flex flex-col">
+                <span class="text-muted-foreground uppercase text-xs font-semibold tracking-wider mb-1">Email</span>
+                <span class="text-foreground font-medium">{{ user.email }}</span>
+            </div>
+            
+            <div class="flex flex-col items-start">
+                <span class="text-muted-foreground uppercase text-xs font-semibold tracking-wider mb-1">Approval Status</span>
+                {% if user.is_provider_approved %}
+                    {% include 'components/atoms/_badge.html' with type='success' text='✓ Approved & Active' %}
+                {% else %}
+                    {% include 'components/atoms/_badge.html' with type='warning' text='⌛ Pending Approval' %}
+                {% endif %}
+            </div>
+            
+            <div class="flex flex-col items-start">
+                <span class="text-muted-foreground uppercase text-xs font-semibold tracking-wider mb-1">Current Subscription</span>
+                {% include 'components/atoms/_badge.html' with type='info' text=display_plan|default:"Tier 1" %}
+            </div>
+            
+        </div>
+    </div>
+
+    <h2 class="text-xl font-bold text-foreground">Platform Capabilities</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- Tier 1 Card -->
+        <div class="bg-secondary border-t-4 border-t-gray-400 border border-border rounded-xl p-6 shadow-sm flex flex-col">
+            <h3 class="font-bold text-foreground mb-2">Tier 1: Basic</h3>
+            <div class="mb-4">
+                {% include 'components/atoms/_badge.html' with type='success' text='Active' %}
+            </div>
+            <ul class="text-sm text-muted-foreground space-y-2 flex-grow mb-6">
+                <li>• Profile creation & contact info</li>
+                <li>• General service categories</li>
+                <li>• Manual inquiry handling</li>
+            </ul>
+            <div class="flex flex-col gap-2 mt-auto">
+                {% trans "Manage Services" as manage_services_text %}
+                {% include 'components/atoms/_action_link.html' with url='service:provider_list' style='primary' text=manage_services_text %}
+                {% trans "Edit Profile" as edit_profile_text %}
+                {% include 'components/atoms/_action_link.html' with url='dashboard:profile' style='dark' text=edit_profile_text %}
+            </div>
+        </div>
+
+        <!-- Tier 2 Card -->
+        <div class="bg-secondary border-t-4 border-t-blue-500 border border-border rounded-xl p-6 shadow-sm flex flex-col">
+            <h3 class="font-bold text-foreground mb-2">Tier 2: Standard</h3>
+            
+            {% if user.subscription_plan == 'provider_tier2' or user.subscription_plan == 'provider_tier3' %}
+                <div class="mb-4">{% include 'components/atoms/_badge.html' with type='success' text='Unlocked' %}</div>
+                <ul class="text-sm text-muted-foreground space-y-2 flex-grow mb-6">
+                    <li>• Booking calendar & availability</li>
+                    <li>• Individual service pricing</li>
+                    <li>• In-app messaging</li>
+                </ul>
+                <div class="mt-auto">
+                    <!-- Form button using our earlier button atom -->
+                    {% include 'components/atoms/_button.html' with type='button' text='Manage Calendar' %}
+                </div>
+            {% else %}
+                <div class="mb-4">{% include 'components/atoms/_badge.html' with type='danger' text='Locked' %}</div>
+                <ul class="text-sm text-muted-foreground space-y-2 flex-grow mb-6 opacity-60">
+                    <li>• Booking calendar & availability</li>
+                    <li>• Individual service pricing</li>
+                    <li>• In-app messaging</li>
+                </ul>
+                <div class="mt-auto">
+                    {% trans "View Subscription" as view_subscription_text %}
+                    {% include 'components/atoms/_action_link.html' with url='subscription:manage' style='outline' text=view_subscription_text %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Tier 3 Card -->
+        <div class="bg-secondary border-t-4 border-t-purple-600 border border-border rounded-xl p-6 shadow-sm flex flex-col">
+            <h3 class="font-bold text-foreground mb-2">Tier 3: Pro</h3>
+            
+            {% if user.subscription_plan == 'provider_tier3' %}
+                <div class="mb-4">{% include 'components/atoms/_badge.html' with type='success' text='Unlocked' %}</div>
+                <ul class="text-sm text-muted-foreground space-y-2 flex-grow mb-6">
+                    <li>• Financial reporting & analytics</li>
+                    <li>• Profile engagement metrics</li>
+                    <li>• Priority search visibility</li>
+                </ul>
+                <div class="mt-auto">
+                    <!-- Example of overriding styles if needed, or using standard button -->
+                    {% include 'components/atoms/_button.html' with type='button' text='View Analytics' %}
+                </div>
+            {% else %}
+                <div class="mb-4">{% include 'components/atoms/_badge.html' with type='danger' text='Locked' %}</div>
+                <ul class="text-sm text-muted-foreground space-y-2 flex-grow mb-6 opacity-60">
+                    <li>• Financial reporting & analytics</li>
+                    <li>• Profile engagement metrics</li>
+                    <li>• Priority search visibility</li>
+                </ul>
+                <div class="mt-auto">
+                    {% trans "View Subscription" as view_subscription_text2 %}
+                    {% include 'components/atoms/_action_link.html' with url='subscription:manage' style='outline' text=view_subscription_text2 %}
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+{% endblock %} -->

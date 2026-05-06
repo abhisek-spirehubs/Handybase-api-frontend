@@ -1,0 +1,34 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Welcome | HandyBase{% endblock %}</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-foreground flex flex-col justify-center items-center min-h-screen p-4 sm:p-6">
+
+    <!-- Brand Logo (Optional, but good for Auth pages) -->
+    <a href="{% url 'home' %}" class="text-3xl font-bold text-blue-600 mb-8 hover:opacity-80 transition">
+        HandyBase
+    </a>
+
+    <!-- A wrapper to keep all auth cards the exact same width -->
+    <div class="w-full max-w-md">
+        
+        <!-- Reusing your Alerts Molecule! -->
+        {% include 'components/molecules/_alerts.html' %}
+
+        <!-- This is where login.html or register.html will inject their forms -->
+        {% block content %}{% endblock %}
+        
+    </div>
+
+</body>
+</html>

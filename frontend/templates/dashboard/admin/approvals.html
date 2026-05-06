@@ -1,0 +1,60 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+
+{% block title %}Pending Approvals | HandyBase{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-8">
+    <h1 class="text-2xl font-bold text-foreground">Pending Provider Approvals</h1>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+    {% for provider in providers %}
+        <div class="bg-secondary rounded-xl shadow-sm border border-border overflow-hidden flex flex-col">
+            <div class="p-6 border-b border-gray-100 flex items-center gap-4">
+                <div class="size-12 rounded-full bg-amber-500 flex items-center justify-center font-bold text-white text-xl">
+                    {{ provider.business_name|default:provider.fname|make_list|first|upper }}
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-foreground">{{ provider.business_name|default:"No Business Name" }}</h3>
+                    <p class="text-muted-foreground text-sm">{{ provider.fname }} {{ provider.lname }}</p>
+                </div>
+            </div>
+
+            <div class="p-6 flex-grow text-sm text-muted-foreground space-y-2">
+                <p><strong>✉️ Email:</strong> {{ provider.email }}</p>
+                <p><strong>📞 Phone:</strong> {{ provider.phone|default:"Not provided" }}</p>
+                <p><strong>📅 Applied:</strong> {{ provider.created_at|slice:":10" }}</p>
+                {% if provider.services %}
+                <div class="pt-2">
+                    <strong class="block mb-2">🛠️ Services:</strong>
+                    <div class="flex flex-wrap gap-2">
+                        {% for service in provider.services %}
+                            <span class="bg-background text-muted-foreground px-3 py-1 rounded-full text-xs font-medium">{{ service }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="p-4 bg-background border-t border-gray-100 flex gap-3">
+                <form method="post" action="{% url 'dashboard:admin_approvals' %}" class="flex-1" onsubmit="return confirm('Reject this provider?');">
+                    {% csrf_token %}
+                    <input type="hidden" name="provider_id" value="{{ provider.id }}">
+                    <button type="submit" name="action" value="reject" class="w-full py-2 bg-red-50 text-red-700 border border-red-200 rounded-lg font-bold hover:bg-red-100 transition">Reject</button>
+                </form>
+                <form method="post" action="{% url 'dashboard:admin_approvals' %}" class="flex-1" onsubmit="return confirm('Approve this provider?');">
+                    {% csrf_token %}
+                    <input type="hidden" name="provider_id" value="{{ provider.id }}">
+                    <button type="submit" name="action" value="approve" class="w-full py-2 bg-emerald-500 text-white rounded-lg font-bold hover:bg-emerald-600 transition">Approve</button>
+                </form>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-span-full text-center p-12 bg-secondary rounded-xl shadow-sm border border-border">
+            <h3 class="text-xl font-bold text-foreground mb-2">You're all caught up!</h3>
+            <p class="text-muted-foreground">There are no pending provider approval requests at this time.</p>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

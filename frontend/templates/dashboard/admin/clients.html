@@ -1,0 +1,41 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+
+{% block title %}Manage Clients | Admin{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto bg-secondary p-6 rounded-xl shadow-sm border border-border">
+    <h2 class="text-2xl font-bold mb-6">Client Management</h2>
+    
+    <table class="w-full text-left border-collapse">
+        <thead>
+            <tr class="border-b bg-background">
+                <th class="p-3">Name</th>
+                <th class="p-3">Email</th>
+                <th class="p-3">Status</th>
+                <th class="p-3 text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for client in clients %}
+            <tr class="border-b hover:bg-background">
+                <td class="p-3">{{ client.fname }} {{ client.lname }}</td>
+                <td class="p-3">{{ client.email }}</td>
+                <td class="p-3">
+                    <span class="px-2 py-1 rounded-full text-xs font-bold {% if client.status == 'active' %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+                        {{ client.status|upper }}
+                    </span>
+                </td>
+                <td class="p-3 text-right">
+                    <button class="text-blue-600 hover:underline">Edit</button>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="p-8 text-center text-muted-foreground">No clients found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

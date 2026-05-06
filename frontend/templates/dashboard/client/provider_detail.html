@@ -1,0 +1,392 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+{% block title %}{{ provider.business_name|default:provider.full_name }} | HandyBase{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <!-- Go Back -->
+    <a href="{% url 'dashboard:directory' %}" class="text-blue-600 hover:underline text-sm font-semibold flex items-center gap-1">
+        ← Back to Directory
+    </a>
+
+    <!-- Profile Header -->
+    <div class="bg-secondary p-8 rounded-xl shadow-sm border border-border flex flex-col md:flex-row gap-8 items-start">
+        <div class="h-32 w-32 rounded-full bg-blue-100 overflow-hidden flex-shrink-0 border-4 border-white shadow-md">
+            {% if provider.profile_image %}
+                <img src="{{ provider.profile_image }}" class="h-full w-full object-cover">
+            {% endif %}
+        </div>
+        <div class="flex-grow">
+            <h1 class="text-3xl font-bold text-foreground">{{ provider.business_name|default:provider.full_name }}</h1>
+            <p class="text-muted-foreground mt-1">{{ provider.experience_years|default:"0" }} years of experience</p>
+            
+            <div class="mt-4 flex gap-4">
+                <!-- Toggle Modal Button -->
+                {% if services %}
+                    <button onclick="document.getElementById('bookingModal').classList.remove('hidden')" class="px-6 py-2.5 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition shadow-sm">
+                        Book Service Now
+                    </button>
+                {% else %}
+                    <button type="button" disabled class="px-6 py-2.5 bg-gray-200 text-muted-foreground font-bold rounded-lg cursor-not-allowed">
+                        No Services Available
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <div class="bg-secondary p-6 rounded-xl shadow-sm border border-border">
+        <h2 class="text-lg font-bold text-foreground mb-4 border-b pb-2">About the Provider</h2>
+        <p class="text-muted-foreground whitespace-pre-line">{{ provider.description|default:"No description provided." }}</p>
+    </div>
+</div>
+
+<!-- BOOKING MODAL (Hidden by default) -->
+<div id="bookingModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-secondary rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div class="p-6 border-b border-gray-100 flex justify-between items-center sticky top-0 bg-secondary">
+            <h2 class="text-xl font-bold text-foreground">Request a Booking</h2>
+            <button onclick="document.getElementById('bookingModal').classList.add('hidden')" class="text-muted-foreground hover:text-muted-foreground font-bold text-xl">&times;</button>
+        </div>
+        
+        <form method="post" class="p-6 space-y-6">
+            {% csrf_token %}
+            
+            <!-- Service Selection Dropdown -->
+            <div>
+                <label class="block text-sm font-medium text-muted-foreground mb-1">Service Required</label>
+                <select name="service_id" required class="w-full px-4 py-2 border border-border rounded-lg focus:ring-blue-500 outline-none bg-secondary">
+                    <option value="" disabled selected>Select a service...</option>
+                    {% for service in services %}
+                        <option value="{{ service.id }}">
+                            {{ service.title }} — ${{ service.price }} ({{ service.duration }} mins)
+                        </option>
+                    {% empty %}
+                        <option value="" disabled>This provider has no listed services.</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-muted-foreground mb-1">Preferred Date</label>
+                    <input type="date" name="booking_date" required
+                        min="{{ today_date }}"
+                        class="w-full px-4 py-2 border border-border rounded-lg focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-muted-foreground mb-1">Preferred Time</label>
+                    <!-- Hidden input carries the value (24h format) for form POST -->
+                    <input type="hidden" name="booking_time" id="booking_time_value">
+                    <!-- Custom Clock Trigger Button -->
+                    <button type="button" id="time-trigger" onclick="openClockPicker()"
+                        class="w-full px-4 py-2 border border-border rounded-lg text-left flex items-center gap-2 bg-white hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 transition">
+                        <svg class="size-4 shrink-0 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        <span id="time-display" class="text-sm text-muted-foreground">Select time...</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ══════════════ CLOCK PICKER POPUP (fixed, outside modal flow) ══════════════ -->
+            <div id="clock-picker"
+                style="display:none;position:fixed;z-index:9999;width:272px;"
+                class="bg-white rounded-2xl shadow-2xl border border-gray-200 p-5">
+
+                <!-- Time Display Header -->
+                <div class="flex justify-center items-center gap-1 mb-4">
+                    <button type="button" onclick="setClockMode('hour')" id="hd"
+                        class="text-4xl font-bold leading-none text-blue-600 transition-colors">12</button>
+                    <span class="text-4xl font-bold text-gray-300 leading-none">:</span>
+                    <button type="button" onclick="setClockMode('minute')" id="md"
+                        class="text-4xl font-bold leading-none text-gray-400 transition-colors">00</button>
+                    <button type="button" id="ap" onclick="toggleAmPm()"
+                        class="ml-3 text-xs font-bold text-blue-600 border border-blue-200 rounded-lg px-2 py-1.5 hover:bg-blue-50 transition">AM</button>
+                </div>
+
+                <!-- Analog Clock Face -->
+                <div class="flex justify-center">
+                    <svg id="clock-svg" width="220" height="220" viewBox="0 0 220 220"
+                        class="cursor-pointer select-none" onclick="handleClockClick(event)">
+                        <!-- Face -->
+                        <circle cx="110" cy="110" r="106" fill="#f0f4ff" stroke="#dbeafe" stroke-width="2"/>
+                        <circle cx="110" cy="110" r="90" fill="white" stroke="#e0e7ff" stroke-width="1"/>
+                        <!-- Tick marks -->
+                        <g id="clock-ticks"></g>
+                        <!-- Numbers -->
+                        <g id="clock-numbers"></g>
+                        <!-- Hand -->
+                        <line id="clock-hand" x1="110" y1="110" x2="110" y2="34"
+                            stroke="#3b82f6" stroke-width="3" stroke-linecap="round" pointer-events="none"/>
+                        <!-- Center dot -->
+                        <circle cx="110" cy="110" r="5" fill="#3b82f6" pointer-events="none"/>
+                        <!-- Hand tip highlight -->
+                        <circle id="hand-tip" cx="110" cy="34" r="11" fill="#3b82f6" pointer-events="none"/>
+                    </svg>
+                </div>
+
+                <!-- AM / PM + Actions -->
+                <div class="flex items-center justify-between mt-4">
+                    <div class="flex gap-2">
+                        <button type="button" onclick="setAmPm('AM')" id="am-b"
+                            class="px-3 py-1 rounded-full text-xs font-bold bg-blue-600 text-white">AM</button>
+                        <button type="button" onclick="setAmPm('PM')" id="pm-b"
+                            class="px-3 py-1 rounded-full text-xs font-bold border border-gray-200 text-gray-500 hover:bg-gray-50">PM</button>
+                    </div>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="closeClockPicker()"
+                            class="px-3 py-1 text-xs text-gray-500 hover:bg-gray-100 rounded-lg">Cancel</button>
+                        <button type="button" onclick="confirmTime()"
+                            class="px-4 py-1.5 text-xs font-bold bg-blue-600 text-white rounded-lg hover:bg-blue-700">OK</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="col-span-2">
+                    <label class="block text-sm font-medium text-muted-foreground mb-1">Address Line 1</label>
+                    <input type="text" name="address_line1" required class="w-full px-4 py-2 border border-border rounded-lg focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-muted-foreground mb-1">City</label>
+                    <input type="text" name="city" required class="w-full px-4 py-2 border border-border rounded-lg focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-muted-foreground mb-1">State</label>
+                    <input type="text" name="state" required class="w-full px-4 py-2 border border-border rounded-lg focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-muted-foreground mb-1">Postal Code</label>
+                    <input type="text" name="postal_code" required class="w-full px-4 py-2 border border-border rounded-lg focus:ring-blue-500 outline-none">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-muted-foreground mb-1">Additional Notes for Provider</label>
+                <textarea name="note" rows="3" class="w-full px-4 py-2 border border-border rounded-lg focus:ring-blue-500 outline-none"></textarea>
+            </div>
+
+            <div class="pt-4 border-t border-gray-100 flex justify-end gap-3">
+                <button type="button" onclick="document.getElementById('bookingModal').classList.add('hidden')" class="px-4 py-2 text-muted-foreground font-bold hover:bg-background rounded-lg">Cancel</button>
+                <button type="submit" {% if not services %}disabled{% endif %} class="px-6 py-2 {% if services %}bg-blue-600 text-white hover:bg-blue-700{% else %}bg-gray-200 text-muted-foreground cursor-not-allowed{% endif %} font-bold rounded-lg">Submit Booking</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    var state = { mode: 'hour', hour: 12, minute: 0, ampm: 'AM' };
+    var cx = 110, cy = 110, r = 78;
+
+    function toRad(deg) { return deg * Math.PI / 180; }
+
+    function getAngle(val, total) {
+        return toRad(val / total * 360 - 90);
+    }
+
+    function updateHand() {
+        var a = state.mode === 'hour'
+            ? getAngle(state.hour % 12, 12)
+            : getAngle(state.minute, 60);
+        var x2 = cx + r * Math.cos(a);
+        var y2 = cy + r * Math.sin(a);
+        document.getElementById('clock-hand').setAttribute('x2', x2);
+        document.getElementById('clock-hand').setAttribute('y2', y2);
+        document.getElementById('hand-tip').setAttribute('cx', x2);
+        document.getElementById('hand-tip').setAttribute('cy', y2);
+    }
+
+    function renderClock() {
+        var g = document.getElementById('clock-numbers');
+        g.innerHTML = '';
+        var svg = document.getElementById('clock-svg');
+        var ns = 'http://www.w3.org/2000/svg';
+
+        if (state.mode === 'hour') {
+            for (var h = 1; h <= 12; h++) {
+                var a = getAngle(h, 12);
+                var x = cx + r * Math.cos(a);
+                var y = cy + r * Math.sin(a);
+                var active = (state.hour === h);
+                if (active) {
+                    var circ = document.createElementNS(ns, 'circle');
+                    circ.setAttribute('cx', x); circ.setAttribute('cy', y);
+                    circ.setAttribute('r', '15'); circ.setAttribute('fill', '#3b82f6');
+                    g.appendChild(circ);
+                }
+                var txt = document.createElementNS(ns, 'text');
+                txt.setAttribute('x', x); txt.setAttribute('y', y + 5);
+                txt.setAttribute('text-anchor', 'middle');
+                txt.setAttribute('font-size', '14'); txt.setAttribute('font-weight', '700');
+                txt.setAttribute('fill', active ? 'white' : '#374151');
+                txt.setAttribute('pointer-events', 'none');
+                txt.textContent = h;
+                g.appendChild(txt);
+            }
+        } else {
+            var mins = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
+            mins.forEach(function (m) {
+                var a = getAngle(m, 60);
+                var x = cx + r * Math.cos(a);
+                var y = cy + r * Math.sin(a);
+                var active = (state.minute === m);
+                if (active) {
+                    var circ = document.createElementNS(ns, 'circle');
+                    circ.setAttribute('cx', x); circ.setAttribute('cy', y);
+                    circ.setAttribute('r', '15'); circ.setAttribute('fill', '#3b82f6');
+                    g.appendChild(circ);
+                }
+                var txt = document.createElementNS(ns, 'text');
+                txt.setAttribute('x', x); txt.setAttribute('y', y + 5);
+                txt.setAttribute('text-anchor', 'middle');
+                txt.setAttribute('font-size', '13'); txt.setAttribute('font-weight', '700');
+                txt.setAttribute('fill', active ? 'white' : '#374151');
+                txt.setAttribute('pointer-events', 'none');
+                txt.textContent = String(m).padStart(2, '0');
+                g.appendChild(txt);
+            });
+        }
+        updateHand();
+        updateHeader();
+    }
+
+    function updateHeader() {
+        var hd = document.getElementById('hd');
+        var md = document.getElementById('md');
+        hd.textContent = String(state.hour).padStart(2, '0');
+        md.textContent = String(state.minute).padStart(2, '0');
+        if (state.mode === 'hour') {
+            hd.className = 'text-4xl font-bold leading-none text-blue-600 transition-colors';
+            md.className = 'text-4xl font-bold leading-none text-gray-400 transition-colors';
+        } else {
+            hd.className = 'text-4xl font-bold leading-none text-gray-700 transition-colors';
+            md.className = 'text-4xl font-bold leading-none text-blue-600 transition-colors';
+        }
+        document.getElementById('ap').textContent = state.ampm;
+    }
+
+    function updateAmPmButtons() {
+        var ab = document.getElementById('am-b');
+        var pb = document.getElementById('pm-b');
+        if (state.ampm === 'AM') {
+            ab.className = 'px-3 py-1 rounded-full text-xs font-bold bg-blue-600 text-white';
+            pb.className = 'px-3 py-1 rounded-full text-xs font-bold border border-gray-200 text-gray-500 hover:bg-gray-50';
+        } else {
+            ab.className = 'px-3 py-1 rounded-full text-xs font-bold border border-gray-200 text-gray-500 hover:bg-gray-50';
+            pb.className = 'px-3 py-1 rounded-full text-xs font-bold bg-blue-600 text-white';
+        }
+    }
+
+    window.openClockPicker = function () {
+        var trigger = document.getElementById('time-trigger');
+        var rect = trigger.getBoundingClientRect();
+        var picker = document.getElementById('clock-picker');
+        picker.style.top = (rect.bottom + 8) + 'px';
+        picker.style.left = rect.left + 'px';
+        // Make sure it doesn't overflow bottom of viewport
+        var bottom = rect.bottom + 8 + 400;
+        if (bottom > window.innerHeight) {
+            picker.style.top = (rect.top - 400 - 8) + 'px';
+        }
+        picker.style.display = 'block';
+        state.mode = 'hour';
+        renderClock();
+    };
+
+    window.closeClockPicker = function () {
+        document.getElementById('clock-picker').style.display = 'none';
+    };
+
+    window.setClockMode = function (mode) {
+        state.mode = mode;
+        renderClock();
+    };
+
+    window.toggleAmPm = function () {
+        state.ampm = state.ampm === 'AM' ? 'PM' : 'AM';
+        updateAmPmButtons();
+        updateHeader();
+    };
+
+    window.setAmPm = function (ap) {
+        state.ampm = ap;
+        updateAmPmButtons();
+        updateHeader();
+    };
+
+    window.handleClockClick = function (event) {
+        var svg = document.getElementById('clock-svg');
+        var rect = svg.getBoundingClientRect();
+        var scale = 220 / rect.width;
+        var mx = (event.clientX - rect.left) * scale;
+        var my = (event.clientY - rect.top) * scale;
+        var dx = mx - cx, dy = my - cy;
+        var angleDeg = Math.atan2(dy, dx) * 180 / Math.PI + 90;
+        if (angleDeg < 0) angleDeg += 360;
+
+        if (state.mode === 'hour') {
+            var h = Math.round(angleDeg / 30) % 12;
+            if (h === 0) h = 12;
+            state.hour = h;
+            renderClock();
+            // Auto-switch to minute selection after a short delay
+            setTimeout(function () {
+                state.mode = 'minute';
+                renderClock();
+            }, 300);
+        } else {
+            var m = Math.round(angleDeg / 6) % 60;
+            m = Math.round(m / 5) * 5;
+            if (m >= 60) m = 0;
+            state.minute = m;
+            renderClock();
+        }
+    };
+
+    window.confirmTime = function () {
+        // Convert to 24h for the POST
+        var h = state.hour;
+        if (state.ampm === 'AM' && h === 12) h = 0;
+        if (state.ampm === 'PM' && h !== 12) h += 12;
+        var val24 = String(h).padStart(2, '0') + ':' + String(state.minute).padStart(2, '0');
+        document.getElementById('booking_time_value').value = val24;
+        // Update trigger button label
+        var display = String(state.hour).padStart(2, '0') + ':' +
+            String(state.minute).padStart(2, '0') + ' ' + state.ampm;
+        var span = document.getElementById('time-display');
+        span.textContent = display;
+        span.classList.remove('text-muted-foreground');
+        span.classList.add('text-foreground', 'font-medium');
+        closeClockPicker();
+    };
+
+    // Validate time is chosen on form submit
+    document.addEventListener('DOMContentLoaded', function () {
+        var form = document.querySelector('#bookingModal form');
+        if (form) {
+            form.addEventListener('submit', function (e) {
+                if (!document.getElementById('booking_time_value').value) {
+                    e.preventDefault();
+                    openClockPicker();
+                    alert('Please select a time for your booking.');
+                }
+            });
+        }
+        // Close picker on outside click
+        document.addEventListener('click', function (e) {
+            var picker = document.getElementById('clock-picker');
+            var trigger = document.getElementById('time-trigger');
+            if (picker && picker.style.display !== 'none' &&
+                !picker.contains(e.target) && !trigger.contains(e.target)) {
+                picker.style.display = 'none';
+            }
+        });
+    });
+})();
+</script>
+{% endblock %}

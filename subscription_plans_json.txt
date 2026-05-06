@@ -1,0 +1,167 @@
+{
+  "name": "Provider Tier 1",
+  "plan_type": "provider_tier1",
+  "price": 0,
+  "duration_days": 36500,
+  "currency": "USD",
+  "description": "Profile presence only — portfolio, social links. Upgrade to Tier 2 to list services.",
+  "is_active": true,
+  "features": {
+    "can_chat": false,
+    "can_book": false,
+    "can_compare_prices": false,
+    "can_request_quotes": false,
+    "can_use_advanced_filters": false,
+    "can_view_full_profiles": false,
+    "can_leave_reviews": false,
+    "can_exchange_documents": false,
+    "can_list_services": true,
+    "can_set_pricing": false,
+    "can_use_calendar": false,
+    "can_receive_payments": false,
+    "can_use_messaging": false,
+    "can_view_analytics": false,
+    "can_view_reports": false,
+    "has_priority_listing": false,
+    "can_upload_videos": false,
+    "can_rate_clients": false,
+    "max_services": 3,
+    "max_portfolio_images": 4
+  }
+}
+
+
+{
+  "name": "Provider Tier 2",
+  "plan_type": "provider_tier2",
+  "price": 29.99,
+  "duration_days": 30,
+  "currency": "USD",
+  "description": "Full service listings with pricing, calendar, messaging and payments.",
+  "is_active": true,
+  "features": {
+    "can_chat": false,
+    "can_book": false,
+    "can_compare_prices": false,
+    "can_request_quotes": false,
+    "can_use_advanced_filters": false,
+    "can_view_full_profiles": false,
+    "can_leave_reviews": false,
+    "can_exchange_documents": true,
+    "can_list_services": true,
+    "can_set_pricing": true,
+    "can_use_calendar": true,
+    "can_receive_payments": true,
+    "can_use_messaging": true,
+    "can_view_analytics": false,
+    "can_view_reports": false,
+    "has_priority_listing": false,
+    "can_upload_videos": false,
+    "can_rate_clients": false,
+    "max_services": 10,
+    "max_portfolio_images": 10
+  }
+}
+
+
+{
+  "name": "Provider Tier 3",
+  "plan_type": "provider_tier3",
+  "price": 49.99,
+  "duration_days": 30,
+  "currency": "USD",
+  "description": "Pro — analytics, financial reports, video portfolio, client ratings, priority listing, unlimited services.",
+  "is_active": true,
+  "features": {
+    "can_chat": false,
+    "can_book": false,
+    "can_compare_prices": false,
+    "can_request_quotes": false,
+    "can_use_advanced_filters": false,
+    "can_view_full_profiles": false,
+    "can_leave_reviews": false,
+    "can_exchange_documents": true,
+    "can_list_services": true,
+    "can_set_pricing": true,
+    "can_use_calendar": true,
+    "can_receive_payments": true,
+    "can_use_messaging": true,
+    "can_view_analytics": true,
+    "can_view_reports": true,
+    "has_priority_listing": true,
+    "can_upload_videos": true,
+    "can_rate_clients": true,
+    "max_services": -1,
+    "max_portfolio_images": 20
+  }
+}
+
+
+
+
+{
+  "name": "Client Free",
+  "plan_type": "client_free",
+  "price": 0,
+  "duration_days": 36500,
+  "currency": "USD",
+  "description": "Browse providers and categories. No booking or chat.",
+  "is_active": true,
+  "features": {
+    "can_chat": false,
+    "can_book": false,
+    "can_compare_prices": false,
+    "can_request_quotes": false,
+    "can_use_advanced_filters": false,
+    "can_view_full_profiles": false,
+    "can_leave_reviews": false,
+    "can_exchange_documents": false,
+    "can_list_services": false,
+    "can_set_pricing": false,
+    "can_use_calendar": false,
+    "can_receive_payments": false,
+    "can_use_messaging": false,
+    "can_view_analytics": false,
+    "can_view_reports": false,
+    "has_priority_listing": false,
+    "can_upload_videos": false,
+    "can_rate_clients": false,
+    "max_services": 0,
+    "max_portfolio_images": 0
+  }
+}
+
+
+{
+  "name": "Client Paid",
+  "plan_type": "client_paid",
+  "price": 9.99,
+  "duration_days": 30,
+  "currency": "USD",
+  "description": "Full access — book, chat, pay, review providers.",
+  "is_active": true,
+  "features": {
+    "can_chat": true,
+    "can_book": true,
+    "can_compare_prices": true,
+    "can_request_quotes": true,
+    "can_use_advanced_filters": true,
+    "can_view_full_profiles": true,
+    "can_leave_reviews": true,
+    "can_exchange_documents": true,
+    "can_list_services": false,
+    "can_set_pricing": false,
+    "can_use_calendar": false,
+    "can_receive_payments": false,
+    "can_use_messaging": false,
+    "can_view_analytics": false,
+    "can_view_reports": false,
+    "has_priority_listing": false,
+    "can_upload_videos": false,
+    "can_rate_clients": false,
+    "max_services": 0,
+    "max_portfolio_images": 0
+  }
+}
+
+

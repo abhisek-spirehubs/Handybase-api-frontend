@@ -1,0 +1,67 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Reviews Received" %} | HandyBase{% endblock %}
+
+{% block content %}
+<div class="mb-8 flex justify-between items-center">
+    <div>
+        <h1 class="text-2xl font-bold text-foreground">{% trans "Reviews Received from Providers" %}</h1>
+        <p class="text-muted-foreground mt-1">{% trans "See how service professionals have rated their experience with you." %}</p>
+    </div>
+    <a href="{% url 'dashboard:client_bookings' %}" class="text-sm font-medium text-blue-600 hover:underline flex items-center gap-1">
+        <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        {% trans "Back to Bookings" %}
+    </a>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {% for review in reviews %}
+    <div class="bg-secondary rounded-xl p-6 border border-border shadow-sm transition hover:shadow-md">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold uppercase border border-blue-200">
+                {{ review.provider_name|default:"P"|make_list|first }}
+            </div>
+            <div>
+                <h3 class="font-bold text-foreground">{{ review.provider_name|default:_("Anonymous Provider") }}</h3>
+                <div class="text-xs text-muted-foreground">
+                    {% trans "Booking" %} #{{ review.booking_id|truncatechars:12 }}
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2 mb-3">
+            <span class="flex text-yellow-400 text-lg">
+                {% for i in "12345" %}
+                    {% if forloop.counter <= review.rating|floatformat:"0"|add:"0" %}
+                        ★
+                    {% else %}
+                        <span class="text-gray-300">★</span>
+                    {% endif %}
+                {% endfor %}
+            </span>
+            <span class="text-sm font-bold text-foreground">{{ review.rating|floatformat:1 }}</span>
+            <span class="text-xs text-muted-foreground ml-2">{{ review.created_at|slice:":10" }}</span>
+        </div>
+
+        {% if review.comment %}
+        <p class="text-foreground/90 bg-background/50 p-4 rounded-lg border border-border italic">
+            "{{ review.comment }}"
+        </p>
+        {% else %}
+        <p class="text-muted-foreground italic p-4 rounded-lg border border-border border-dashed">
+            {% trans "No comment provided." %}
+        </p>
+        {% endif %}
+    </div>
+    {% empty %}
+    <div class="col-span-full bg-secondary rounded-xl p-12 text-center border border-border border-dashed">
+        <div class="size-16 bg-background rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="size-8 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+        </div>
+        <h3 class="text-foreground font-bold text-lg">{% trans "No reviews received yet" %}</h3>
+        <p class="text-muted-foreground mt-1">{% trans "You haven't been rated by any providers yet. Complete some bookings to see feedback!" %}</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

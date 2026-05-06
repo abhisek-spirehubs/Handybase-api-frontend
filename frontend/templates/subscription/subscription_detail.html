@@ -1,0 +1,23 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Subscription Detail" %} | HandyBase{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-3xl">
+  <h1 class="text-2xl font-bold">{% trans "Subscription Detail" %}</h1>
+
+  {% if subscription %}
+    <div class="mt-4 rounded-lg border p-4">
+      <p><strong>{% trans "User" %}:</strong> {{ subscription.user_email|default:subscription.user_id }}</p>
+      <p><strong>{% trans "Plan" %}:</strong> {{ subscription.plan_name|default:subscription.plan_id }}</p>
+      <p><strong>{% trans "Amount" %}:</strong> {{ subscription.amount_paid|default:subscription.price }} {{ subscription.currency|default:'USD' }}</p>
+      <p><strong>{% trans "Status" %}:</strong> {{ subscription.status }}</p>
+      <p><strong>{% trans "Start" %}:</strong> {{ subscription.start_date|default:subscription.created_at }}</p>
+      <p><strong>{% trans "End" %}:</strong> {{ subscription.end_date|default:'-' }}</p>
+    </div>
+  {% else %}
+    <div class="mt-4 text-muted-foreground">{% trans "Subscription not found." %}</div>
+  {% endif %}
+</div>
+{% endblock %}

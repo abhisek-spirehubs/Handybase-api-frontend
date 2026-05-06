@@ -1,0 +1,88 @@
+{% load i18n %}
+{% if booking_completed and not user_review %}
+<div id="review-form-container" class="mt-8 rounded-xl border border-gray-200 bg-white p-6">
+    <h3 class="text-lg font-bold text-gray-900">{% trans "Leave a Review" %}</h3>
+
+    <form id="review-form" action="{% url 'reviews:create' booking_id=booking_id %}" method="POST" enctype="multipart/form-data" class="mt-4 space-y-4">
+        {% csrf_token %}
+
+        <!-- Star Rating -->
+        <div>
+            <label class="text-sm font-semibold text-gray-700">{% trans "Your Rating" %}</label>
+            <div class="flex items-center gap-1 mt-1" id="star-rating">
+                <input type="hidden" name="rating" id="rating-input" value="0" />
+                {% for i in "12345" %}
+                    <button type="button" data-value="{{ forloop.counter }}" class="star-btn text-2xl text-gray-300 focus:outline-none transition hover:text-yellow-400">★</button>
+                {% endfor %}
+            </div>
+            <p id="rating-error" class="text-red-500 text-xs mt-1 hidden">{% trans "Please select a rating" %}</p>
+        </div>
+
+        <!-- Comment -->
+        <div>
+            <label for="review-comment" class="text-sm font-semibold text-gray-700">{% trans "Comment (optional)" %}</label>
+            <textarea id="review-comment" name="comment" rows="4" maxlength="1000" class="w-full rounded-xl border border-gray-300 p-3 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none"></textarea>
+            <p class="text-xs text-gray-400 mt-1">{% trans "Max 1000 characters" %}</p>
+        </div>
+
+        <!-- Media Upload -->
+        <div>
+            <label class="text-sm font-semibold text-gray-700">{% trans "Photos (optional)" %}</label>
+            <div class="mt-1 flex flex-wrap gap-2" id="media-preview"></div>
+            <label class="mt-2 inline-flex cursor-pointer items-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                {% trans "Upload Images" %}
+                <input type="file" id="media-files" name="media_files" multiple accept="image/*" class="hidden" />
+            </label>
+        </div>
+
+        <button type="submit" class="w-full rounded-xl bg-blue-600 py-3 text-sm font-bold text-white shadow-sm hover:bg-blue-700 transition">
+            {% trans "Submit Review" %}
+        </button>
+    </form>
+</div>
+
+<script>
+    (() => {
+        const stars = document.querySelectorAll('.star-btn');
+        const ratingInput = document.getElementById('rating-input');
+        const ratingError = document.getElementById('rating-error');
+        const mediaInput = document.getElementById('media-files');
+        const mediaPreview = document.getElementById('media-preview');
+
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const value = star.getAttribute('data-value');
+                ratingInput.value = value;
+                ratingError.classList.add('hidden');
+                stars.forEach((s, idx) => {
+                    s.classList.toggle('text-yellow-400', idx < value);
+                    s.classList.toggle('text-gray-300', idx >= value);
+                });
+            });
+        });
+
+        mediaInput.addEventListener('change', (e) => {
+            mediaPreview.innerHTML = '';
+            Array.from(e.target.files).forEach(file => {
+                if (!file.type.startsWith('image/')) return;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'h-20 w-20 object-cover rounded-lg border';
+                    mediaPreview.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        document.getElementById('review-form').addEventListener('submit', function(e) {
+            if (!ratingInput.value || ratingInput.value === '0') {
+                e.preventDefault();
+                ratingError.classList.remove('hidden');
+            }
+        });
+    })();
+</script>
+{% endif %}

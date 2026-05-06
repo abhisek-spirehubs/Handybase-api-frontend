@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<button onclick="generate()">Generate Token</button>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCSYo-JUaPwwfoVLZPerWGIAkPs9uPndPc",
+  authDomain: "handybase-74eb1.firebaseapp.com",
+  projectId: "handybase-74eb1",
+  messagingSenderId: "408168929732",
+  appId: "1:408168929732:web:34ec5caa04a2057f836c91"
+};
+
+const app = initializeApp(firebaseConfig);
+const messaging = getMessaging(app);
+
+window.generate = async function(){
+
+  const permission = await Notification.requestPermission();
+
+  if(permission === "granted"){
+
+    const token = await getToken(messaging,{
+      vapidKey: "BLMfKrxsFwENd9wdslY4SjA_qfMVHhht20fnM8yi774j0aAH9SKMBIaD54bvv1uqjSuLrNyFMhJopZ1Jm0TPbNQ"
+    });
+
+    console.log(token);
+    alert(token);
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>

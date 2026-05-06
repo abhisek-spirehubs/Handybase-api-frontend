@@ -1,0 +1,16 @@
+{% load i18n %}
+<!-- components/atoms/_input.html -->
+<div class="mb-4">
+    <label for="{{ name }}" class="block text-sm font-semibold text-muted-foreground mb-1">
+    {% if label %}{% trans label %}{% else %}{{ block.super|default:'' }}{% endif %} {% if required %}<span class="text-red-500">*</span>{% endif %}
+    </label>
+    <input 
+        type="{{ type|default:'text' }}" 
+        name="{{ name }}" 
+        id="{{ name }}"
+        value="{{ value|default:'' }}"
+    placeholder="{% if placeholder %}{% trans placeholder %}{% else %}{{ '' }}{% endif %}"
+        {% if required %}required{% endif %} 
+        class="w-full p-2.5 border border-border rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition shadow-sm"
+    >
+</div>

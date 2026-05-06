@@ -1,0 +1,98 @@
+{% extends "layouts/_base_auth.html" %}
+{% load i18n %}
+
+{% block title %}Register as Provider | HandyBase{% endblock %}
+
+{% block content %}
+<div class="bg-secondary p-8 rounded-2xl shadow-xl w-full max-w-xl border border-gray-100 my-8">
+    <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center p-3 bg-blue-50 rounded-full text-blue-600 mb-4">
+            <svg class="size-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+        </div>
+        <h2 class="text-2xl font-bold text-foreground">Join as a Provider</h2>
+        <p class="text-muted-foreground mt-2">Offer your services, manage bookings, and grow your business.</p>
+    </div>
+
+    {% include 'components/molecules/_alerts.html' %}
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+            <div class="p-3 mb-4 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm font-medium text-center">
+                {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+            </div>
+        {% endif %}
+
+        <h3 class="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4 border-b border-gray-100 pb-2">Personal Details</h3>
+        
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                {% include 'components/atoms/_input.html' with label="First Name" type="text" name="fname" value=form.fname.value|default:'' placeholder="John" required=True %}
+                {% if form.fname.errors %}<p class="text-red-500 text-xs mt-[-10px] mb-2 font-medium">{{ form.fname.errors.0 }}</p>{% endif %}
+            </div>
+            <div>
+                {% include 'components/atoms/_input.html' with label="Last Name" type="text" name="lname" value=form.lname.value|default:'' placeholder="Doe" required=True %}
+                {% if form.lname.errors %}<p class="text-red-500 text-xs mt-[-10px] mb-2 font-medium">{{ form.lname.errors.0 }}</p>{% endif %}
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                {% include 'components/atoms/_input.html' with label="Email Address" type="email" name="email" value=form.email.value|default:'' placeholder="you@example.com" required=True %}
+                {% if form.email.errors %}<p class="text-red-500 text-xs mt-[-10px] mb-2 font-medium">{{ form.email.errors.0 }}</p>{% endif %}
+            </div>
+            <div>
+                {% include 'components/atoms/_input.html' with label="Phone (Optional)" type="tel" name="phone" value=form.phone.value|default:'' placeholder="(555) 000-0000" %}
+                {% if form.phone.errors %}<p class="text-red-500 text-xs mt-[-10px] mb-2 font-medium">{{ form.phone.errors.0 }}</p>{% endif %}
+            </div>
+        </div>
+
+        <h3 class="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4 mt-6 border-b border-gray-100 pb-2">Business Details</h3>
+
+        {% include 'components/atoms/_input.html' with label="Business Name" type="text" name="business_name" value=form.business_name.value|default:'' placeholder="e.g. Acme Plumbing Solutions" required=True %}
+        {% if form.business_name.errors %}<p class="text-red-500 text-xs mt-[-10px] mb-2 font-medium">{{ form.business_name.errors.0 }}</p>{% endif %}
+
+        <div class="mb-4">
+            <label class="block text-sm font-semibold text-muted-foreground mb-1">Description (Optional)</label>
+            <textarea name="description" rows="3" placeholder="Briefly describe your services..." class="w-full p-2.5 border border-border rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition shadow-sm resize-none">{{ form.description.value|default:'' }}</textarea>
+            {% if form.description.errors %}<p class="text-red-500 text-xs mt-1 font-medium">{{ form.description.errors.0 }}</p>{% endif %}
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                {% include 'components/atoms/_input.html' with label="Years of Experience" type="number" name="experience_years" value=form.experience_years.value|default:'' placeholder="e.g. 5" %}
+                {% if form.experience_years.errors %}<p class="text-red-500 text-xs mt-[-10px] mb-2 font-medium">{{ form.experience_years.errors.0 }}</p>{% endif %}
+            </div>
+            <div>
+                {% include 'components/atoms/_input.html' with label="Service Area (City/Region)" type="text" name="address" value=form.address.value|default:'' placeholder="e.g. New York Metro" %}
+                {% if form.address.errors %}<p class="text-red-500 text-xs mt-[-10px] mb-2 font-medium">{{ form.address.errors.0 }}</p>{% endif %}
+            </div>
+        </div>
+
+        <h3 class="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4 mt-6 border-b border-gray-100 pb-2">Security</h3>
+
+        <div class="grid grid-cols-2 gap-4 mb-2">
+            <div>
+                {% include 'components/atoms/_input.html' with label="Password" type="password" name="password" placeholder="••••••••" required=True %}
+                {% if form.password.errors %}<p class="text-red-500 text-xs mt-[-10px] font-medium">{{ form.password.errors.0 }}</p>{% endif %}
+            </div>
+            <div>
+                {% include 'components/atoms/_input.html' with label="Confirm" type="password" name="confirm_password" placeholder="••••••••" required=True %}
+                {% if form.confirm_password.errors %}<p class="text-red-500 text-xs mt-[-10px] font-medium">{{ form.confirm_password.errors.0 }}</p>{% endif %}
+            </div>
+        </div>
+
+        <div class="mt-8">
+            {% include 'components/atoms/_button.html' with text="Submit Application" type="submit" %}
+        </div>
+    </form>
+
+    <div class="mt-6 pt-6 border-t border-gray-100 text-center">
+        <p class="text-sm text-muted-foreground">
+            Already have a provider account? 
+            <a href="{% url 'auth:login' %}" class="font-bold text-blue-600 hover:text-blue-800 transition">Sign in</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

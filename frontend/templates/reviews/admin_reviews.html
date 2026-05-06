@@ -1,0 +1,108 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+{% block title %}Admin | Reviews Management | HandyBase{% endblock %}
+
+{% block content %}
+<div class="mb-8 flex justify-between items-end">
+    <div>
+        <h1 class="text-2xl font-bold text-foreground">{% trans "Review Management" %}</h1>
+        <p class="text-muted-foreground mt-1">{% trans "Monitor and moderate platform reviews." %}</p>
+    </div>
+</div>
+
+<!-- Filters -->
+<form method="get" class="mb-6 p-4 bg-secondary rounded-xl border border-border shadow-sm flex flex-wrap gap-4 items-end">
+    <div>
+        <label class="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">{% trans "Provider ID" %}</label>
+        <input type="text" name="provider_id" value="{{ provider_id|default:'' }}" class="px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm focus:ring-blue-500 outline-none w-48">
+    </div>
+    <div>
+        <label class="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">{% trans "Client ID" %}</label>
+        <input type="text" name="client_id" value="{{ client_id|default:'' }}" class="px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm focus:ring-blue-500 outline-none w-48">
+    </div>
+    <div>
+        <label class="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">{% trans "Min Rating" %}</label>
+        <input type="number" step="0.5" min="1" max="5" name="min_rating" value="{{ min_rating|default:'' }}" class="px-3 py-2 border border-border rounded-lg bg-background text-foreground text-sm focus:ring-blue-500 outline-none w-32">
+    </div>
+    <div class="flex items-center gap-2 pb-2">
+        <input type="checkbox" id="include_deleted" name="include_deleted" value="true" {% if include_deleted %}checked{% endif %} class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+        <label for="include_deleted" class="text-sm font-medium text-foreground">{% trans "Include Deleted" %}</label>
+    </div>
+    <div class="ml-auto">
+        <button type="submit" class="px-6 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition shadow-sm">
+            {% trans "Filter" %}
+        </button>
+        <a href="?page=1" class="px-4 py-2 text-muted-foreground hover:text-foreground font-medium ml-2">{% trans "Clear" %}</a>
+    </div>
+</form>
+
+<div class="bg-secondary rounded-xl border border-border shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm text-muted-foreground">
+            <thead class="text-xs text-muted-foreground uppercase bg-background/50 border-b border-border">
+                <tr>
+                    <th scope="col" class="px-6 py-4">{% trans "Booking" %}</th>
+                    <th scope="col" class="px-6 py-4">{% trans "Rating" %}</th>
+                    <th scope="col" class="px-6 py-4">{% trans "Comment" %}</th>
+                    <th scope="col" class="px-6 py-4">{% trans "Date" %}</th>
+                    <th scope="col" class="px-6 py-4 text-right">{% trans "Actions" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for review in reviews %}
+                <tr class="border-b border-border hover:bg-background/50 transition">
+                    <td class="px-6 py-4 whitespace-nowrap font-medium text-foreground">
+                        {{ review.booking_id|truncatechars:12 }}
+                        {% if review.is_deleted %}
+                            <span class="ml-2 px-2 py-0.5 text-[10px] bg-red-100 text-red-800 rounded-full font-bold uppercase">{% trans "Deleted" %}</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center text-yellow-500 font-bold">
+                            {{ review.rating }}
+                            <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 min-w-[300px]">
+                        {{ review.comment|default:"<em class='text-muted-foreground/50'>No comment</em>"|safe }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-xs">
+                        {{ review.created_at|slice:":10" }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right">
+                        {% if not review.is_deleted %}
+                            {% trans "Are you sure you want to delete this review?" as del_msg %}
+                            <form method="post" action="{% url 'reviews:admin_delete' review.id %}" class="inline-block" onsubmit="return confirm('{{ del_msg|escapejs }}');">
+                                {% csrf_token %}
+                                <button type="submit" class="text-red-500 hover:text-red-700 font-bold transition">{% trans "Delete" %}</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="px-6 py-12 text-center text-muted-foreground">
+                        {% trans "No reviews found." %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Pagination -->
+{% if total > limit %}
+<div class="mt-6 flex justify-between items-center text-sm text-muted-foreground">
+    <div>
+        {% trans "Showing page" %} {{ page }}
+    </div>
+    <div class="flex gap-2">
+        {% if page > 1 %}
+            <a href="?page={{ page|add:'-1' }}&limit={{ limit }}&provider_id={{ provider_id }}&client_id={{ client_id }}&min_rating={{ min_rating }}&include_deleted={% if include_deleted %}true{% else %}false{% endif %}" class="px-4 py-2 bg-secondary border border-border rounded-lg hover:bg-background transition">{% trans "Previous" %}</a>
+        {% endif %}
+        <a href="?page={{ page|add:'1' }}&limit={{ limit }}&provider_id={{ provider_id }}&client_id={{ client_id }}&min_rating={{ min_rating }}&include_deleted={% if include_deleted %}true{% else %}false{% endif %}" class="px-4 py-2 bg-secondary border border-border rounded-lg hover:bg-background transition">{% trans "Next" %}</a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

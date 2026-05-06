@@ -1,0 +1,57 @@
+{% extends 'layouts/_base_dashboard.html' %}
+{% load i18n %}
+{% block title %}All Bookings | Admin{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-2xl font-bold text-foreground">Platform Bookings Overview</h1>
+    <p class="text-muted-foreground mt-1">Monitor all service interactions across HandyBase.</p>
+</div>
+
+<div class="bg-secondary rounded-xl shadow-sm border border-border overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead class="bg-background border-b border-border">
+                <tr>
+                    <th class="p-4 text-muted-foreground font-semibold">Date</th>
+                    <th class="p-4 text-muted-foreground font-semibold">Provider ID</th>
+                    <th class="p-4 text-muted-foreground font-semibold">Client ID</th>
+                    <th class="p-4 text-muted-foreground font-semibold">Service ID</th>
+                    <th class="p-4 text-muted-foreground font-semibold">Status</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% for booking in bookings %}
+                <tr class="hover:bg-background transition">
+                    <td class="p-4 text-foreground text-sm whitespace-nowrap">
+                        {{ booking.booking_date|slice:":10" }}
+                    </td>
+                    <td class="p-4 font-mono text-xs text-muted-foreground">{{ booking.provider_id|truncatechars:12 }}</td>
+                    <td class="p-4 font-mono text-xs text-muted-foreground">{{ booking.client_id|truncatechars:12 }}</td>
+                    <td class="p-4 font-mono text-xs text-muted-foreground">{{ booking.service_id|truncatechars:12 }}</td>
+                    <td class="p-4">
+                        {% if booking.booking_status == 'PENDING' %}
+                            <span class="text-yellow-600 font-bold text-xs">PENDING</span>
+                        {% elif booking.booking_status == 'CONFIRMED' %}
+                            <span class="text-blue-600 font-bold text-xs">CONFIRMED</span>
+                        {% elif booking.booking_status == 'COMPLETED' %}
+                            <span class="text-green-600 font-bold text-xs">COMPLETED</span>
+                        {% elif booking.booking_status == 'CANCELLED' %}
+                            <span class="text-red-600 font-bold text-xs" title="{{ booking.cancellation_reason }}">CANCELLED</span>
+                        {% else %}
+                            <span class="text-muted-foreground font-bold text-xs">{{ booking.booking_status }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="p-12 text-center text-muted-foreground">
+                        No bookings exist on the platform yet.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
